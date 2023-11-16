@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <!--
-   Copyright 2023 Andreas Räder
+   Copyright 2023 Andreas Räder, https://github.com/raederan
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -22,11 +22,11 @@
 
   <!-- project specification settings -->
   <modelVersion>4.0.0</modelVersion>
-  <groupId>de.rapsql.rapsqltranspiler</groupId>
-  <artifactId>rapsqltranspiler</artifactId>
+  <groupId>de.rapsql.transpiler</groupId>
+  <artifactId>transpiler</artifactId>
   <version>v0.1.0</version>
   <packaging>jar</packaging>
-  <name>rapsqltranspiler</name>
+  <name>transpiler</name>
   <url>http://www.rapsql.de</url>
 
 
@@ -39,18 +39,48 @@
 
   <!-- maven repository dependencies -->
   <dependencies>
+    <!-- Neo4j -->
+    <dependency>
+      <groupId>org.neo4j</groupId>
+      <artifactId>neo4j</artifactId>
+      <version>4.2.4</version>
+    </dependency>
+    <!-- https://mvnrepository.com/artifact/org.neo4j/neo4j-ast -->
+    <dependency>
+      <groupId>org.neo4j</groupId>
+      <artifactId>neo4j-ast</artifactId>
+      <version>4.2.4</version>
+    </dependency>    
+    <dependency>
+      <groupId>org.neo4j.driver</groupId>
+      <artifactId>neo4j-java-driver</artifactId>
+      <version>4.2.4</version>
+    </dependency>
+    <dependency>
+      <groupId>org.neo4j.test</groupId>
+      <artifactId>neo4j-harness</artifactId>
+      <version>4.2.4</version>
+      <scope>test</scope>
+    </dependency>
+
     <!-- PL/Java annotations (!not in public maven repo, local programming requires install from https://github.com/tada/pljava/tree/REL1_5_STABLE/pljava-api) -->
     <dependency>
       <groupId>org.postgresql</groupId>
       <artifactId>pljava-api</artifactId>
       <version>1.5-SNAPSHOT</version>
     </dependency>
+    <!-- rdf2pg from local maven repository -->
+    <dependency>
+      <groupId>de.rapsql.rdf2pg</groupId>
+      <artifactId>rdf2pg</artifactId>
+      <version>v0.1.0</version>
+    </dependency>
     <!-- jena SPARQL algebra library -->
     <dependency>
       <groupId>org.apache.jena</groupId>
       <artifactId>apache-jena-libs</artifactId>
       <type>pom</type>
-      <version>4.7.0</version>
+      <version>4.9.0</version>
     </dependency>   
     <!-- JDBC -->
     <dependency>
@@ -131,4 +161,21 @@
       </plugin>
     </plugins>
   </build>
+
+
+  <dependencyManagement>
+  
+
+    <dependencies>
+    
+
+      <dependency>
+        <groupId>org.checkerframework</groupId>
+        <artifactId>checker-qual</artifactId>
+        <version>3.33.0</version>
+      </dependency>
+
+    </dependencies>
+
+  </dependencyManagement>
 </project>
