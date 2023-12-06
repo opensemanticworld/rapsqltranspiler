@@ -35,6 +35,19 @@ public class Main
   public static void main( String[] args )
   {
     try {
+      if (args.length != 2) {
+        System.err.println("Usage: java -jar rapsqltranspiler.jar <rdf_path> <graph_name>");
+        System.exit(1);
+      } else {
+        String sparql_path = args[0];
+        String graph_name = args[1];
+        // String sparql_path = "/usr/local/docker/masterthesis/rapsql/submodules/rapsqltranspiler/src/test/resources/notest/sp2b/queries/a1-q1.sparql";
+        // String graph_name = "sp100";
+      
+        String cypher_q_stmt1 = S2C.rapsql_s2c(graph_name, S2C.get_sparql(sparql_path));
+        Helper.pretty_cypher(cypher_q_stmt1);
+      }
+
       //////////////////////////// S2C TESTS ////////////////////////////
       // // // Test 1: S2C
       // String sparql_path1 = "/usr/local/docker/masterthesis/rapsql/submodules/rapsqltranspiler/src/test/resources/ttl-sparql/w3c_test1/queries/query1.sparql";

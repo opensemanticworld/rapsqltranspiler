@@ -134,7 +134,7 @@
             <configuration>
               <archive>
                 <manifest>
-                  <mainClass>de.rapsql.rapsqltranspiler.Main</mainClass>
+                  <mainClass>de.rapsql.transpiler.Main</mainClass>
                   <addClasspath>true</addClasspath>
                   <classpathPrefix>lib</classpathPrefix>
                   <addDefaultImplementationEntries>
