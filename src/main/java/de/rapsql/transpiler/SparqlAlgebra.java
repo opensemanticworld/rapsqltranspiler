@@ -196,9 +196,10 @@ public class SparqlAlgebra implements OpVisitor {
 
 
   // build MATCH clause
-  public void buildMatchClause(String s, String p, String o) {
+  public void buildMatchClause(String s, String pn, String p, String o) {
     // directed pattern by subject, predicate and object
-    String triple_path = "(" + s + ")-[" + p + "]->(" + o + ") ";
+    // String triple_path = "(" + s + ")-[" + p + "]->(" + o + ") ";
+    String triple_path = "(" + s + ")-[" + pn + p + "]->(" + o + ") ";
     // cover OpJoin case for all query types
     switch (query_type) {
       case "SELECT":
@@ -339,6 +340,12 @@ public class SparqlAlgebra implements OpVisitor {
       String p = t.getMatchPredicate().visitWith(cypherNodeMatcher).toString();
       String o = t.getMatchObject().visitWith(cypherNodeMatcher).toString();
 
+      // get predicate name if it is uri
+      String pn = "";
+      if (t.getMatchPredicate().isURI()) {
+        pn = ":" + t.getMatchPredicate().getLocalName();
+      }
+
       // set the latest variable for ask return clause if variable exists
       if (t.getMatchSubject().isVariable()) {
         latest_var = (Var) t.getMatchSubject();
@@ -351,7 +358,7 @@ public class SparqlAlgebra implements OpVisitor {
       }
       
       // build MATCH clause
-      buildMatchClause(s, p, o);
+      buildMatchClause(s, pn, p, o);
     }
   }
 

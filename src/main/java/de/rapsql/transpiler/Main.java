@@ -95,8 +95,23 @@ public class Main
       
       // Test: S2C
 
-      // String query = "a1-q1";
-      String query = "j10-q7";
+      String query = "a1-q1";
+      // String query = "b2-q2";
+      // String query = "c3-q3a";
+      // String query = "d4-q3b";
+      // String query = "e5-q3c";
+      // String query = "f6-q4";
+      // String query = "g7-q5a";
+      // String query = "h8-q5b";
+      // String query = "i9-q6";    // NOT IMPLEMENTED YET
+      // String query = "j10-q7";   // NOT IMPLEMENTED YET
+      // String query = "k11-q8";
+      // String query = "l12-q9";
+      // String query = "m13-q10";
+      // String query = "n14-q11";
+      // String query = "o15-q12a";
+      // String query = "p16-q12b";
+      // String query = "q17-q12c";
       String graph_spcustom = "sp100000";
       // String sparql_path = "/usr/local/docker/masterthesis/rapsql/submodules/rapsqltranspiler/src/test/resources/ttl-sparql/w3c_test5/queries/";
       String sparql_path = "/usr/local/docker/masterthesis/rapsql/submodules/rapsqltranspiler/src/test/resources/sp2b/spcustom/queries/";
@@ -104,6 +119,7 @@ public class Main
       String cypher_q_stmt1 = S2C.rapsql_s2c(graph_spcustom, S2C.get_sparql(sparql_path));
       Helper.pretty_cypher(cypher_q_stmt1);
       // System.out.println("\nGraph: " + graph_spcustom + ", Cypher:\n" + cypher_q_stmt1 + "\n");
+
 
 
 
@@ -166,10 +182,6 @@ public class Main
 
 
 
-
-
-
-
       // String sparql = RdfGraph.get_sparql("/usr/local/docker/masterthesis/rapsql/submodules/rapsqltranspiler/src/test/resources/ttl-sparql/w3c_test1/queries/query1.sparql");
       // // System.out.println(sparql);
       // String cypher = S2C.rapsql_s2c("sp1", sparql);
@@ -178,4 +190,5 @@ public class Main
       System.err.println("MAIN ERROR: " + e);
     }
   }
+
 }
