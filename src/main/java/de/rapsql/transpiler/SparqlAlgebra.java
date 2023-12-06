@@ -87,6 +87,8 @@ public class SparqlAlgebra implements OpVisitor {
   private boolean left_bgp_join = false;
   private boolean right_bgp_join = false;
   private Var latest_var = null;
+  // support for edge partitioned graphs
+  private boolean partitioned = true;
 
   
   // initialize instance
@@ -340,9 +342,9 @@ public class SparqlAlgebra implements OpVisitor {
       String p = t.getMatchPredicate().visitWith(cypherNodeMatcher).toString();
       String o = t.getMatchObject().visitWith(cypherNodeMatcher).toString();
 
-      // get predicate name if it is uri
+      // get predicate name if it is uri (!partition dependency)
       String pn = "";
-      if (t.getMatchPredicate().isURI()) {
+      if (t.getMatchPredicate().isURI() && partitioned) {
         pn = ":" + t.getMatchPredicate().getLocalName();
       }
 

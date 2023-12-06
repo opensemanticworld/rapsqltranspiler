@@ -17,7 +17,9 @@
 package de.rapsql.transpiler;
 
 import java.util.ArrayList;
-import de.rapsql.rdf2pg.writers.RapsqlWriter2;
+
+import de.rapsql.rdf2pg.writers.RapsqlSplitWriter;
+// import de.rapsql.rdf2pg.writers.RapsqlWriter2;
 import de.rapsql.rdf2pg.maps.generic.GenericMapping;
 // import org.apache.jena.rdf.model.Model;
 // import org.apache.jena.rdf.model.StmtIterator;
@@ -30,8 +32,10 @@ public class R2C {
 
   public static ArrayList<String> rdf_path(String rdf_path) {
     ArrayList<String> rdf = new ArrayList<String>();
-    RapsqlWriter2 instance_pgwriter = new RapsqlWriter2();
-    RapsqlWriter2 schema_pgwriter = new RapsqlWriter2();
+    // RapsqlWriter2 instance_pgwriter = new RapsqlWriter2();
+    // RapsqlWriter2 schema_pgwriter = new RapsqlWriter2();
+    RapsqlSplitWriter instance_pgwriter = new RapsqlSplitWriter();
+    RapsqlSplitWriter schema_pgwriter = new RapsqlSplitWriter();
     GenericMapping gdm = new GenericMapping();
     gdm.run(rdf_path, instance_pgwriter, schema_pgwriter);
     rdf = instance_pgwriter.getLines();

@@ -35,18 +35,18 @@ public class Main
   public static void main( String[] args )
   {
     try {
-      if (args.length != 2) {
-        System.err.println("Usage: java -jar rapsqltranspiler.jar <rdf_path> <graph_name>");
-        System.exit(1);
-      } else {
-        String sparql_path = args[0];
-        String graph_name = args[1];
-        // String sparql_path = "/usr/local/docker/masterthesis/rapsql/submodules/rapsqltranspiler/src/test/resources/notest/sp2b/queries/a1-q1.sparql";
-        // String graph_name = "sp100";
+    //   if (args.length != 2) {
+    //     System.err.println("Usage: java -jar rapsqltranspiler.jar <rdf_path> <graph_name>");
+    //     System.exit(1);
+    //   } else {
+    //     String sparql_path = args[0];
+    //     String graph_name = args[1];
+    //     // String sparql_path = "/usr/local/docker/masterthesis/rapsql/submodules/rapsqltranspiler/src/test/resources/notest/sp2b/queries/a1-q1.sparql";
+    //     // String graph_name = "sp100";
       
-        String cypher_q_stmt1 = S2C.rapsql_s2c(graph_name, S2C.get_sparql(sparql_path));
-        Helper.pretty_cypher(cypher_q_stmt1);
-      }
+    //     String cypher_q_stmt1 = S2C.rapsql_s2c(graph_name, S2C.get_sparql(sparql_path));
+    //     Helper.pretty_cypher(cypher_q_stmt1);
+    //   }
 
       //////////////////////////// S2C TESTS ////////////////////////////
       // // // Test 1: S2C
@@ -108,9 +108,9 @@ public class Main
       
       // Test: S2C
 
-      String query = "a1-q1";
+      // String query = "a1-q1";
       // String query = "b2-q2";
-      // String query = "c3-q3a";
+      String query = "c3-q3a";
       // String query = "d4-q3b";
       // String query = "e5-q3c";
       // String query = "f6-q4";
@@ -125,7 +125,8 @@ public class Main
       // String query = "o15-q12a";
       // String query = "p16-q12b";
       // String query = "q17-q12c";
-      String graph_spcustom = "sp100000";
+      // String graph_spcustom = "sp100000";
+      String graph_spcustom = "spcustompart";
       // String sparql_path = "/usr/local/docker/masterthesis/rapsql/submodules/rapsqltranspiler/src/test/resources/ttl-sparql/w3c_test5/queries/";
       String sparql_path = "/usr/local/docker/masterthesis/rapsql/submodules/rapsqltranspiler/src/test/resources/sp2b/spcustom/queries/";
       sparql_path = sparql_path.concat(query + ".sparql");
