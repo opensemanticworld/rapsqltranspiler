@@ -31,7 +31,8 @@ import java.util.List;
 import org.apache.jena.rdf.model.Model;
 import org.junit.jupiter.params.provider.Arguments;
 import de.rapsql.rdf2pg.maps.generic.GenericMapping;
-import de.rapsql.rdf2pg.writers.RapsqlSplitWriter;
+// import de.rapsql.rdf2pg.writers.RapsqlSplitWriter;
+import de.rapsql.rdf2pg.writers.RapsqlSplitWriterMerge;
 // import de.rapsql.rdf2pg.writers.RapsqlWriter2;
 
 public class TestProvider {
@@ -55,7 +56,8 @@ public class TestProvider {
             
       // create RDF to Cypher model from ttl
       // RapsqlWriter2 instance_pgwriter = new RapsqlWriter2(); // no edge partitioning
-      RapsqlSplitWriter instance_pgwriter = new RapsqlSplitWriter(); // edge partitioning
+      // RapsqlSplitWriter instance_pgwriter = new RapsqlSplitWriter(); // edge partitioning
+      RapsqlSplitWriterMerge instance_pgwriter = new RapsqlSplitWriterMerge(); // edge partitioning merge
       GenericMapping gdm = new GenericMapping();
       Model rdf_model = gdm.runModelMapping4(rdf_path.toString(), instance_pgwriter);
       String rdf_to_cypher = R2C.r2c(graph, instance_pgwriter.getLines());  

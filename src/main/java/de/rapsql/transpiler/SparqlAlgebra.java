@@ -198,19 +198,27 @@ public class SparqlAlgebra implements OpVisitor {
 
 
   // build MATCH clause
-  public void buildMatchClause(String s, String pn, String p, String o) {
+  public void buildMatchClause(String s, String pn, String p, String o, Boolean is_first) {
     // directed pattern by subject, predicate and object
     // String triple_path = "(" + s + ")-[" + p + "]->(" + o + ") ";
     String triple_path = "(" + s + ")-[" + pn + p + "]->(" + o + ") ";
+    String match_comma = "";
+    if (is_first) {
+      match_comma = "MATCH ";
+    } else {
+      match_comma = ", ";
+    }
+
     // cover OpJoin case for all query types
     switch (query_type) {
       case "SELECT":
         if (!left_bgp_join) {
           // no OpJoin
-          cypher = cypher + "MATCH " + triple_path;
+          // cypher = cypher + "MATCH " + triple_path;
+          cypher = cypher + match_comma + triple_path;
         } else {
           // OpJoin
-          cached_match_clause = cached_match_clause + "MATCH " + triple_path;
+          cached_match_clause = cached_match_clause + match_comma + triple_path;
         }
         break;
       case "ASK":
@@ -273,7 +281,7 @@ public class SparqlAlgebra implements OpVisitor {
     //! ONLY FOR DEBUG VISITOR ! COMMENT OUT FOR STACK INTEGRATION !
     // System.out.println("\nIn opBGP\n" + opBGP.toString()+"\n");
     // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
+    Boolean is_first = true;
     java.util.Iterator<Triple> it = opBGP.getPattern().iterator();
     while(it.hasNext()) {
       Triple t = it.next();
@@ -360,7 +368,8 @@ public class SparqlAlgebra implements OpVisitor {
       }
       
       // build MATCH clause
-      buildMatchClause(s, pn, p, o);
+      buildMatchClause(s, pn, p, o, is_first);
+      is_first = false;
     }
   }
 
