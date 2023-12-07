@@ -39,30 +39,6 @@
 
   <!-- maven repository dependencies -->
   <dependencies>
-    <!-- Neo4j -->
-    <dependency>
-      <groupId>org.neo4j</groupId>
-      <artifactId>neo4j</artifactId>
-      <version>4.2.4</version>
-    </dependency>
-    <!-- https://mvnrepository.com/artifact/org.neo4j/neo4j-ast -->
-    <dependency>
-      <groupId>org.neo4j</groupId>
-      <artifactId>neo4j-ast</artifactId>
-      <version>4.2.4</version>
-    </dependency>    
-    <dependency>
-      <groupId>org.neo4j.driver</groupId>
-      <artifactId>neo4j-java-driver</artifactId>
-      <version>4.2.4</version>
-    </dependency>
-    <dependency>
-      <groupId>org.neo4j.test</groupId>
-      <artifactId>neo4j-harness</artifactId>
-      <version>4.2.4</version>
-      <scope>test</scope>
-    </dependency>
-
     <!-- PL/Java annotations (!not in public maven repo, local programming requires install from https://github.com/tada/pljava/tree/REL1_5_STABLE/pljava-api) -->
     <dependency>
       <groupId>org.postgresql</groupId>
