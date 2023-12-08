@@ -205,9 +205,6 @@ public class SparqlAlgebra implements OpVisitor {
   }
 
 
-      // p_list.add("-[");
-      // p_list.add(p);
-      // p_list.add("]->");
   // cypher variable path optimization: uniqueness of relationships
 
   // predicate rules
