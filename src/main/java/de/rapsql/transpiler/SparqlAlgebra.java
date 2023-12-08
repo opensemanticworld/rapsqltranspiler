@@ -391,8 +391,7 @@ public class SparqlAlgebra implements OpVisitor {
       // for (int j = subject_pairlist.size() - 1; j >= 0; j--) {
         if (
             subject_pairlist.get(i).getRight().equals(object_pairlist.get(j).getRight()) 
-            && !checkPredicateVars(i, j)
-            && !checkPredicateUniqueness(i, j)
+            && !checkPredicateVars(i, j) && !checkPredicateUniqueness(i, j)
           ) {
           // System.out.println("Path Optimization:");
           l2r_match = true;
@@ -468,7 +467,7 @@ public class SparqlAlgebra implements OpVisitor {
 
   // build end of cypher query
   public void buildEndOfAgeQuery(List<Var> vars) {
-      concatCypher("LIMIT 1 $$) AS (");
+      concatCypher(" $$) AS (");
       for(Var var: vars) {
         concatCypher(Sparql_to_cypher_variable_map.get(var) + " ag_catalog.agtype, ");
       }
@@ -492,6 +491,7 @@ public class SparqlAlgebra implements OpVisitor {
     List<Var> ask = List.of(var);
     return_clause = getReturnClause(ask, has_with_clause);
     concatCypher(return_clause);
+    concatCypher(" LIMIT 1");
     buildEndOfAgeQuery(ask);
     cypher = cypher.substring(0, cypher.length() - 2);
     concatCypher("); ");
