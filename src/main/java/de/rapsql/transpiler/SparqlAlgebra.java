@@ -206,6 +206,28 @@ public class SparqlAlgebra implements OpVisitor {
 
 
   // cypher variable path optimization
+  public void l2lCypherPath() {
+    // left == object, right == subject
+    Map<Integer, String> left_var_matches = new HashMap<Integer, String>();
+    Boolean l2l_match = false;
+    // print subject_pairlist
+    System.out.println("Subject pairlist: " + subject_pairlist.toString());
+    // get all duplicates in subject_pairlist
+    for (int i = 0; i < subject_pairlist.size(); i++) {
+      for (int j = i + 1; j < subject_pairlist.size(); j++) {
+        if (subject_pairlist.get(i).getRight().equals(subject_pairlist.get(j).getRight())) {
+          System.out.println("i: " + i + " j: " + j);
+          left_var_matches.put(i, subject_pairlist.get(i).getRight());
+          left_var_matches.put(j, subject_pairlist.get(j).getRight());
+          l2l_match = true;
+        }
+      }
+    }
+    // print left_var_matches
+    System.out.println("Left var_name matches: " + left_var_matches.toString());
+  }
+
+  // left to right path optimization
   public void l2rCypherPath() {
     // left == object, right == subject
     Boolean l2r_match = false;
@@ -441,7 +463,7 @@ public class SparqlAlgebra implements OpVisitor {
       l2rCypherPath();
 
       // add more path optimizations here
-
+      l2lCypherPath();
 
       // build MATCH clause for each list element
       for (int i = 0; i < subject_pairlist.size(); i++) {
@@ -605,7 +627,7 @@ public class SparqlAlgebra implements OpVisitor {
   @Override
   public void visit(OpJoin opJoin) {
     //! ONLY FOR DEBUG VISITOR ! COMMENT OUT FOR STACK INTEGRATION !
-    System.out.println("\nIn opJoin\n" + opJoin.toString());
+    // System.out.println("\nIn opJoin\n" + opJoin.toString());
     // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     
     // set detection for OpJoin to cache MATCH clause 
