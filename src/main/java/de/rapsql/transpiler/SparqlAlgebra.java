@@ -208,7 +208,7 @@ public class SparqlAlgebra implements OpVisitor {
   // cypher variable path optimization: uniqueness of relationships
 
   // predicate rules
-  // no path optimization if both predicates are uniqueness
+  // no path optimization if both predicates are unique
   public Boolean checkPredicateUniqueness(int left, int right) {
     if (predicate_pairlist.get(left).getRight().equals(predicate_pairlist.get(right).getRight())) {
       return false;
