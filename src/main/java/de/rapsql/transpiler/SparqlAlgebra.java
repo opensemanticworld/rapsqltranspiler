@@ -221,59 +221,64 @@ public class SparqlAlgebra implements OpVisitor {
     // count and save var_name in subject_pairlist that matches var_name in object_pairlist, only if isVariable
 
 
-    System.out.println("\nBEFORE REPLACEMENT:\n");
-    System.out.println("Subject pairlist: " + subject_pairlist.toString());
-    System.out.println("Predicate pairlist: " + predicate_pairlist.toString());
-    System.out.println("Object pairlist: " + object_pairlist.toString());
-    System.out.println("\n");
-
+    // System.out.println("\nBEFORE REPLACEMENT:\n");
+    // System.out.println("Subject pairlist: " + subject_pairlist.toString());
+    // System.out.println("Predicate pairlist: " + predicate_pairlist.toString());
+    // System.out.println("Object pairlist: " + object_pairlist.toString());
+    // System.out.println("\n");
+    Map<Integer, String> left_var_matches = new HashMap<Integer, String>();
+    Map<Integer, String> right_var_matches = new HashMap<Integer, String>();
+    Map<Integer, Integer> idx_matches = new HashMap<Integer, Integer>();
     Integer match_cnt = 0;
 
 
     // if subject_pairlist left is true and object_pairlist left is true, then compare all var_names from both lists and save matching ones with their index
     for (int i = 0; i < subject_pairlist.size(); i++) {
-      if (subject_pairlist.get(i).getLeft() && object_pairlist.get(i).getLeft() && !predicate_pairlist.get(i).getLeft()) {
+      if (
+        subject_pairlist.get(i).getLeft() 
+        && object_pairlist.get(i).getLeft() 
+        && !predicate_pairlist.get(i).getLeft()
+        ) {
 
         // for every var_name in subject_pairlist compare with every var_name in object_pairlist
         for (int j = 0; j < subject_pairlist.size(); j++) {
           if (subject_pairlist.get(i).getRight().equals(object_pairlist.get(j).getRight())) {
             match_cnt++;
-            Map<Integer, String> left_var_matches = new HashMap<Integer, String>();
-            Map<Integer, String> right_var_matches = new HashMap<Integer, String>();
+
             left_var_matches.put(i, subject_pairlist.get(i).getRight());
             right_var_matches.put(j, object_pairlist.get(j).getRight());
+            idx_matches.put(i, j);
+            // System.out.println("Subject var_name matches: " + left_var_matches.toString());
+            // System.out.println("Object var_name matches: " + right_var_matches.toString());
 
-            System.out.println("Subject var_name matches: " + left_var_matches.toString());
-            System.out.println("Object var_name matches: " + right_var_matches.toString());
+            // System.out.println("Matching var_name: " + subject_pairlist.get(i).getRight() + " with index: " + i + " and " + object_pairlist.get(j).getRight() + " with index: " + j);
+            // String left_var = subject_pairlist.get(j).getRight(); 
+            // ArrayList<String> predicate_path = new ArrayList<String>();
+            // // build new predicate path
+            // predicate_path.addAll(predicate_pairlist.get(j).getRight());
+            // predicate_path.add("("+ object_pairlist.get(j).getRight() +")");
+            // predicate_path.addAll(predicate_pairlist.get(i).getRight());  
+            // String right_var = object_pairlist.get(i).getRight();
 
-            System.out.println("Matching var_name: " + subject_pairlist.get(i).getRight() + " with index: " + i + " and " + object_pairlist.get(j).getRight() + " with index: " + j);
-            String left_var = subject_pairlist.get(j).getRight(); 
-            ArrayList<String> predicate_path = new ArrayList<String>();
-            // build new predicate path
-            predicate_path.addAll(predicate_pairlist.get(j).getRight());
-            predicate_path.add("("+ object_pairlist.get(j).getRight() +")");
-            predicate_path.addAll(predicate_pairlist.get(i).getRight());  
-            String right_var = object_pairlist.get(i).getRight();
-
-            System.out.println("Left var: " + left_var + "\nLeft index: " + j);
-            System.out.println("Predicate path: " + predicate_path);
-            // print combined predicate path
-            String predicate_path_str = "";
-            for (String predicate: predicate_path) {
-              predicate_path_str = predicate_path_str.concat(predicate);
-            }
-            System.out.println("Combined predicate path: " + predicate_path_str);
-            System.out.println("Right var: " + right_var + "\nRight index: " + i + "\n");
+            // System.out.println("Left var: " + left_var + "\nLeft index: " + j);
+            // System.out.println("Predicate path: " + predicate_path);
+            // // print combined predicate path
+            // String predicate_path_str = "";
+            // for (String predicate: predicate_path) {
+            //   predicate_path_str = predicate_path_str.concat(predicate);
+            // }
+            // System.out.println("Combined predicate path: " + predicate_path_str);
+            // System.out.println("Right var: " + right_var + "\nRight index: " + i + "\n");
 
 
 
-            // replace all pairlists on index of right match and remove left match
-            subject_pairlist.set(j, Pair.of(subject_pairlist.get(j).getLeft(), left_var));
-            predicate_pairlist.set(j, Pair.of(predicate_pairlist.get(j).getLeft() && predicate_pairlist.get(i).getLeft(), predicate_path));
-            object_pairlist.set(j, Pair.of(object_pairlist.get(i).getLeft(), right_var));     
-            subject_pairlist.remove(i);
-            predicate_pairlist.remove(i);
-            object_pairlist.remove(i);
+            // // replace all pairlists on index of right match and remove left match
+            // subject_pairlist.set(j, Pair.of(subject_pairlist.get(j).getLeft(), left_var));
+            // predicate_pairlist.set(j, Pair.of(predicate_pairlist.get(j).getLeft() && predicate_pairlist.get(i).getLeft(), predicate_path));
+            // object_pairlist.set(j, Pair.of(object_pairlist.get(i).getLeft(), right_var));     
+            // subject_pairlist.remove(i);
+            // predicate_pairlist.remove(i);
+            // object_pairlist.remove(i);
             
           } 
         }
@@ -291,19 +296,21 @@ public class SparqlAlgebra implements OpVisitor {
       // }
     }
 
+    System.out.println("Subject var_name matches: " + left_var_matches.toString());
+    System.out.println("Object var_name matches: " + right_var_matches.toString());
+    System.out.println("Index matches: " + idx_matches.toString());
 
-
-    System.out.println("\nAFTER REPLACEMENT:\n");
-    System.out.println("Subject pairlist: " + subject_pairlist.toString());
-    System.out.println("Predicate pairlist: " + predicate_pairlist.toString());
-    System.out.println("Object pairlist: " + object_pairlist.toString());
-    System.out.println("\n");
+    // System.out.println("\nAFTER REPLACEMENT:\n");
+    // System.out.println("Subject pairlist: " + subject_pairlist.toString());
+    // System.out.println("Predicate pairlist: " + predicate_pairlist.toString());
+    // System.out.println("Object pairlist: " + object_pairlist.toString());
+    // System.out.println("\n");
 
     // show match cnt and recursive call if match_cnt > 0
     System.out.println("Match count: " + match_cnt);
-    if (match_cnt > 0) {
-      l2rCypherPath();
-    }
+    // if (match_cnt > 0) {
+    //   l2rCypherPath();
+    // }
 
   }
 
@@ -450,16 +457,16 @@ public class SparqlAlgebra implements OpVisitor {
       String p = t.getMatchPredicate().visitWith(cypherNodeMatcher).toString();
       String o = t.getMatchObject().visitWith(cypherNodeMatcher).toString();
 
+      // get predicate name if it is uri (!partition dependency)
+      if (t.getMatchPredicate().isURI() && partitioned) {
+        p = ":" + t.getMatchPredicate().getLocalName() + " " + p;
+      }
+      
       // list of predicates for path optimization with different patterns
       ArrayList<String> p_list = new ArrayList<String>();
       p_list.add("-[");
       p_list.add(p);
       p_list.add("]->");
-
-      // get predicate name if it is uri (!partition dependency)
-      if (t.getMatchPredicate().isURI() && partitioned) {
-        p = ":" + t.getMatchPredicate().getLocalName() + " " + p;
-      }
 
       // set the latest variable for ask return clause if variable exists
       if (t.getMatchSubject().isVariable()) {
@@ -489,11 +496,29 @@ public class SparqlAlgebra implements OpVisitor {
     }
     // sysout pairlists for path optimization
     if (path_optimization) {
-      System.out.println("Subject pairlist: " + subject_pairlist.toString());
-      System.out.println("Predicate pairlist: " + predicate_pairlist.toString());
-      System.out.println("Object pairlist: " + object_pairlist.toString());
+      // System.out.println("Subject pairlist: " + subject_pairlist.toString());
+      // System.out.println("Predicate pairlist: " + predicate_pairlist.toString());
+      // System.out.println("Object pairlist: " + object_pairlist.toString());
       System.out.println("\nPath optimization:\n");
       l2rCypherPath();
+      // build MATCH clause for each list element
+      // for (int i = 0; i < subject_pairlist.size(); i++) {
+      //   String triple_path = "";
+      //   triple_path = triple_path.concat("("+ subject_pairlist.get(i).getRight() +")");
+      //   for (String predicate: predicate_pairlist.get(i).getRight()) {
+      //     triple_path = triple_path.concat(predicate);
+      //   }
+      //   triple_path = triple_path.concat("("+ object_pairlist.get(i).getRight() +") ");
+
+      //   // build MATCH clause
+      //   buildMatchClause(triple_path);
+      // }
+
+      // // clear pairlists
+      // subject_pairlist.clear();
+      // predicate_pairlist.clear();
+      // object_pairlist.clear();
+      
     }
   }
 
