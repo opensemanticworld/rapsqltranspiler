@@ -468,7 +468,7 @@ public class SparqlAlgebra implements OpVisitor {
 
   // build end of cypher query
   public void buildEndOfAgeQuery(List<Var> vars) {
-      concatCypher(" $$) AS (");
+      concatCypher("LIMIT 1 $$) AS (");
       for(Var var: vars) {
         concatCypher(Sparql_to_cypher_variable_map.get(var) + " ag_catalog.agtype, ");
       }
