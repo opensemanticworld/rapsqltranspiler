@@ -98,9 +98,6 @@ public class SparqlAlgebra implements OpVisitor {
   private List<Pair<Boolean, String>> subject_pairlist = new ArrayList<Pair<Boolean, String>>();
   private List<Pair<Boolean, ArrayList<String>>> predicate_pairlist = new ArrayList<Pair<Boolean, ArrayList<String>>>();
   private List<Pair<Boolean, String>> object_pairlist = new ArrayList<Pair<Boolean, String>>();
-  private List<Pair<Boolean, String>> subject_pairlist_cached = new ArrayList<Pair<Boolean, String>>();
-  private List<Pair<Boolean, ArrayList<String>>> predicate_pairlist_cached = new ArrayList<Pair<Boolean, ArrayList<String>>>();
-  private List<Pair<Boolean, String>> object_pairlist_cached = new ArrayList<Pair<Boolean, String>>();
 
   // initialize instance
   public SparqlAlgebra(String _graph_name, String _query_type) {
@@ -423,48 +420,26 @@ public class SparqlAlgebra implements OpVisitor {
       p_list.add(p);
       p_list.add("]->");
 
-      if (!left_bgp_join) {
-        // set the latest variable for ask return clause if variable exists
-        if (t.getMatchSubject().isVariable()) {
-          latest_var = (Var) t.getMatchSubject();
-          subject_pairlist.add(Pair.of(true, s));
-        } else {
-          subject_pairlist.add(Pair.of(false, s));
-        }
-        if (t.getMatchPredicate().isVariable()) {
-          latest_var = (Var) t.getMatchPredicate();
-          predicate_pairlist.add(Pair.of(true, p_list));
-        } else {
-          predicate_pairlist.add(Pair.of(false, p_list));
-        }
-        if (t.getMatchObject().isVariable()) {
-          latest_var = (Var) t.getMatchObject();
-          object_pairlist.add(Pair.of(true, o));
-        } else {
-          object_pairlist.add(Pair.of(false, o));
-        }
+      // set the latest variable for ask return clause if variable exists
+      if (t.getMatchSubject().isVariable()) {
+        latest_var = (Var) t.getMatchSubject();
+        subject_pairlist.add(Pair.of(true, s));
       } else {
-        // set the latest variable for ask return clause if variable exists
-        if (t.getMatchSubject().isVariable()) {
-          latest_var = (Var) t.getMatchSubject();
-          subject_pairlist_cached.add(Pair.of(true, s));
-        } else {
-          subject_pairlist_cached.add(Pair.of(false, s));
-        }
-        if (t.getMatchPredicate().isVariable()) {
-          latest_var = (Var) t.getMatchPredicate();
-          predicate_pairlist_cached.add(Pair.of(true, p_list));
-        } else {
-          predicate_pairlist_cached.add(Pair.of(false, p_list));
-        }
-        if (t.getMatchObject().isVariable()) {
-          latest_var = (Var) t.getMatchObject();
-          object_pairlist_cached.add(Pair.of(true, o));
-        } else {
-          object_pairlist_cached.add(Pair.of(false, o));
-        }
+        subject_pairlist.add(Pair.of(false, s));
       }
-
+      if (t.getMatchPredicate().isVariable()) {
+        latest_var = (Var) t.getMatchPredicate();
+        predicate_pairlist.add(Pair.of(true, p_list));
+      } else {
+        predicate_pairlist.add(Pair.of(false, p_list));
+      }
+      if (t.getMatchObject().isVariable()) {
+        latest_var = (Var) t.getMatchObject();
+        object_pairlist.add(Pair.of(true, o));
+      } else {
+        object_pairlist.add(Pair.of(false, o));
+      }
+      
       
       // build MATCH clause
       if (!path_optimization) {
@@ -651,13 +626,7 @@ public class SparqlAlgebra implements OpVisitor {
     // visit left bgp -> cache MATCH clause
     opJoin.getLeft().visit(this);
     // concat cached MATCH clause to the left part
-    if (!path_optimization) { 
-      concatCypher(cached_match_clause); 
-    } else {
-      subject_pairlist = subject_pairlist_cached; 
-      predicate_pairlist = predicate_pairlist_cached;
-      object_pairlist = object_pairlist_cached;
-    }
+    concatCypher(cached_match_clause); 
 
     // unset detection for OpJoin to parse by visitors as usual
     left_bgp_join = false;
@@ -680,13 +649,7 @@ public class SparqlAlgebra implements OpVisitor {
     has_union_clause = true;
     // add MATCH duplicate for right bgp
     if (right_bgp_join) {
-      if (!path_optimization) { 
-        concatCypher(cached_match_clause); 
-      } else {
-        subject_pairlist = subject_pairlist_cached; 
-        predicate_pairlist = predicate_pairlist_cached;
-        object_pairlist = object_pairlist_cached;
-      }
+      concatCypher(cached_match_clause); 
       // unset used cache and detection
       cached_match_clause = "";
       right_bgp_join = false;
