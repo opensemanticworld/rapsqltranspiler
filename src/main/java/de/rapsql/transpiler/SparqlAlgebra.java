@@ -210,29 +210,20 @@ public class SparqlAlgebra implements OpVisitor {
     // left == object, right == subject
     Boolean l2r_match = false;
     // print all pairlists
-
-    System.out.println("\nSubject pairlist: " + subject_pairlist.toString());
-    System.out.println("Object pairlist: " + object_pairlist.toString());
-
     
     // if subject_pairlist left is true and object_pairlist left is true, then compare all var_names from both lists and save matching ones with their index
     for (int i = 0; i < subject_pairlist.size(); i++) {
-      if (!predicate_pairlist.get(i).getLeft() && subject_pairlist.get(i).getLeft() && object_pairlist.get(i).getLeft()) {
+      if (!predicate_pairlist.get(i).getLeft()) {
         // for every var_name in subject_pairlist compare with every var_name in object_pairlist
         for (int j = 0; j < subject_pairlist.size(); j++) {
         // for from highest index to lowest index to ensure no out of bounds
         // for (int j = subject_pairlist.size() - 1; j >= 0; j--) {
           if (subject_pairlist.get(i).getRight().equals(object_pairlist.get(j).getRight())) {
-            System.out.println("Path Optimization:");
+            // System.out.println("Path Optimization:");
             l2r_match = true;
-            // Map<Integer, String> left_var_matches = new HashMap<Integer, String>();
-            // Map<Integer, String> right_var_matches = new HashMap<Integer, String>();
-            // left_var_matches.put(i, subject_pairlist.get(i).getRight());
-            // right_var_matches.put(j, object_pairlist.get(j).getRight());
-            // idx_matches.put(i, j);
             // System.out.println("Subject var_name matches: " + left_var_matches.toString());
             // System.out.println("Object var_name matches: " + right_var_matches.toString());
-            System.out.println("Matching var_name: " + subject_pairlist.get(i).getRight() + " with index: " + i + " and " + object_pairlist.get(j).getRight() + " with index: " + j);
+            // System.out.println("Matching var_name: " + subject_pairlist.get(i).getRight() + " with index: " + i + " and " + object_pairlist.get(j).getRight() + " with index: " + j);
             String left_var = subject_pairlist.get(j).getRight(); 
             ArrayList<String> predicate_path = new ArrayList<String>();
             // build new predicate path
@@ -260,10 +251,8 @@ public class SparqlAlgebra implements OpVisitor {
       // break outer loop if found possible optimization
       if (l2r_match) break;
     }
-
     // recursive call if found possible optimization
     if (l2r_match) l2rCypherPath(); 
-
   }
 
   // build MATCH clause
