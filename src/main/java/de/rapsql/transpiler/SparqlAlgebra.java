@@ -263,7 +263,7 @@ public class SparqlAlgebra implements OpVisitor {
 
   // helper function to swap direction of all predicate path elements
   // swap direction of predicate path elements
-  public ArrayList<String> swap_path_direction(ArrayList<String> predicate_path) {
+  public ArrayList<String> reversePath(ArrayList<String> predicate_path) {
     ArrayList<String> predicate_path_reverse = new ArrayList<String>();
     for (int i = predicate_path.size() - 1; i >= 0; i--) {
       if (predicate_path.get(i).equals("-[")) {
@@ -304,7 +304,7 @@ public class SparqlAlgebra implements OpVisitor {
           object_pairlist.set(i, Pair.of(true, subject_pairlist.get(j).getRight()));
           // get reverse predicate path
           ArrayList<String> second_predicate_path_rev = new ArrayList<String>();
-          second_predicate_path_rev = swap_path_direction(predicate_pairlist.get(j).getRight());
+          second_predicate_path_rev = reversePath(predicate_pairlist.get(j).getRight());
           // add matching subject var_name to second predicate path
           second_predicate_path_rev.add("("+ object_pairlist.get(j).getRight() +")");
           // add first predicate path to second predicate path
@@ -353,7 +353,7 @@ public class SparqlAlgebra implements OpVisitor {
           subject_pairlist.set(i, Pair.of(true, object_pairlist.get(j).getRight()));
           // get reverse predicate path
           ArrayList<String> second_predicate_path_rev = new ArrayList<String>();
-          second_predicate_path_rev = swap_path_direction(predicate_pairlist.get(j).getRight());
+          second_predicate_path_rev = reversePath(predicate_pairlist.get(j).getRight());
           // add matching subject var_name to second predicate path
           second_predicate_path_rev.add("("+ subject_pairlist.get(j).getRight() +")");
           // add first predicate path to second predicate path
