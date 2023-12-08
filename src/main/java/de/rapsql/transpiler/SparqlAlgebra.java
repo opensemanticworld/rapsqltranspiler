@@ -98,6 +98,9 @@ public class SparqlAlgebra implements OpVisitor {
   private List<Pair<Boolean, String>> subject_pairlist = new ArrayList<Pair<Boolean, String>>();
   private List<Pair<Boolean, ArrayList<String>>> predicate_pairlist = new ArrayList<Pair<Boolean, ArrayList<String>>>();
   private List<Pair<Boolean, String>> object_pairlist = new ArrayList<Pair<Boolean, String>>();
+  private List<Pair<Boolean, String>> subject_pairlist_cached = new ArrayList<Pair<Boolean, String>>();
+  private List<Pair<Boolean, ArrayList<String>>> predicate_pairlist_cached = new ArrayList<Pair<Boolean, ArrayList<String>>>();
+  private List<Pair<Boolean, String>> object_pairlist_cached = new ArrayList<Pair<Boolean, String>>();
 
   // initialize instance
   public SparqlAlgebra(String _graph_name, String _query_type) {
@@ -203,114 +206,66 @@ public class SparqlAlgebra implements OpVisitor {
     return_clause = return_clause.substring(0, return_clause.length() - 2);
     return return_clause;
   }
-  // (article)-[:creator {iri:'http://purl.org/dc/elements/1.1/creator'}]->(person)-[:name {iri:'http://xmlns.com/foaf/0.1/name'}]->(name)
-  // (inproc)-[:creator {iri:'http://purl.org/dc/elements/1.1/creator'}]->(person2)-[:name {iri:'http://xmlns.com/foaf/0.1/name'}]->(name2) 
-  // example: g7-q5a.sql 
-  // SELECT count(*) FROM ag_catalog.cypher('sp100k', $$
-  // MATCH (article)-[:type {iri:'http://www.w3.org/1999/02/22-rdf-syntax-ns#type'}]->({iri:'http://localhost/vocabulary/bench/Article'})
-  // MATCH (article)-[:creator {iri:'http://purl.org/dc/elements/1.1/creator'}]->(person)-[:name {iri:'http://xmlns.com/foaf/0.1/name'}]->(name)
-  // MATCH (inproc)-[:type {iri:'http://www.w3.org/1999/02/22-rdf-syntax-ns#type'}]->({iri:'http://localhost/vocabulary/bench/Inproceedings'})
-  // MATCH (inproc)-[:creator {iri:'http://purl.org/dc/elements/1.1/creator'}]->(person2)-[:name {iri:'http://xmlns.com/foaf/0.1/name'}]->(name2) 
-  // WHERE (coalesce(name.iri, name.bnid, name.value) = coalesce(name2.iri, name2.bnid, name2.value)) 
-  // RETURN DISTINCT coalesce(person.iri, person.bnid, person.value), coalesce(name.iri, name.bnid, name.value) $$) 
-  // AS (person ag_catalog.agtype, name ag_catalog.agtype); 
+
 
   // cypher variable path optimization
   public void l2rCypherPath() {
     // left == object, right == subject
-    // count and save var_name in subject_pairlist that matches var_name in object_pairlist, only if isVariable
+    Boolean l2r_match = false;
+    // print all pairlists
 
+    System.out.println("\nSubject pairlist: " + subject_pairlist.toString());
+    System.out.println("Object pairlist: " + object_pairlist.toString());
 
-    // System.out.println("\nBEFORE REPLACEMENT:\n");
-    // System.out.println("Subject pairlist: " + subject_pairlist.toString());
-    // System.out.println("Predicate pairlist: " + predicate_pairlist.toString());
-    // System.out.println("Object pairlist: " + object_pairlist.toString());
-    // System.out.println("\n");
-    Map<Integer, String> left_var_matches = new HashMap<Integer, String>();
-    Map<Integer, String> right_var_matches = new HashMap<Integer, String>();
-    Map<Integer, Integer> idx_matches = new HashMap<Integer, Integer>();
-    Integer match_cnt = 0;
-
-
+    
     // if subject_pairlist left is true and object_pairlist left is true, then compare all var_names from both lists and save matching ones with their index
     for (int i = 0; i < subject_pairlist.size(); i++) {
-      if (
-        subject_pairlist.get(i).getLeft() 
-        && object_pairlist.get(i).getLeft() 
-        && !predicate_pairlist.get(i).getLeft()
-        ) {
-
+      if (!predicate_pairlist.get(i).getLeft() && subject_pairlist.get(i).getLeft() && object_pairlist.get(i).getLeft()) {
         // for every var_name in subject_pairlist compare with every var_name in object_pairlist
         for (int j = 0; j < subject_pairlist.size(); j++) {
+        // for from highest index to lowest index to ensure no out of bounds
+        // for (int j = subject_pairlist.size() - 1; j >= 0; j--) {
           if (subject_pairlist.get(i).getRight().equals(object_pairlist.get(j).getRight())) {
-            match_cnt++;
-
-            left_var_matches.put(i, subject_pairlist.get(i).getRight());
-            right_var_matches.put(j, object_pairlist.get(j).getRight());
-            idx_matches.put(i, j);
+            System.out.println("Path Optimization:");
+            l2r_match = true;
+            // Map<Integer, String> left_var_matches = new HashMap<Integer, String>();
+            // Map<Integer, String> right_var_matches = new HashMap<Integer, String>();
+            // left_var_matches.put(i, subject_pairlist.get(i).getRight());
+            // right_var_matches.put(j, object_pairlist.get(j).getRight());
+            // idx_matches.put(i, j);
             // System.out.println("Subject var_name matches: " + left_var_matches.toString());
             // System.out.println("Object var_name matches: " + right_var_matches.toString());
+            System.out.println("Matching var_name: " + subject_pairlist.get(i).getRight() + " with index: " + i + " and " + object_pairlist.get(j).getRight() + " with index: " + j);
+            String left_var = subject_pairlist.get(j).getRight(); 
+            ArrayList<String> predicate_path = new ArrayList<String>();
+            // build new predicate path
+            predicate_path.addAll(predicate_pairlist.get(j).getRight());
+            predicate_path.add("("+ object_pairlist.get(j).getRight() +")");
+            predicate_path.addAll(predicate_pairlist.get(i).getRight());  
+            String right_var = object_pairlist.get(i).getRight();
 
-            // System.out.println("Matching var_name: " + subject_pairlist.get(i).getRight() + " with index: " + i + " and " + object_pairlist.get(j).getRight() + " with index: " + j);
-            // String left_var = subject_pairlist.get(j).getRight(); 
-            // ArrayList<String> predicate_path = new ArrayList<String>();
-            // // build new predicate path
-            // predicate_path.addAll(predicate_pairlist.get(j).getRight());
-            // predicate_path.add("("+ object_pairlist.get(j).getRight() +")");
-            // predicate_path.addAll(predicate_pairlist.get(i).getRight());  
-            // String right_var = object_pairlist.get(i).getRight();
+            // get the smaller and bigger index of i and j to ensure out of bounds 
+            int i_min = Math.min(i, j);
+            int i_max = Math.max(i, j);
 
-            // System.out.println("Left var: " + left_var + "\nLeft index: " + j);
-            // System.out.println("Predicate path: " + predicate_path);
-            // // print combined predicate path
-            // String predicate_path_str = "";
-            // for (String predicate: predicate_path) {
-            //   predicate_path_str = predicate_path_str.concat(predicate);
-            // }
-            // System.out.println("Combined predicate path: " + predicate_path_str);
-            // System.out.println("Right var: " + right_var + "\nRight index: " + i + "\n");
-
-
-
-            // // replace all pairlists on index of right match and remove left match
-            // subject_pairlist.set(j, Pair.of(subject_pairlist.get(j).getLeft(), left_var));
-            // predicate_pairlist.set(j, Pair.of(predicate_pairlist.get(j).getLeft() && predicate_pairlist.get(i).getLeft(), predicate_path));
-            // object_pairlist.set(j, Pair.of(object_pairlist.get(i).getLeft(), right_var));     
-            // subject_pairlist.remove(i);
-            // predicate_pairlist.remove(i);
-            // object_pairlist.remove(i);
-            
-          } 
+            // replace all pairlists on index of right match and remove left match
+            subject_pairlist.set(i_min, Pair.of(subject_pairlist.get(j).getLeft(), left_var));
+            predicate_pairlist.set(i_min, Pair.of(predicate_pairlist.get(j).getLeft() && predicate_pairlist.get(i).getLeft(), predicate_path));
+            object_pairlist.set(i_min, Pair.of(object_pairlist.get(i).getLeft(), right_var));     
+            subject_pairlist.remove(i_max);
+            predicate_pairlist.remove(i_max);
+            object_pairlist.remove(i_max);
+          }
+          // break inner loop if found possible optimization
+          if (l2r_match) break;
         }
-      } 
-      // else {
-      //   buildMatchClause(
-      //     "(" 
-      //     + subject_pairlist.get(i).getRight() 
-      //     + ")-[" 
-      //     + predicate_pairlist.get(i).getRight() 
-      //     + "]->(" 
-      //     + object_pairlist.get(i).getRight() 
-      //     + ") "
-      //   );
-      // }
+      }
+      // break outer loop if found possible optimization
+      if (l2r_match) break;
     }
 
-    System.out.println("Subject var_name matches: " + left_var_matches.toString());
-    System.out.println("Object var_name matches: " + right_var_matches.toString());
-    System.out.println("Index matches: " + idx_matches.toString());
-
-    // System.out.println("\nAFTER REPLACEMENT:\n");
-    // System.out.println("Subject pairlist: " + subject_pairlist.toString());
-    // System.out.println("Predicate pairlist: " + predicate_pairlist.toString());
-    // System.out.println("Object pairlist: " + object_pairlist.toString());
-    // System.out.println("\n");
-
-    // show match cnt and recursive call if match_cnt > 0
-    System.out.println("Match count: " + match_cnt);
-    // if (match_cnt > 0) {
-    //   l2rCypherPath();
-    // }
+    // recursive call if found possible optimization
+    if (l2r_match) l2rCypherPath(); 
 
   }
 
@@ -468,56 +423,79 @@ public class SparqlAlgebra implements OpVisitor {
       p_list.add(p);
       p_list.add("]->");
 
-      // set the latest variable for ask return clause if variable exists
-      if (t.getMatchSubject().isVariable()) {
-        latest_var = (Var) t.getMatchSubject();
-        subject_pairlist.add(Pair.of(true, s));
+      if (!left_bgp_join) {
+        // set the latest variable for ask return clause if variable exists
+        if (t.getMatchSubject().isVariable()) {
+          latest_var = (Var) t.getMatchSubject();
+          subject_pairlist.add(Pair.of(true, s));
+        } else {
+          subject_pairlist.add(Pair.of(false, s));
+        }
+        if (t.getMatchPredicate().isVariable()) {
+          latest_var = (Var) t.getMatchPredicate();
+          predicate_pairlist.add(Pair.of(true, p_list));
+        } else {
+          predicate_pairlist.add(Pair.of(false, p_list));
+        }
+        if (t.getMatchObject().isVariable()) {
+          latest_var = (Var) t.getMatchObject();
+          object_pairlist.add(Pair.of(true, o));
+        } else {
+          object_pairlist.add(Pair.of(false, o));
+        }
       } else {
-        subject_pairlist.add(Pair.of(false, s));
+        // set the latest variable for ask return clause if variable exists
+        if (t.getMatchSubject().isVariable()) {
+          latest_var = (Var) t.getMatchSubject();
+          subject_pairlist_cached.add(Pair.of(true, s));
+        } else {
+          subject_pairlist_cached.add(Pair.of(false, s));
+        }
+        if (t.getMatchPredicate().isVariable()) {
+          latest_var = (Var) t.getMatchPredicate();
+          predicate_pairlist_cached.add(Pair.of(true, p_list));
+        } else {
+          predicate_pairlist_cached.add(Pair.of(false, p_list));
+        }
+        if (t.getMatchObject().isVariable()) {
+          latest_var = (Var) t.getMatchObject();
+          object_pairlist_cached.add(Pair.of(true, o));
+        } else {
+          object_pairlist_cached.add(Pair.of(false, o));
+        }
       }
 
-      if (t.getMatchPredicate().isVariable()) {
-        latest_var = (Var) t.getMatchPredicate();
-        predicate_pairlist.add(Pair.of(true, p_list));
-      } else {
-        predicate_pairlist.add(Pair.of(false, p_list));
-      }
-      if (t.getMatchObject().isVariable()) {
-        latest_var = (Var) t.getMatchObject();
-        object_pairlist.add(Pair.of(true, o));
-      } else {
-        object_pairlist.add(Pair.of(false, o));
-      }
       
       // build MATCH clause
       if (!path_optimization) {
         buildMatchClause("(" + s + ")-[" + p + "]->(" + o + ") ");
       }
     }
-    // sysout pairlists for path optimization
+    // use all pairlists for path optimization
     if (path_optimization) {
-      // System.out.println("Subject pairlist: " + subject_pairlist.toString());
-      // System.out.println("Predicate pairlist: " + predicate_pairlist.toString());
-      // System.out.println("Object pairlist: " + object_pairlist.toString());
-      System.out.println("\nPath optimization:\n");
+      // left to right path optimization
       l2rCypherPath();
+
+      // add more path optimizations here
+
+
       // build MATCH clause for each list element
-      // for (int i = 0; i < subject_pairlist.size(); i++) {
-      //   String triple_path = "";
-      //   triple_path = triple_path.concat("("+ subject_pairlist.get(i).getRight() +")");
-      //   for (String predicate: predicate_pairlist.get(i).getRight()) {
-      //     triple_path = triple_path.concat(predicate);
-      //   }
-      //   triple_path = triple_path.concat("("+ object_pairlist.get(i).getRight() +") ");
+      for (int i = 0; i < subject_pairlist.size(); i++) {
+        String triple_path = "";
+        triple_path = triple_path.concat("("+ subject_pairlist.get(i).getRight() +")");
+        for (String predicate: predicate_pairlist.get(i).getRight()) {
+          triple_path = triple_path.concat(predicate);
+        }
+        triple_path = triple_path.concat("("+ object_pairlist.get(i).getRight() +") ");
 
-      //   // build MATCH clause
-      //   buildMatchClause(triple_path);
-      // }
+        // build MATCH clause
+        buildMatchClause(triple_path);
+      }
 
-      // // clear pairlists
-      // subject_pairlist.clear();
-      // predicate_pairlist.clear();
-      // object_pairlist.clear();
+      // clear pairlists
+      subject_pairlist.clear();
+      predicate_pairlist.clear();
+      object_pairlist.clear();
       
     }
   }
@@ -663,7 +641,7 @@ public class SparqlAlgebra implements OpVisitor {
   @Override
   public void visit(OpJoin opJoin) {
     //! ONLY FOR DEBUG VISITOR ! COMMENT OUT FOR STACK INTEGRATION !
-    // System.out.println("\nIn opJoin\n" + opJoin.toString());
+    System.out.println("\nIn opJoin\n" + opJoin.toString());
     // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     
     // set detection for OpJoin to cache MATCH clause 
@@ -673,7 +651,14 @@ public class SparqlAlgebra implements OpVisitor {
     // visit left bgp -> cache MATCH clause
     opJoin.getLeft().visit(this);
     // concat cached MATCH clause to the left part
-    concatCypher(cached_match_clause);
+    if (!path_optimization) { 
+      concatCypher(cached_match_clause); 
+    } else {
+      subject_pairlist = subject_pairlist_cached; 
+      predicate_pairlist = predicate_pairlist_cached;
+      object_pairlist = object_pairlist_cached;
+    }
+
     // unset detection for OpJoin to parse by visitors as usual
     left_bgp_join = false;
     // visit right bgp
@@ -695,7 +680,13 @@ public class SparqlAlgebra implements OpVisitor {
     has_union_clause = true;
     // add MATCH duplicate for right bgp
     if (right_bgp_join) {
-      concatCypher(cached_match_clause);
+      if (!path_optimization) { 
+        concatCypher(cached_match_clause); 
+      } else {
+        subject_pairlist = subject_pairlist_cached; 
+        predicate_pairlist = predicate_pairlist_cached;
+        object_pairlist = object_pairlist_cached;
+      }
       // unset used cache and detection
       cached_match_clause = "";
       right_bgp_join = false;

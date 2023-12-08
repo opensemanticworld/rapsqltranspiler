@@ -114,11 +114,11 @@ public class Main
       // String query = "d4-q3b";
       // String query = "e5-q3c";
       // String query = "f6-q4";
-      String query = "g7-q5a";
+      // String query = "g7-q5a";
       // String query = "h8-q5b";
       // String query = "i9-q6";    // NOT IMPLEMENTED YET
       // String query = "j10-q7";   // NOT IMPLEMENTED YET
-      // String query = "k11-q8";
+      String query = "k11-q8";
       // String query = "l12-q9";
       // String query = "m13-q10";
       // String query = "n14-q11";
