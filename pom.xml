@@ -23,7 +23,7 @@
   <!-- project specification settings -->
   <modelVersion>4.0.0</modelVersion>
   <groupId>de.rapsql.transpiler</groupId>
-  <artifactId>transpiler</artifactId>
+  <artifactId>rapsqltranspiler</artifactId>
   <version>v0.1.1</version>
   <packaging>jar</packaging>
   <name>rapsqltranspiler</name>
