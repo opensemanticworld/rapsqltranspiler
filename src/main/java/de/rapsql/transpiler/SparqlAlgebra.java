@@ -96,9 +96,12 @@ public class SparqlAlgebra implements OpVisitor {
   private boolean partitioned = true;
   // support for cypher variable path optimization
   private boolean path_optimization = true;
-  private List<Pair<Boolean, String>> subject_pairlist = new ArrayList<Pair<Boolean, String>>();
-  private List<Pair<Boolean, ArrayList<String>>> predicate_pairlist = new ArrayList<Pair<Boolean, ArrayList<String>>>();
-  private List<Pair<Boolean, String>> object_pairlist = new ArrayList<Pair<Boolean, String>>();
+  private List<Pair<Boolean, String>> 
+            subject_pairlist = new ArrayList<Pair<Boolean, String>>();
+  private List<Pair<Boolean, ArrayList<String>>> 
+            predicate_pairlist = new ArrayList<Pair<Boolean, ArrayList<String>>>();
+  private List<Pair<Boolean, String>> 
+            object_pairlist = new ArrayList<Pair<Boolean, String>>();
 
   // initialize instance
   public SparqlAlgebra(String _graph_name, String _query_type) {
@@ -609,15 +612,12 @@ public class SparqlAlgebra implements OpVisitor {
     }
     // use all pairlists for path optimization
     if (path_optimization) {
-      // no path optimization if opJoin is present
-      if (!left_bgp_join || !has_union_clause) {
-        // left to right path optimization
-        l2rCypherPath();
-        // left to left path optimization
-        l2lCypherPath();
-        // right to right path optimization
-        r2rCypherPath();
-      }
+      // left to right path optimization
+      l2rCypherPath();
+      // left to left path optimization
+      l2lCypherPath();
+      // right to right path optimization
+      r2rCypherPath();
 
       // build MATCH clause for each list element
       for (int i = 0; i < subject_pairlist.size(); i++) {
@@ -742,7 +742,7 @@ public class SparqlAlgebra implements OpVisitor {
   @Override 
   public void visit(OpDistinct opDistinct) {
     //! ONLY FOR DEBUG VISITOR ! COMMENT OUT FOR STACK INTEGRATION !
-    System.out.println("\nIn opDistinct\n" + opDistinct.toString());
+    // System.out.println("\nIn opDistinct\n" + opDistinct.toString());
     // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
     // visit sub operation
