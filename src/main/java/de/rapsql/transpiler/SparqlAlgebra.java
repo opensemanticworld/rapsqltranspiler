@@ -90,6 +90,7 @@ public class SparqlAlgebra implements OpVisitor {
   private String return_clause = "";
   private boolean left_bgp_join = false;
   private boolean right_bgp_join = false;
+  private boolean distinct = false;
   private Var latest_var = null;
   // support for edge partitioned graphs
   private boolean partitioned = true;
@@ -185,7 +186,7 @@ public class SparqlAlgebra implements OpVisitor {
   }
 
   // get return clause for matching select variables
-  public String getReturnClause(List<Var> vars, Boolean has_with_clause) {
+  public String setgetReturnClause(List<Var> vars, Boolean has_with_clause) {
     // build return clause
     String return_clause = "RETURN ";
     // match all variables of select statement in return clause
@@ -486,7 +487,7 @@ public class SparqlAlgebra implements OpVisitor {
     }
     // concat specific return clause for ASK queries
     List<Var> ask = List.of(var);
-    return_clause = getReturnClause(ask, has_with_clause);
+    return_clause = setgetReturnClause(ask, has_with_clause);
     concatCypher(return_clause);
     concatCypher(" LIMIT 1");
     buildEndOfAgeQuery(ask);
@@ -673,7 +674,7 @@ public class SparqlAlgebra implements OpVisitor {
     // get vars from select statement
     List<Var> vars = opProject.getVars();
     // build return clause
-    return_clause = getReturnClause(vars, has_with_clause);
+    return_clause = setgetReturnClause(vars, has_with_clause);
     // concat return clause
     concatCypher(return_clause);
     // build end of agtype cypher query
@@ -741,14 +742,16 @@ public class SparqlAlgebra implements OpVisitor {
   @Override 
   public void visit(OpDistinct opDistinct) {
     //! ONLY FOR DEBUG VISITOR ! COMMENT OUT FOR STACK INTEGRATION !
-    // System.out.println("\nIn opDistinct\n" + opDistinct.toString());
+    System.out.println("\nIn opDistinct\n" + opDistinct.toString());
     // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
     // visit sub operation
     opDistinct.getSubOp().visit(this);
     // DISTINCT is in the RETURN clause of age cypher
-    cypher = cypher.replace("RETURN", "RETURN DISTINCT");
-    // Optionally SELECT DISTINCT could be used in SQL part of age cypher
+    cypher = cypher.replaceAll("RETURN", "RETURN DISTINCT");
+    // set distinct detection for UNION clause, 
+    //required to duplicate RETURN clause after visitors
+    distinct = true;
   }
 
 
@@ -832,6 +835,13 @@ public class SparqlAlgebra implements OpVisitor {
       }
       // duplicate return clause before UNION if OpJoin + OpUnion is present
       if (has_union_clause) {
+        // check if DISTINCT is present
+        if (distinct) {
+          // DISTINCT is in the RETURN clause of age cypher
+          return_clause = return_clause.replaceAll("RETURN", "RETURN DISTINCT");
+          // unset distinct detection
+          distinct = false;
+        }
         cypher = cypher.replace("UNION", return_clause + " UNION");
       }
       // provide final cypher query
