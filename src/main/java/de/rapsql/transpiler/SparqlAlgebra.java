@@ -682,9 +682,11 @@ public class SparqlAlgebra implements OpVisitor {
       l2lCypherPath();
 
       // right to right path optimization
+      // TODO: change to same as l2l logic when test cases are available
       // r2rCypherPath();
 
       // left to right path optimization
+      // TODO: check if has added value
       // l2rCypherPath();
 
       // build MATCH clause for each list element
