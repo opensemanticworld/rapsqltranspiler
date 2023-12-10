@@ -285,6 +285,28 @@ public class SparqlAlgebra implements OpVisitor {
     return predicate_path_reverse;
   }
 
+  // helper function to remove all applied path optimizations by int lists
+  public void rmAppliedPathOptimization(List<Integer> rm_list) {
+    // set all applied path optimizations 
+    // for (int integer : set_list) {
+    //   subject_pairlist.set(integer, Pair.of(true, subject_pairlist.get(integer).getRight()));
+    //   predicate_pairlist.set(integer, Pair.of(true, predicate_pairlist.get(integer).getRight()));
+    //   object_pairlist.set(integer, Pair.of(true, object_pairlist.get(integer).getRight()));
+    // }
+    // // sort index list from highest to lowest
+    rm_list.sort((o1, o2) -> o2.compareTo(o1));
+    System.out.println("Sorted remove index list: " + rm_list.toString());
+    // remove all applied path optimizations by each element from index list from highest to lowest
+    for (int integer : rm_list) {
+      subject_pairlist.remove(integer);
+      predicate_pairlist.remove(integer);
+      object_pairlist.remove(integer);
+    }
+
+  }
+    
+  
+
   // path optimization algorithm functions
 
   // right to right path optimization (same as left to left, object instead of subject)
@@ -298,7 +320,7 @@ public class SparqlAlgebra implements OpVisitor {
         if (
             object_pairlist.get(i).getRight().equals(object_pairlist.get(j).getRight()) 
             && checkObjectVars(i, j) && checkOneOfSubjectVar(i, j)
-            && !checkPredicateVars(j, i) && checkPredicateUniqueness(i, j)
+            && !checkPredicateVars(i, j) && checkPredicateUniqueness(i, j)
           ) {
           System.out.println("i: " + i + " j: " + j);
           r2r_match = true;
@@ -329,8 +351,12 @@ public class SparqlAlgebra implements OpVisitor {
       }
       if (r2r_match) break;
     }
-    // recursive call if found possible optimization
-    if (r2r_match) r2rCypherPath();
+    if (r2r_match) {
+      // recursive call if found possible optimization
+      r2rCypherPath();
+      // // check l2r path optimization after r2r path optimization
+      // l2rCypherPath();
+    }
   }
 
   // left to left path optimization
@@ -338,6 +364,14 @@ public class SparqlAlgebra implements OpVisitor {
     // left == object, right == subject
     // Map<Integer, String> left_var_matches = new HashMap<Integer, String>();
     Boolean l2l_match = false;
+    List<Integer> rm_list = new ArrayList<Integer>();
+
+    // create copy of all pairlists
+    List<Pair<Boolean, String>> local_subject_pairlist = new ArrayList<Pair<Boolean, String>>(subject_pairlist);
+    List<Pair<Boolean, ArrayList<String>>> local_predicate_pairlist = new ArrayList<Pair<Boolean, ArrayList<String>>>(predicate_pairlist);
+    // List<Pair<Boolean, String>> local_object_pairlist = new ArrayList<Pair<Boolean, String>>(object_pairlist);
+    
+
     // print subject_pairlist
     // System.out.println("Subject pairlist: " + subject_pairlist.toString());
     // get all duplicates in subject_pairlist
@@ -349,12 +383,17 @@ public class SparqlAlgebra implements OpVisitor {
             && checkSubjectVars(j, i) && checkOneOfObjectVar(i, j)
             && !checkPredicateVars(i, j) && checkPredicateUniqueness(i, j)
           ) {
+          // System.out.println("predicate unique: " + checkPredicateUniqueness(i, j));
           // System.out.println("i: " + i + " j: " + j);
+          // System.out.println("L2L Path Optimization:");
+          // System.out.println("Subject " + i + " var_name match: " + subject_pairlist.get(i).getRight());
+          // System.out.println("Subject " + j + " var_name match: " + subject_pairlist.get(j).getRight());
+
           l2l_match = true;
           // left_var_matches.put(i, subject_pairlist.get(i).getRight());
           // left_var_matches.put(j, subject_pairlist.get(j).getRight());
           // set left var subject to object of second match (i < j)
-          subject_pairlist.set(i, Pair.of(true, object_pairlist.get(j).getRight()));
+          local_subject_pairlist.set(i, Pair.of(true, object_pairlist.get(j).getRight()));
           // get reverse predicate path
           ArrayList<String> second_predicate_path_rev = new ArrayList<String>();
           second_predicate_path_rev = reversePath(predicate_pairlist.get(j).getRight());
@@ -364,18 +403,44 @@ public class SparqlAlgebra implements OpVisitor {
           second_predicate_path_rev.addAll(predicate_pairlist.get(i).getRight());
           // System.out.println("Second predicate path: " + second_predicate_path_rev.toString());
           // set second predicate path to first predicate path
-          predicate_pairlist.set(i, Pair.of(predicate_pairlist.get(i).getLeft() && predicate_pairlist.get(j).getLeft(), second_predicate_path_rev));
+          local_predicate_pairlist.set(i, Pair.of(predicate_pairlist.get(i).getLeft() && predicate_pairlist.get(j).getLeft(), second_predicate_path_rev));
           // delete second subject, predicate and object pairlist
-          subject_pairlist.remove(j);
-          predicate_pairlist.remove(j);
-          object_pairlist.remove(j);
+          // subject_pairlist.remove(j);
+          // predicate_pairlist.remove(j);
+          // object_pairlist.remove(j);
+          rm_list.add(j);
+          // System.out.println("Removals: " + rm_list.toString());
         }
-        if (l2l_match) break;
+        // if (l2l_match) break;
       }
-      if (l2l_match) break;
+      // if (l2l_match) break;
     }
-    // recursive call if found possible optimization
-    if (l2l_match) l2lCypherPath();
+    
+    
+    // System.out.println("RM List: " + rm_list.toString());
+    // if (rm_list.stream().distinct().count() == rm_list.size()) {
+    //   System.out.println("All elements in rm_list are unique");
+    //   idx_uniqueness = true;
+    // } else {
+    //   System.out.println("All elements in rm_list are not unique");
+    //   idx_uniqueness = false;
+    // }
+
+    if (l2l_match) {
+      // check if all elements in rm_list are unique
+      if (rm_list.stream().distinct().count() == rm_list.size()) {
+        // System.out.println("All elements in rm_list are unique");
+        // set local pairlists to global pairlists
+        subject_pairlist = local_subject_pairlist;
+        predicate_pairlist = local_predicate_pairlist;
+        // remove all applied path optimizations by int list
+        rmAppliedPathOptimization(rm_list);
+        // recursive call if found possible optimization
+        l2lCypherPath();
+      }
+    } 
+    // // check l2r path optimization after l2l path optimization
+    // l2rCypherPath();
   }
 
   // left to right path optimization
@@ -392,12 +457,13 @@ public class SparqlAlgebra implements OpVisitor {
       // for (int j = subject_pairlist.size() - 1; j >= 0; j--) {
         if (
             subject_pairlist.get(i).getRight().equals(object_pairlist.get(j).getRight()) 
-            && !checkPredicateVars(i, j) && !checkPredicateUniqueness(i, j)
-          ) {
-          // System.out.println("Path Optimization:");
+            && !checkPredicateVars(i, j) //&& !checkPredicateUniqueness(i, j)
+        ) {
+          // System.out.println("L2R Path Optimization:");
+          // System.out.println("Subject var_name matches: " + subject_pairlist.get(i).getRight());
+          // System.out.println("Object var_name matches: " + object_pairlist.get(j).getRight());
+
           l2r_match = true;
-          // System.out.println("Subject var_name matches: " + left_var_matches.toString());
-          // System.out.println("Object var_name matches: " + right_var_matches.toString());
           // System.out.println("Matching var_name: " + subject_pairlist.get(i).getRight() + " with index: " + i + " and " + object_pairlist.get(j).getRight() + " with index: " + j);
           String left_var = subject_pairlist.get(j).getRight(); 
           ArrayList<String> predicate_path = new ArrayList<String>();
@@ -612,12 +678,14 @@ public class SparqlAlgebra implements OpVisitor {
     }
     // use all pairlists for path optimization
     if (path_optimization) {
-      // left to right path optimization
-      l2rCypherPath();
       // left to left path optimization
       l2lCypherPath();
+
       // right to right path optimization
-      r2rCypherPath();
+      // r2rCypherPath();
+
+      // left to right path optimization
+      // l2rCypherPath();
 
       // build MATCH clause for each list element
       for (int i = 0; i < subject_pairlist.size(); i++) {
