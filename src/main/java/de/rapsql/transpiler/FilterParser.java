@@ -192,7 +192,7 @@ public class FilterParser {
             if (num_args == 3) {
               sub_list_3 = expr.getFunction().getArgs().subList(2, 3).get(0);
               reg3 = supportedRegex3(sub_list_3.toString().replace("\"", ""));
-              System.out.println("SUB LIST 3: " + sub_list_3);
+              // System.out.println("SUB LIST 3: " + sub_list_3);
             }
           }
   
