@@ -295,7 +295,7 @@ public class SparqlAlgebra implements OpVisitor {
     // }
     // // sort index list from highest to lowest
     rm_list.sort((o1, o2) -> o2.compareTo(o1));
-    System.out.println("Sorted remove index list: " + rm_list.toString());
+    // System.out.println("Sorted remove index list: " + rm_list.toString());
     // remove all applied path optimizations by each element from index list from highest to lowest
     for (int integer : rm_list) {
       subject_pairlist.remove(integer);
