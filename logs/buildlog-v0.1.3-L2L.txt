@@ -17,7 +17,7 @@
 [INFO] 
 [INFO] --- maven-resources-plugin:2.6:testResources (default-testResources) @ rapsqltranspiler ---
 [INFO] Using 'UTF-8' encoding to copy filtered resources.
-[INFO] Copying 238 resources
+[INFO] Copying 240 resources
 [INFO] 
 [INFO] --- maven-compiler-plugin:3.1:testCompile (default-testCompile) @ rapsqltranspiler ---
 [INFO] Changes detected - recompiling the module!
@@ -73,7 +73,7 @@ WHERE {
 
 
 ####### SPARQL EXEC TIME (ms) #######
-215
+223
 
 ---------------------- CYPHER TRANSPILED QUERY ----------------------
 SELECT * FROM ag_catalog.cypher('spcustompart', $$
@@ -84,7 +84,7 @@ RETURN coalesce(yr.iri, yr.bnid, yr.value) $$)
 AS (yr ag_catalog.agtype); 
 
 ####### CYPHER EXEC TIME (ms) #######
-34
+41
 
 $$$$$$$$$$$$$$$$$$$$$$$$$$$$ EQUALITY TEST RESULT $$$$$$$$$$$$$$$$$$$$$$$$$$$$
 -------- SPARQL RESULT --------
@@ -125,7 +125,7 @@ ORDER BY ?yr
 
 
 ####### SPARQL EXEC TIME (ms) #######
-48
+68
 
 ---------------------- CYPHER TRANSPILED QUERY ----------------------
 SELECT * FROM ag_catalog.cypher('spcustompart', $$
@@ -155,7 +155,7 @@ RETURN inproc, author, booktitle, title, proc, ee, page, url, yr, abstract $$)
 AS (inproc ag_catalog.agtype, author ag_catalog.agtype, booktitle ag_catalog.agtype, title ag_catalog.agtype, proc ag_catalog.agtype, ee ag_catalog.agtype, page ag_catalog.agtype, url ag_catalog.agtype, yr ag_catalog.agtype, abstract ag_catalog.agtype); 
 
 ####### CYPHER EXEC TIME (ms) #######
-32
+26
 
 $$$$$$$$$$$$$$$$$$$$$$$$$$$$ EQUALITY TEST RESULT $$$$$$$$$$$$$$$$$$$$$$$$$$$$
 -------- SPARQL RESULT --------
@@ -181,7 +181,7 @@ WHERE {
 
 
 ####### SPARQL EXEC TIME (ms) #######
-14
+10
 
 ---------------------- CYPHER TRANSPILED QUERY ----------------------
 SELECT * FROM ag_catalog.cypher('spcustompart', $$
@@ -192,7 +192,7 @@ RETURN coalesce(article.iri, article.bnid, article.value) $$)
 AS (article ag_catalog.agtype); 
 
 ####### CYPHER EXEC TIME (ms) #######
-14
+9
 
 $$$$$$$$$$$$$$$$$$$$$$$$$$$$ EQUALITY TEST RESULT $$$$$$$$$$$$$$$$$$$$$$$$$$$$
 -------- SPARQL RESULT --------
@@ -218,7 +218,7 @@ WHERE {
 
 
 ####### SPARQL EXEC TIME (ms) #######
-3
+4
 
 ---------------------- CYPHER TRANSPILED QUERY ----------------------
 SELECT * FROM ag_catalog.cypher('spcustompart', $$
@@ -229,7 +229,7 @@ RETURN coalesce(article.iri, article.bnid, article.value) $$)
 AS (article ag_catalog.agtype); 
 
 ####### CYPHER EXEC TIME (ms) #######
-10
+13
 
 $$$$$$$$$$$$$$$$$$$$$$$$$$$$ EQUALITY TEST RESULT $$$$$$$$$$$$$$$$$$$$$$$$$$$$
 -------- SPARQL RESULT --------
@@ -255,7 +255,7 @@ WHERE {
 
 
 ####### SPARQL EXEC TIME (ms) #######
--1702222729879
+-1702393362490
 
 ---------------------- CYPHER TRANSPILED QUERY ----------------------
 SELECT * FROM ag_catalog.cypher('spcustompart', $$
@@ -266,7 +266,7 @@ RETURN coalesce(article.iri, article.bnid, article.value) $$)
 AS (article ag_catalog.agtype); 
 
 ####### CYPHER EXEC TIME (ms) #######
-10
+16
 
 $$$$$$$$$$$$$$$$$$$$$$$$$$$$ EQUALITY TEST RESULT $$$$$$$$$$$$$$$$$$$$$$$$$$$$
 -------- SPARQL RESULT --------
@@ -301,7 +301,7 @@ WHERE {
 
 
 ####### SPARQL EXEC TIME (ms) #######
-16
+19
 
 ---------------------- CYPHER TRANSPILED QUERY ----------------------
 SELECT * FROM ag_catalog.cypher('spcustompart', $$
@@ -318,7 +318,7 @@ RETURN DISTINCT coalesce(name1.iri, name1.bnid, name1.value), coalesce(name2.iri
 AS (name1 ag_catalog.agtype, name2 ag_catalog.agtype); 
 
 ####### CYPHER EXEC TIME (ms) #######
-258
+255
 
 $$$$$$$$$$$$$$$$$$$$$$$$$$$$ EQUALITY TEST RESULT $$$$$$$$$$$$$$$$$$$$$$$$$$$$
 -------- SPARQL RESULT --------
@@ -349,9 +349,7 @@ WHERE {
 
 
 ####### SPARQL EXEC TIME (ms) #######
-15
-Sorted remove index list: [3, 1]
-Sorted remove index list: [3, 2]
+12
 
 ---------------------- CYPHER TRANSPILED QUERY ----------------------
 SELECT * FROM ag_catalog.cypher('spcustompart', $$
@@ -362,7 +360,7 @@ RETURN DISTINCT coalesce(person.iri, person.bnid, person.value), coalesce(name.i
 AS (person ag_catalog.agtype, name ag_catalog.agtype); 
 
 ####### CYPHER EXEC TIME (ms) #######
-29
+30
 
 $$$$$$$$$$$$$$$$$$$$$$$$$$$$ EQUALITY TEST RESULT $$$$$$$$$$$$$$$$$$$$$$$$$$$$
 -------- SPARQL RESULT --------
@@ -391,8 +389,7 @@ WHERE {
 
 
 ####### SPARQL EXEC TIME (ms) #######
-6
-Sorted remove index list: [3, 1]
+8
 
 ---------------------- CYPHER TRANSPILED QUERY ----------------------
 SELECT * FROM ag_catalog.cypher('spcustompart', $$
@@ -403,7 +400,7 @@ RETURN DISTINCT coalesce(person.iri, person.bnid, person.value), coalesce(name.i
 AS (person ag_catalog.agtype, name ag_catalog.agtype); 
 
 ####### CYPHER EXEC TIME (ms) #######
-23
+28
 
 $$$$$$$$$$$$$$$$$$$$$$$$$$$$ EQUALITY TEST RESULT $$$$$$$$$$$$$$$$$$$$$$$$$$$$
 -------- SPARQL RESULT --------
@@ -445,7 +442,7 @@ WHERE {
 
 
 ####### SPARQL EXEC TIME (ms) #######
-18
+16
 
 ---------------------- CYPHER TRANSPILED QUERY ----------------------
 SELECT * FROM ag_catalog.cypher('spcustompart', $$
@@ -469,7 +466,7 @@ RETURN DISTINCT coalesce(name.iri, name.bnid, name.value) $$)
 AS (name ag_catalog.agtype); 
 
 ####### CYPHER EXEC TIME (ms) #######
-48
+57
 
 $$$$$$$$$$$$$$$$$$$$$$$$$$$$ EQUALITY TEST RESULT $$$$$$$$$$$$$$$$$$$$$$$$$$$$
 -------- SPARQL RESULT --------
@@ -498,7 +495,7 @@ WHERE {
 
 
 ####### SPARQL EXEC TIME (ms) #######
-6
+8
 
 ---------------------- CYPHER TRANSPILED QUERY ----------------------
 SELECT * FROM ag_catalog.cypher('spcustompart', $$
@@ -512,7 +509,7 @@ RETURN DISTINCT coalesce(predicate.iri, predicate.bnid, predicate.value) $$)
 AS (predicate ag_catalog.agtype); 
 
 ####### CYPHER EXEC TIME (ms) #######
-19
+18
 
 $$$$$$$$$$$$$$$$$$$$$$$$$$$$ EQUALITY TEST RESULT $$$$$$$$$$$$$$$$$$$$$$$$$$$$
 -------- SPARQL RESULT --------
@@ -534,7 +531,7 @@ WHERE {
 
 
 ####### SPARQL EXEC TIME (ms) #######
-3
+2
 
 ---------------------- CYPHER TRANSPILED QUERY ----------------------
 SELECT * FROM ag_catalog.cypher('spcustompart', $$
@@ -543,7 +540,7 @@ RETURN coalesce(subject.iri, subject.bnid, subject.value), coalesce(predicate.ir
 AS (subject ag_catalog.agtype, predicate ag_catalog.agtype); 
 
 ####### CYPHER EXEC TIME (ms) #######
-9
+13
 
 $$$$$$$$$$$$$$$$$$$$$$$$$$$$ EQUALITY TEST RESULT $$$$$$$$$$$$$$$$$$$$$$$$$$$$
 -------- SPARQL RESULT --------
@@ -568,7 +565,7 @@ OFFSET 50
 
 
 ####### SPARQL EXEC TIME (ms) #######
-12
+16
 
 ---------------------- CYPHER TRANSPILED QUERY ----------------------
 SELECT * FROM ag_catalog.cypher('spcustompart', $$
@@ -583,7 +580,7 @@ LIMIT 10
 OFFSET 50;
 
 ####### CYPHER EXEC TIME (ms) #######
-10
+6
 
 $$$$$$$$$$$$$$$$$$$$$$$$$$$$ EQUALITY TEST RESULT $$$$$$$$$$$$$$$$$$$$$$$$$$$$
 -------- SPARQL RESULT --------
@@ -613,9 +610,7 @@ ASK {
 
 
 ####### SPARQL EXEC TIME (ms) #######
-7
-Sorted remove index list: [3, 1]
-Sorted remove index list: [3, 2]
+6
 
 ---------------------- CYPHER TRANSPILED QUERY ----------------------
 SELECT EXISTS (SELECT * FROM ag_catalog.cypher('spcustompart', $$
@@ -627,7 +622,7 @@ LIMIT 1 $$)
 AS (name2 ag_catalog.agtype)); 
 
 ####### CYPHER EXEC TIME (ms) #######
-25
+24
 
 $$$$$$$$$$$$$$$$$$$$$$$$$$$$ EQUALITY TEST RESULT $$$$$$$$$$$$$$$$$$$$$$$$$$$$
 -------- SPARQL RESULT --------
@@ -668,7 +663,7 @@ ASK {
 
 
 ####### SPARQL EXEC TIME (ms) #######
-5
+10
 
 ---------------------- CYPHER TRANSPILED QUERY ----------------------
 SELECT EXISTS (SELECT * FROM ag_catalog.cypher('spcustompart', $$
@@ -693,7 +688,7 @@ LIMIT 1 $$)
 AS (name ag_catalog.agtype)); 
 
 ####### CYPHER EXEC TIME (ms) #######
-40
+49
 
 $$$$$$$$$$$$$$$$$$$$$$$$$$$$ EQUALITY TEST RESULT $$$$$$$$$$$$$$$$$$$$$$$$$$$$
 -------- SPARQL RESULT --------
@@ -716,7 +711,7 @@ ASK {
 
 
 ####### SPARQL EXEC TIME (ms) #######
-3
+5
 
 ---------------------- CYPHER TRANSPILED QUERY ----------------------
 SELECT EXISTS (SELECT * FROM ag_catalog.cypher('spcustompart', $$
@@ -726,7 +721,7 @@ LIMIT 1 $$)
 AS (ask ag_catalog.agtype)); 
 
 ####### CYPHER EXEC TIME (ms) #######
-11
+19
 
 $$$$$$$$$$$$$$$$$$$$$$$$$$$$ EQUALITY TEST RESULT $$$$$$$$$$$$$$$$$$$$$$$$$$$$
 -------- SPARQL RESULT --------
@@ -741,7 +736,7 @@ $$$$$$$$$$$$$$$$$$$$$$$$$$$$$ EQUALITY RESULT END $$$$$$$$$$$$$$$$$$$$$$$$$$$$$
 §§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§ END OF TESTS §§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§
 
 
-[INFO] Tests run: 15, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 2.67 s - in de.rapsql.transpiler.SP2BTest
+[INFO] Tests run: 15, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 2.745 s - in de.rapsql.transpiler.SP2BTest
 [INFO] 
 [INFO] Results:
 [INFO] 
@@ -761,6 +756,6 @@ $$$$$$$$$$$$$$$$$$$$$$$$$$$$$ EQUALITY RESULT END $$$$$$$$$$$$$$$$$$$$$$$$$$$$$
 [INFO] ------------------------------------------------------------------------
 [INFO] BUILD SUCCESS
 [INFO] ------------------------------------------------------------------------
-[INFO] Total time:  12.757 s
-[INFO] Finished at: 2023-12-10T15:38:56Z
+[INFO] Total time:  12.995 s
+[INFO] Finished at: 2023-12-12T15:02:49Z
 [INFO] ------------------------------------------------------------------------
