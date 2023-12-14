@@ -102,6 +102,7 @@ public class SparqlAlgebra implements OpVisitor {
             predicate_pairlist = new ArrayList<Pair<Boolean, ArrayList<String>>>();
   private List<Pair<Boolean, String>> 
             object_pairlist = new ArrayList<Pair<Boolean, String>>();
+  private boolean use_coalesce = false;
 
   // initialize instance
   public SparqlAlgebra(String _graph_name, String _query_type) {
@@ -162,14 +163,18 @@ public class SparqlAlgebra implements OpVisitor {
 
 
   // get coalesce clause for resource, blank node and literal (!schema dependency)
-  public String getCoalesceClause(String var_name, Boolean seperate) {
+  public String getSchemaStmt(String var_name, Boolean seperate) {
     String stmt = "";
-    stmt = stmt.concat(
-      "coalesce("
-      + var_name + ".iri, "     // Resource
-      + var_name + ".bnid, "    // BlankNode
-      + var_name + ".value)"    // Literal
-    );
+    if (!use_coalesce) {
+      stmt = stmt.concat(var_name + ".rdfid ");
+    } else {
+      stmt = stmt.concat(
+        "coalesce("
+        + var_name + ".iri, "     // Resource
+        + var_name + ".bnid, "    // BlankNode
+        + var_name + ".value)"    // Literal
+      );
+    }
     if(seperate) stmt = stmt.concat(", ");
     // else stmt = stmt.concat(" ");
     return stmt;
@@ -199,7 +204,7 @@ public class SparqlAlgebra implements OpVisitor {
         return_clause = return_clause.concat(Sparql_to_cypher_variable_map.get(var) + ", ");
       } else {
         // coalesce returns first non-null value from list, no OpOrder including WITH clause present
-        return_clause = return_clause.concat(getCoalesceClause(Sparql_to_cypher_variable_map.get(var), true));
+        return_clause = return_clause.concat(getSchemaStmt(Sparql_to_cypher_variable_map.get(var), true));
         // TODO: check if type cast is necessary
       }
     }
@@ -588,9 +593,10 @@ public class SparqlAlgebra implements OpVisitor {
           // $support: Language tag is not supported in rdf2pg yet
 
           return String.format(
-            "{type:\'%s\', value:\'%s\'}",
-            lit.getDatatypeURI(), 
-            lit.getLexicalForm()
+            lit.getDatatypeURI() == org.apache.jena.datatypes.xsd.XSDDatatype.XSDstring.getURI() ?
+              "{rdfid:\'%s\'}" : "{rdfid:\'%s^^%s\'}",
+            lit.getLexicalForm(),
+            lit.getDatatypeURI()
           );
           // $issue: possible (part) solution to add language tag support
           // System.out.println("DEBUG LITERAL: " + it.toString());
@@ -606,7 +612,7 @@ public class SparqlAlgebra implements OpVisitor {
         @Override
         public String visitURI(Node_URI it, String uri) {
           // System.out.println("DEBUG URI: " + it.toString());
-          return String.format("{iri:\'%s\'}", uri);
+          return String.format("{rdfid:\'%s\'}", uri);
         }
 
         @Override
@@ -767,7 +773,7 @@ public class SparqlAlgebra implements OpVisitor {
     concatCypher(" WITH ");
     for(Var var: Sparql_to_cypher_variable_map.keySet()) {
       concatCypher(
-        getCoalesceClause(Sparql_to_cypher_variable_map.get(var), false)
+        getSchemaStmt(Sparql_to_cypher_variable_map.get(var), false)
         + "AS " + Sparql_to_cypher_variable_map.get(var) + ", "
       );
     }
@@ -775,7 +781,7 @@ public class SparqlAlgebra implements OpVisitor {
     // build ORDER BY clause for all variables with regard to their conditions 
     concatCypher(" ORDER BY ");
     for(Var var: opOrder.getConditions().get(0).getExpression().getVarsMentioned()) {
-      concatCypher(getCoalesceClause(Sparql_to_cypher_variable_map.get(var), true));
+      concatCypher(getSchemaStmt(Sparql_to_cypher_variable_map.get(var), true));
     }
     cypher = cypher.substring(0, cypher.length() - 2);
   }

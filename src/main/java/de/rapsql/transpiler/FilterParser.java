@@ -29,6 +29,7 @@ public class FilterParser {
   public String cypher;
   private HashMap<Integer, String> expr_map;
   private int expr_counter;
+  private boolean use_coalesce = false;
 
   // constructor to apply filter parser
   public FilterParser() {
@@ -50,14 +51,18 @@ public class FilterParser {
   }
 
   // coalesce statement for transpilation
-  public String coalesceStmt(String var_name, Boolean seperate) {
+  public String getSchemaStmt(String var_name, Boolean seperate) {
     String stmt = "";
-    stmt = stmt.concat(
-      "coalesce("
-      + var_name + ".iri, "     // Resource
-      + var_name + ".bnid, "    // BlankNode
-      + var_name + ".value)"    // Literal
-    );
+    if (!use_coalesce) {
+      stmt = stmt.concat(var_name + ".rdfid");
+    } else {
+      stmt = stmt.concat(
+        "coalesce("
+        + var_name + ".iri, "     // Resource
+        + var_name + ".bnid, "    // BlankNode
+        + var_name + ".value)"    // Literal
+      );
+    }
     if(seperate) stmt = stmt.concat(", ");
     // else stmt = stmt.concat(" ");
     return stmt;
@@ -146,12 +151,12 @@ public class FilterParser {
       );
     // check if expression is variable and has no constant neighbor
     } else if (expr.isVariable() && !expr_has_const) {
-      typed_expr = coalesceStmt(expr.getVarName(), false);
+      typed_expr = getSchemaStmt(expr.getVarName(), false);
     // check if expression var must be casted to equalize type with constant
     } else if (expr.isVariable() && expr_has_const) {
       typed_expr = supportedCast(
         expr_const_type,
-        coalesceStmt(expr.getVarName(), false)
+        getSchemaStmt(expr.getVarName(), false)
       );
     } else {
       // nothing to do (e.g. expr is function)

@@ -40,7 +40,7 @@ mvn test -Dtest=SP2BTest
 ## Latest Build
 
 ```bash
-mvn clean install -Dtest=SP2BTest -Dstyle.color=never > buildlog-v0.1.3-L2L.txt
+mvn clean install -Dtest=SP2BTest -Dstyle.color=never > buildlog-v0.2.0-rdfid.txt
 ```
 
 ## License

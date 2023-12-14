@@ -108,7 +108,8 @@ public class W3CTest {
         QuerySolution row = results.next();
         for(String col: results.getResultVars()) {
           // rm datatype for equality test of different triple store designs
-          sparql_res.put(col, Helper.rm_dt(row.get(col).toString()));
+          sparql_res.put(col, row.get(col).toString());
+          // sparql_res.put(col, Helper.rm_dt(row.get(col).toString()));
         }
         sparql_res_map.add(sparql_res); // add result to sparql result list
       }

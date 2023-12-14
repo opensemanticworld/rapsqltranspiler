@@ -54,7 +54,7 @@ public class SP2BTest {
   private static final String USER = "postgres";
   private static final String PASS = "postgres";
   // private static final String GRAPH_NAME = "spcustom";
-  private static final String GRAPH_NAME = "spcustompart";
+  private static final String GRAPH_NAME = "spcustomrdfid";
   // private static final String GRAPH_NAME = "sp100k";
   private static final String PATH_NAME = "src/test/resources/sp2b";
   private static final String SRC_NAME = "rdf.n3";
@@ -162,7 +162,7 @@ public class SP2BTest {
               // if not null add to result map, else "null" string
               if (row.get(col) != null) {
                 // rm datatype for equality test of different triple store designs
-                sparql_res.put(col, Helper.rm_dt(row.get(col).toString()));
+                sparql_res.put(col, row.get(col).toString());
               } 
               else sparql_res.put(col, "null");
             }
