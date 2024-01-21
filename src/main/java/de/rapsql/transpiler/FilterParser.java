@@ -181,7 +181,7 @@ public class FilterParser {
 
         // parse expression by number of arguments
         if (num_args < 2) {
-          // TODO: NUM_ARGS < 2
+          // TODO: NUM_ARGS < 2 (e.g. `EXISTS`)
           this.isQueryConversionSuccesful = false;
           this.conversionErrors += "\nUnsupported Algebra Filter (Num of Args): " + num_args;
         } else {
