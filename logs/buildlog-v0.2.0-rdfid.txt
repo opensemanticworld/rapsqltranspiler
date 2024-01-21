@@ -73,7 +73,7 @@ WHERE {
 
 
 ####### SPARQL EXEC TIME (ms) #######
-192
+248
 
 ---------------------- CYPHER TRANSPILED QUERY ----------------------
 SELECT * FROM ag_catalog.cypher('spcustomrdfid', $$
@@ -84,7 +84,7 @@ RETURN yr.rdfid  $$)
 AS (yr ag_catalog.agtype); 
 
 ####### CYPHER EXEC TIME (ms) #######
-32
+41
 
 $$$$$$$$$$$$$$$$$$$$$$$$$$$$ EQUALITY TEST RESULT $$$$$$$$$$$$$$$$$$$$$$$$$$$$
 -------- SPARQL RESULT --------
@@ -125,7 +125,7 @@ ORDER BY ?yr
 
 
 ####### SPARQL EXEC TIME (ms) #######
-50
+43
 
 ---------------------- CYPHER TRANSPILED QUERY ----------------------
 SELECT * FROM ag_catalog.cypher('spcustomrdfid', $$
@@ -155,7 +155,7 @@ RETURN inproc, author, booktitle, title, proc, ee, page, url, yr, abstract $$)
 AS (inproc ag_catalog.agtype, author ag_catalog.agtype, booktitle ag_catalog.agtype, title ag_catalog.agtype, proc ag_catalog.agtype, ee ag_catalog.agtype, page ag_catalog.agtype, url ag_catalog.agtype, yr ag_catalog.agtype, abstract ag_catalog.agtype); 
 
 ####### CYPHER EXEC TIME (ms) #######
-36
+37
 
 $$$$$$$$$$$$$$$$$$$$$$$$$$$$ EQUALITY TEST RESULT $$$$$$$$$$$$$$$$$$$$$$$$$$$$
 -------- SPARQL RESULT --------
@@ -181,7 +181,7 @@ WHERE {
 
 
 ####### SPARQL EXEC TIME (ms) #######
-13
+17
 
 ---------------------- CYPHER TRANSPILED QUERY ----------------------
 SELECT * FROM ag_catalog.cypher('spcustomrdfid', $$
@@ -218,7 +218,7 @@ WHERE {
 
 
 ####### SPARQL EXEC TIME (ms) #######
-3
+4
 
 ---------------------- CYPHER TRANSPILED QUERY ----------------------
 SELECT * FROM ag_catalog.cypher('spcustomrdfid', $$
@@ -229,7 +229,7 @@ RETURN article.rdfid  $$)
 AS (article ag_catalog.agtype); 
 
 ####### CYPHER EXEC TIME (ms) #######
-10
+19
 
 $$$$$$$$$$$$$$$$$$$$$$$$$$$$ EQUALITY TEST RESULT $$$$$$$$$$$$$$$$$$$$$$$$$$$$
 -------- SPARQL RESULT --------
@@ -255,7 +255,7 @@ WHERE {
 
 
 ####### SPARQL EXEC TIME (ms) #######
--1702563005801
+-1702573175719
 
 ---------------------- CYPHER TRANSPILED QUERY ----------------------
 SELECT * FROM ag_catalog.cypher('spcustomrdfid', $$
@@ -266,7 +266,7 @@ RETURN article.rdfid  $$)
 AS (article ag_catalog.agtype); 
 
 ####### CYPHER EXEC TIME (ms) #######
-12
+10
 
 $$$$$$$$$$$$$$$$$$$$$$$$$$$$ EQUALITY TEST RESULT $$$$$$$$$$$$$$$$$$$$$$$$$$$$
 -------- SPARQL RESULT --------
@@ -301,7 +301,7 @@ WHERE {
 
 
 ####### SPARQL EXEC TIME (ms) #######
-12
+17
 
 ---------------------- CYPHER TRANSPILED QUERY ----------------------
 SELECT * FROM ag_catalog.cypher('spcustomrdfid', $$
@@ -318,7 +318,7 @@ RETURN DISTINCT name1.rdfid , name2.rdfid  $$)
 AS (name1 ag_catalog.agtype, name2 ag_catalog.agtype); 
 
 ####### CYPHER EXEC TIME (ms) #######
-233
+229
 
 $$$$$$$$$$$$$$$$$$$$$$$$$$$$ EQUALITY TEST RESULT $$$$$$$$$$$$$$$$$$$$$$$$$$$$
 -------- SPARQL RESULT --------
@@ -349,7 +349,7 @@ WHERE {
 
 
 ####### SPARQL EXEC TIME (ms) #######
-14
+12
 
 ---------------------- CYPHER TRANSPILED QUERY ----------------------
 SELECT * FROM ag_catalog.cypher('spcustomrdfid', $$
@@ -360,7 +360,7 @@ RETURN DISTINCT person.rdfid , name.rdfid  $$)
 AS (person ag_catalog.agtype, name ag_catalog.agtype); 
 
 ####### CYPHER EXEC TIME (ms) #######
-29
+30
 
 $$$$$$$$$$$$$$$$$$$$$$$$$$$$ EQUALITY TEST RESULT $$$$$$$$$$$$$$$$$$$$$$$$$$$$
 -------- SPARQL RESULT --------
@@ -389,7 +389,7 @@ WHERE {
 
 
 ####### SPARQL EXEC TIME (ms) #######
-5
+3
 
 ---------------------- CYPHER TRANSPILED QUERY ----------------------
 SELECT * FROM ag_catalog.cypher('spcustomrdfid', $$
@@ -400,7 +400,7 @@ RETURN DISTINCT person.rdfid , name.rdfid  $$)
 AS (person ag_catalog.agtype, name ag_catalog.agtype); 
 
 ####### CYPHER EXEC TIME (ms) #######
-29
+22
 
 $$$$$$$$$$$$$$$$$$$$$$$$$$$$ EQUALITY TEST RESULT $$$$$$$$$$$$$$$$$$$$$$$$$$$$
 -------- SPARQL RESULT --------
@@ -442,7 +442,7 @@ WHERE {
 
 
 ####### SPARQL EXEC TIME (ms) #######
-17
+16
 
 ---------------------- CYPHER TRANSPILED QUERY ----------------------
 SELECT * FROM ag_catalog.cypher('spcustomrdfid', $$
@@ -466,7 +466,7 @@ RETURN DISTINCT name.rdfid  $$)
 AS (name ag_catalog.agtype); 
 
 ####### CYPHER EXEC TIME (ms) #######
-49
+48
 
 $$$$$$$$$$$$$$$$$$$$$$$$$$$$ EQUALITY TEST RESULT $$$$$$$$$$$$$$$$$$$$$$$$$$$$
 -------- SPARQL RESULT --------
@@ -495,7 +495,7 @@ WHERE {
 
 
 ####### SPARQL EXEC TIME (ms) #######
-9
+8
 
 ---------------------- CYPHER TRANSPILED QUERY ----------------------
 SELECT * FROM ag_catalog.cypher('spcustomrdfid', $$
@@ -509,7 +509,7 @@ RETURN DISTINCT predicate.rdfid  $$)
 AS (predicate ag_catalog.agtype); 
 
 ####### CYPHER EXEC TIME (ms) #######
-21
+14
 
 $$$$$$$$$$$$$$$$$$$$$$$$$$$$ EQUALITY TEST RESULT $$$$$$$$$$$$$$$$$$$$$$$$$$$$
 -------- SPARQL RESULT --------
@@ -565,7 +565,7 @@ OFFSET 50
 
 
 ####### SPARQL EXEC TIME (ms) #######
-16
+15
 
 ---------------------- CYPHER TRANSPILED QUERY ----------------------
 SELECT * FROM ag_catalog.cypher('spcustomrdfid', $$
@@ -580,7 +580,7 @@ LIMIT 10
 OFFSET 50;
 
 ####### CYPHER EXEC TIME (ms) #######
-9
+10
 
 $$$$$$$$$$$$$$$$$$$$$$$$$$$$ EQUALITY TEST RESULT $$$$$$$$$$$$$$$$$$$$$$$$$$$$
 -------- SPARQL RESULT --------
@@ -622,7 +622,7 @@ LIMIT 1 $$)
 AS (name2 ag_catalog.agtype)); 
 
 ####### CYPHER EXEC TIME (ms) #######
-26
+23
 
 $$$$$$$$$$$$$$$$$$$$$$$$$$$$ EQUALITY TEST RESULT $$$$$$$$$$$$$$$$$$$$$$$$$$$$
 -------- SPARQL RESULT --------
@@ -663,7 +663,7 @@ ASK {
 
 
 ####### SPARQL EXEC TIME (ms) #######
-10
+9
 
 ---------------------- CYPHER TRANSPILED QUERY ----------------------
 SELECT EXISTS (SELECT * FROM ag_catalog.cypher('spcustomrdfid', $$
@@ -688,7 +688,7 @@ LIMIT 1 $$)
 AS (name ag_catalog.agtype)); 
 
 ####### CYPHER EXEC TIME (ms) #######
-38
+39
 
 $$$$$$$$$$$$$$$$$$$$$$$$$$$$ EQUALITY TEST RESULT $$$$$$$$$$$$$$$$$$$$$$$$$$$$
 -------- SPARQL RESULT --------
@@ -711,7 +711,7 @@ ASK {
 
 
 ####### SPARQL EXEC TIME (ms) #######
-5
+6
 
 ---------------------- CYPHER TRANSPILED QUERY ----------------------
 SELECT EXISTS (SELECT * FROM ag_catalog.cypher('spcustomrdfid', $$
@@ -721,7 +721,7 @@ LIMIT 1 $$)
 AS (ask ag_catalog.agtype)); 
 
 ####### CYPHER EXEC TIME (ms) #######
-23
+22
 
 $$$$$$$$$$$$$$$$$$$$$$$$$$$$ EQUALITY TEST RESULT $$$$$$$$$$$$$$$$$$$$$$$$$$$$
 -------- SPARQL RESULT --------
@@ -736,7 +736,7 @@ $$$$$$$$$$$$$$$$$$$$$$$$$$$$$ EQUALITY RESULT END $$$$$$$$$$$$$$$$$$$$$$$$$$$$$
 §§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§ END OF TESTS §§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§
 
 
-[INFO] Tests run: 15, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 2.62 s - in de.rapsql.transpiler.SP2BTest
+[INFO] Tests run: 15, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 2.606 s - in de.rapsql.transpiler.SP2BTest
 [INFO] 
 [INFO] Results:
 [INFO] 
@@ -756,6 +756,6 @@ $$$$$$$$$$$$$$$$$$$$$$$$$$$$$ EQUALITY RESULT END $$$$$$$$$$$$$$$$$$$$$$$$$$$$$
 [INFO] ------------------------------------------------------------------------
 [INFO] BUILD SUCCESS
 [INFO] ------------------------------------------------------------------------
-[INFO] Total time:  12.852 s
-[INFO] Finished at: 2023-12-14T14:10:12Z
+[INFO] Total time:  12.486 s
+[INFO] Finished at: 2023-12-14T16:59:42Z
 [INFO] ------------------------------------------------------------------------
