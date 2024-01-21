@@ -35,6 +35,8 @@ public class Main
   public static void main( String[] args )
   {
     try {
+
+      ///////////// Pretty Cypher output for RAPSQLBench /////////////
       if (args.length > 0) {
         if (args.length != 2) {
           System.err.println("Usage: java -jar rapsqltranspiler.jar <graph_name> <rdf_path>");
@@ -110,14 +112,14 @@ public class Main
       
 
 
-      // Test: S2C
+      // // Test: S2C
 
-      // String query = "a1-q1";
+      // // String query = "a1-q1";
       // // String query = "b2-q2";
       // // String query = "c3-q3a";
       // // String query = "d4-q3b";
       // // String query = "e5-q3c";
-      // // String query = "f6-q4";
+      // String query = "f6-q4";
       // // String query = "g7-q5a";
       // // String query = "h8-q5b";
       // // String query = "i9-q6";    // NOT IMPLEMENTED YET

@@ -49,7 +49,7 @@ import org.apache.jena.rdf.model.Model;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class SP2BTest {
-  // test parameter
+  // test parameter setup
   private static final String DB_URL = "jdbc:postgresql://localhost:5432/rapsql";
   private static final String USER = "postgres";
   private static final String PASS = "postgres";
@@ -59,10 +59,10 @@ public class SP2BTest {
   // private static final String GRAPH_NAME = "tesla";
   private static final String PATH_NAME = "src/test/resources/sp2b";
   private static final String SRC_NAME = "rdf.n3";
-  private static final Boolean DISABLE_SPARQL = true;
-  private static final Boolean DISABLE_CYPHER = true;
+  private static final Boolean DISABLE_SPARQL = false;
+  private static final Boolean DISABLE_CYPHER = false;
   private static final Boolean CNT_RESULTS = false;
-  private static final Boolean import_rdf = true;
+  private static final Boolean import_rdf = false;
   private static final Boolean drop_graph = false;
 
   // provide test resources of rdf model, rdf-cypher model, sparql queries
@@ -128,6 +128,7 @@ public class SP2BTest {
     //   fail("Error: RDF-Cypher-Mapping query in PostgreSQL AGE");
     //   return; 
     // }
+
     // read, print, and execute sparql query
     try {
       sparql_query = new String(Files.readAllBytes(query_file.toPath()));

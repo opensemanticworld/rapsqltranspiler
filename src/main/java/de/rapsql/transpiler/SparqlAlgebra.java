@@ -442,6 +442,7 @@ public class SparqlAlgebra implements OpVisitor {
         rmAppliedPathOptimization(rm_list);
         // recursive call if found possible optimization
         l2lCypherPath();
+        // System.out.println("-------- CPO L2L APPLIED --------");
       }
     } 
     // // check l2r path optimization after l2l path optimization
@@ -497,7 +498,10 @@ public class SparqlAlgebra implements OpVisitor {
       if (l2r_match) break;
     }
     // recursive call if found possible optimization
-    if (l2r_match) l2rCypherPath(); 
+    if (l2r_match) {
+      l2rCypherPath(); 
+      // System.out.println("-------- CPO L2R APPLIED --------");
+    }
   }
 
   // build MATCH clause
@@ -684,7 +688,7 @@ public class SparqlAlgebra implements OpVisitor {
     }
     // use all pairlists for path optimization
     if (path_optimization) {
-      // left to left path optimization
+      // left to left path optimization (l2l cpo)
       l2lCypherPath();
 
       // right to right path optimization
@@ -693,7 +697,7 @@ public class SparqlAlgebra implements OpVisitor {
 
       // left to right path optimization
       // TODO: check if has added value
-      // l2rCypherPath();
+      l2rCypherPath();
 
       // build MATCH clause for each list element
       for (int i = 0; i < subject_pairlist.size(); i++) {
