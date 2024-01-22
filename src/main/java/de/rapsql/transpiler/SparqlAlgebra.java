@@ -74,6 +74,17 @@ import org.apache.jena.sparql.core.Var;
 
 
 public class SparqlAlgebra implements OpVisitor {
+  ////////////// Configuration //////////////
+  // enable/disable cypher path optimization (cpo)
+  private boolean use_cpo = false; 
+  // left to left | right to right
+  private boolean l2l_cpo = true;
+  private boolean l2r_cpo = false;
+  // enable/disable coalesce (dbmodel: true=yars, false=rdfid)
+  private boolean use_coalesce = true;
+  ///////////////////////////////////////////
+
+
   // variables for mappings and clause types
   private String cypher;
   private Map<Var, String> Sparql_to_cypher_variable_map;
@@ -95,14 +106,12 @@ public class SparqlAlgebra implements OpVisitor {
   // support for edge partitioned graphs
   private boolean partitioned = true;
   // support for cypher variable path optimization
-  private boolean path_optimization = true;
   private List<Pair<Boolean, String>> 
             subject_pairlist = new ArrayList<Pair<Boolean, String>>();
   private List<Pair<Boolean, ArrayList<String>>> 
             predicate_pairlist = new ArrayList<Pair<Boolean, ArrayList<String>>>();
   private List<Pair<Boolean, String>> 
             object_pairlist = new ArrayList<Pair<Boolean, String>>();
-  private boolean use_coalesce = false;
 
   // initialize instance
   public SparqlAlgebra(String _graph_name, String _query_type) {
@@ -421,7 +430,7 @@ public class SparqlAlgebra implements OpVisitor {
       // if (l2l_match) break;
     }
     
-    
+    //////// FOR DEBUGGING ////////
     // System.out.println("RM List: " + rm_list.toString());
     // if (rm_list.stream().distinct().count() == rm_list.size()) {
     //   System.out.println("All elements in rm_list are unique");
@@ -446,6 +455,7 @@ public class SparqlAlgebra implements OpVisitor {
       }
     } 
     // // check l2r path optimization after l2l path optimization
+    // TODO: to be tested, still experimental
     // l2rCypherPath();
   }
 
@@ -594,14 +604,26 @@ public class SparqlAlgebra implements OpVisitor {
 
         @Override
         public String visitLiteral(Node_Literal it, LiteralLabel lit) {
-          // $support: Language tag is not supported in rdf2pg yet
 
           return String.format(
-            lit.getDatatypeURI() == org.apache.jena.datatypes.xsd.XSDDatatype.XSDstring.getURI() ?
-              "{rdfid:\'%s\'}" : "{rdfid:\'%s^^%s\'}",
+            use_coalesce  
+              ? "{value:\'%s\', type:\'%s\'}" 
+              : "{rdfid:\'%s\', type:\'%s\'}",
             lit.getLexicalForm(),
-            lit.getDatatypeURI()
+            lit.getDatatypeURI() 
           );
+          
+
+          // SINGLE PROPERTY LITERAL VERSION BACKUP
+          // return String.format(
+          //   lit.getDatatypeURI() == org.apache.jena.datatypes.xsd.XSDDatatype.XSDstring.getURI() ?
+          //     "{rdfid:\'%s\'}" : "{rdfid:\'%s^^%s\'}",
+          //   lit.getLexicalForm(),
+          //   lit.getDatatypeURI()
+          // );
+
+          // TODO: LANGTAG SUPPORT
+          // $Language tag is not supported yet in rdf2pg
           // $issue: possible (part) solution to add language tag support
           // System.out.println("DEBUG LITERAL: " + it.toString());
           // return 
@@ -616,7 +638,12 @@ public class SparqlAlgebra implements OpVisitor {
         @Override
         public String visitURI(Node_URI it, String uri) {
           // System.out.println("DEBUG URI: " + it.toString());
-          return String.format("{rdfid:\'%s\'}", uri);
+          return String.format(
+            use_coalesce  
+              ? "{iri:\'%s\'}" 
+              : "{rdfid:\'%s\'}", 
+            uri
+          );
         }
 
         @Override
@@ -654,7 +681,7 @@ public class SparqlAlgebra implements OpVisitor {
         p = ":" + t.getMatchPredicate().getLocalName() + " " + p;
       }
       
-      // list of predicates for path optimization with different patterns
+      // list of predicates for cpo with different patterns 
       ArrayList<String> p_list = new ArrayList<String>();
       p_list.add("-[");
       p_list.add(p);
@@ -680,24 +707,24 @@ public class SparqlAlgebra implements OpVisitor {
         object_pairlist.add(Pair.of(false, o));
       }
       
-      
       // build MATCH clause
-      if (!path_optimization) {
+      if (!use_cpo) {
         buildMatchClause("(" + s + ")-[" + p + "]->(" + o + ") ");
       }
     }
     // use all pairlists for path optimization
-    if (path_optimization) {
-      // left to left path optimization (l2l cpo)
-      l2lCypherPath();
+    if (use_cpo) {
 
-      // right to right path optimization
-      // TODO: change to same as l2l logic when test cases are available
+      // left to left path optimization (l2l cpo)
+      if (l2l_cpo) l2lCypherPath();
+
+      // left to right path optimization (l2r cpo)
+      if (l2r_cpo) l2rCypherPath();
+
+      // right to right path optimization (no sp2b query case)
+      // TODO: test to same as l2l logic when test cases are available
       // r2rCypherPath();
 
-      // left to right path optimization
-      // TODO: check if has added value
-      l2rCypherPath();
 
       // build MATCH clause for each list element
       for (int i = 0; i < subject_pairlist.size(); i++) {
@@ -731,7 +758,7 @@ public class SparqlAlgebra implements OpVisitor {
     // visit sub operation
     opFilter.getSubOp().visit(this);  
     // parse filter expressions and create cypher WHERE clause    
-    FilterParser filter_parser = new FilterParser();
+    FilterParser filter_parser = new FilterParser(use_coalesce);
     try {
       concatCypher(filter_parser.getWhereClause(opFilter.getExprs()));
     } catch (QueryException e) { 
@@ -810,7 +837,7 @@ public class SparqlAlgebra implements OpVisitor {
     // check if FILTER is present by detecting expressions
     if (opLeftJoin.getExprs() != null) {  
       // parse filter expressions and create cypher WHERE clause    
-      FilterParser filter_parser = new FilterParser();
+      FilterParser filter_parser = new FilterParser(use_coalesce);
       try {
         concatCypher(filter_parser.getWhereClause(opLeftJoin.getExprs()));
       } catch (QueryException e) { e.printStackTrace(); }

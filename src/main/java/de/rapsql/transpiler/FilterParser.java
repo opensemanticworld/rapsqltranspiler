@@ -32,10 +32,11 @@ public class FilterParser {
   private boolean use_coalesce = false;
 
   // constructor to apply filter parser
-  public FilterParser() {
+  public FilterParser(boolean _use_coalesce) {
     this.cypher = new String();
     this.expr_map = new HashMap<Integer, String>();
     this.expr_counter = 0;
+    this.use_coalesce = _use_coalesce;
   }
 
   // return where clause and handle exceptions

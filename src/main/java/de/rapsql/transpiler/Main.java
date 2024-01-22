@@ -115,11 +115,11 @@ public class Main
       // // Test: S2C
 
       // // String query = "a1-q1";
-      // // String query = "b2-q2";
+      // String query = "b2-q2";
       // // String query = "c3-q3a";
       // // String query = "d4-q3b";
       // // String query = "e5-q3c";
-      // String query = "f6-q4";
+      // // String query = "f6-q4";
       // // String query = "g7-q5a";
       // // String query = "h8-q5b";
       // // String query = "i9-q6";    // NOT IMPLEMENTED YET
@@ -132,7 +132,8 @@ public class Main
       // // String query = "p16-q12b";
       // // String query = "q17-q12c";
       // // String graph_spcustom = "sp100000";
-      // String graph_spcustom = "spcustomrdfid";
+      // String graph_spcustom = "spcustompart";
+      // // String graph_spcustom = "spcustomrdfid";
       // // String graph_spcustom = "sp1m";
       // // String graph_spcustom = "sp100k";
       // // String sparql_path = "/usr/local/docker/masterthesis/rapsql/submodules/rapsqltranspiler/src/test/resources/ttl-sparql/w3c_test5/queries/";
