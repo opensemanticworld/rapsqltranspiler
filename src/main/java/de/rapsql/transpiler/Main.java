@@ -35,17 +35,21 @@ public class Main
   public static void main( String[] args )
   {
     try {
-      if (args.length != 2) {
-        System.err.println("Usage: java -jar rapsqltranspiler.jar <rdf_path> <graph_name>");
-        System.exit(1);
-      } else {
-        String sparql_path = args[0];
-        String graph_name = args[1];
-        // String sparql_path = "/usr/local/docker/masterthesis/rapsql/submodules/rapsqltranspiler/src/test/resources/notest/sp2b/queries/a1-q1.sparql";
-        // String graph_name = "sp100";
-      
-        String cypher_q_stmt1 = S2C.rapsql_s2c(graph_name, S2C.get_sparql(sparql_path));
-        Helper.pretty_cypher(cypher_q_stmt1);
+
+      ///////////// Pretty Cypher output for RAPSQLBench /////////////
+      if (args.length > 0) {
+        if (args.length != 2) {
+          System.err.println("Usage: java -jar rapsqltranspiler.jar <graph_name> <rdf_path>");
+          System.exit(1);
+        } else {
+          String graph_name = args[0];
+          String sparql_path = args[1];
+          // String sparql_path = "/usr/local/docker/masterthesis/rapsql/submodules/rapsqltranspiler/src/test/resources/notest/sp2b/queries/a1-q1.sparql";
+          // String graph_name = "sp100";
+        
+          String cypher_q_stmt1 = S2C.rapsql_s2c(graph_name, S2C.get_sparql(sparql_path));
+          Helper.pretty_cypher(cypher_q_stmt1);
+        }
       }
 
       //////////////////////////// S2C TESTS ////////////////////////////
@@ -106,10 +110,12 @@ public class Main
       // String cypher_stmt1 = R2C.r2c(graph1, R2C.rdf_path(rdf_path1));
       // System.out.println("Graph: " + graph1 + ", Cypher:\n" + cypher_stmt1+ "\n");
       
+
+
       // // Test: S2C
 
-      // String query = "a1-q1";
-      // // String query = "b2-q2";
+      // // String query = "a1-q1";
+      // String query = "b2-q2";
       // // String query = "c3-q3a";
       // // String query = "d4-q3b";
       // // String query = "e5-q3c";
@@ -127,11 +133,15 @@ public class Main
       // // String query = "q17-q12c";
       // // String graph_spcustom = "sp100000";
       // String graph_spcustom = "spcustompart";
+      // // String graph_spcustom = "spcustomrdfid";
+      // // String graph_spcustom = "sp1m";
+      // // String graph_spcustom = "sp100k";
       // // String sparql_path = "/usr/local/docker/masterthesis/rapsql/submodules/rapsqltranspiler/src/test/resources/ttl-sparql/w3c_test5/queries/";
       // String sparql_path = "/usr/local/docker/masterthesis/rapsql/submodules/rapsqltranspiler/src/test/resources/sp2b/spcustom/queries/";
       // sparql_path = sparql_path.concat(query + ".sparql");
       // String cypher_q_stmt1 = S2C.rapsql_s2c(graph_spcustom, S2C.get_sparql(sparql_path));
       // Helper.pretty_cypher(cypher_q_stmt1);
+      // // Helper.pretty_cypher(cypher_q_stmt1.replace("*", "count(*)"));
       // // System.out.println("\nGraph: " + graph_spcustom + ", Cypher:\n" + cypher_q_stmt1 + "\n");
 
 

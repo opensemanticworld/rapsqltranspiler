@@ -1,0 +1,18 @@
+@prefix rdf: <http://www.w3.org/1999/02/22-rdfsyntax-ns#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix voc: <http://www.example.org/voc/> .
+@prefix ex: <http://www.example.org/data/> .
+ex:Tesla_Inc   rdf:type            voc:Organisation .
+ex:Tesla_Inc   voc:name            "Tesla, Inc." .
+ex:Tesla_Inc   voc:creation        "2003-07-01"^^xsd:date .
+ex:Tesla_Inc   voc:ceo             ex:Elon_Musk .
+ex:Tesla_Inc   voc:location        _:b1 .
+ex:Elon_Musk   rdf:type            voc:Person .
+ex:Elon_Musk   voc:birthName       "Elon Musk" .
+ex:Elon_Musk   voc:age             "52"^^xsd:int .
+_:b1           rdf:type            voc:City .
+_:b1           voc:name            "Palo Alto" .
+_:b1           voc:country         _:b2 .
+_:b2           rdf:type            voc:Country .
+_:b2           voc:name            "US" .
+_:b2           voc:is_location_of  ex:Tesla_Inc .

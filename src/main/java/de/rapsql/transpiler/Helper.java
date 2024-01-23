@@ -53,7 +53,7 @@ public class Helper {
   public static void display_exec_time(String info, long time_before, long time_after) {
     long exec_time = time_after - time_before;
     display_info('#', 7, info + " EXEC TIME (ms)");
-    System.err.println(exec_time);
+    System.out.println(exec_time);
     // TimeUnit.MILLISECONDS.toSeconds(exec_time);
   }
 

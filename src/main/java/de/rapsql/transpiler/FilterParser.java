@@ -29,12 +29,14 @@ public class FilterParser {
   public String cypher;
   private HashMap<Integer, String> expr_map;
   private int expr_counter;
+  private boolean use_coalesce = false;
 
   // constructor to apply filter parser
-  public FilterParser() {
+  public FilterParser(boolean _use_coalesce) {
     this.cypher = new String();
     this.expr_map = new HashMap<Integer, String>();
     this.expr_counter = 0;
+    this.use_coalesce = _use_coalesce;
   }
 
   // return where clause and handle exceptions
@@ -50,14 +52,18 @@ public class FilterParser {
   }
 
   // coalesce statement for transpilation
-  public String coalesceStmt(String var_name, Boolean seperate) {
+  public String getSchemaStmt(String var_name, Boolean seperate) {
     String stmt = "";
-    stmt = stmt.concat(
-      "coalesce("
-      + var_name + ".iri, "     // Resource
-      + var_name + ".bnid, "    // BlankNode
-      + var_name + ".value)"    // Literal
-    );
+    if (!use_coalesce) {
+      stmt = stmt.concat(var_name + ".rdfid");
+    } else {
+      stmt = stmt.concat(
+        "coalesce("
+        + var_name + ".iri, "     // Resource
+        + var_name + ".bnid, "    // BlankNode
+        + var_name + ".value)"    // Literal
+      );
+    }
     if(seperate) stmt = stmt.concat(", ");
     // else stmt = stmt.concat(" ");
     return stmt;
@@ -146,12 +152,12 @@ public class FilterParser {
       );
     // check if expression is variable and has no constant neighbor
     } else if (expr.isVariable() && !expr_has_const) {
-      typed_expr = coalesceStmt(expr.getVarName(), false);
+      typed_expr = getSchemaStmt(expr.getVarName(), false);
     // check if expression var must be casted to equalize type with constant
     } else if (expr.isVariable() && expr_has_const) {
       typed_expr = supportedCast(
         expr_const_type,
-        coalesceStmt(expr.getVarName(), false)
+        getSchemaStmt(expr.getVarName(), false)
       );
     } else {
       // nothing to do (e.g. expr is function)
@@ -176,7 +182,7 @@ public class FilterParser {
 
         // parse expression by number of arguments
         if (num_args < 2) {
-          // TODO: NUM_ARGS < 2
+          // TODO: NUM_ARGS < 2 (e.g. `EXISTS`)
           this.isQueryConversionSuccesful = false;
           this.conversionErrors += "\nUnsupported Algebra Filter (Num of Args): " + num_args;
         } else {
@@ -192,7 +198,7 @@ public class FilterParser {
             if (num_args == 3) {
               sub_list_3 = expr.getFunction().getArgs().subList(2, 3).get(0);
               reg3 = supportedRegex3(sub_list_3.toString().replace("\"", ""));
-              System.out.println("SUB LIST 3: " + sub_list_3);
+              // System.out.println("SUB LIST 3: " + sub_list_3);
             }
           }
   

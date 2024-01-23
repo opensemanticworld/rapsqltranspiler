@@ -16,9 +16,12 @@
 
 package de.rapsql.transpiler;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import org.apache.commons.lang3.tuple.Pair;
 import org.apache.jena.graph.BlankNodeId;
 import org.apache.jena.graph.Graph;
 import org.apache.jena.graph.NodeVisitor;
@@ -69,7 +72,19 @@ import org.apache.jena.sparql.algebra.op.OpUnion;
 import org.apache.jena.sparql.core.Var;
 
 
+
 public class SparqlAlgebra implements OpVisitor {
+  ////////////// Configuration //////////////
+  // enable/disable cypher path optimization (cpo)
+  private boolean use_cpo = false; 
+  // left to left | right to right
+  private boolean l2l_cpo = true;
+  private boolean l2r_cpo = false;
+  // enable/disable coalesce (dbmodel: true=yars, false=rdfid)
+  private boolean use_coalesce = true;
+  ///////////////////////////////////////////
+
+
   // variables for mappings and clause types
   private String cypher;
   private Map<Var, String> Sparql_to_cypher_variable_map;
@@ -86,11 +101,18 @@ public class SparqlAlgebra implements OpVisitor {
   private String return_clause = "";
   private boolean left_bgp_join = false;
   private boolean right_bgp_join = false;
+  private boolean distinct = false;
   private Var latest_var = null;
   // support for edge partitioned graphs
   private boolean partitioned = true;
+  // support for cypher variable path optimization
+  private List<Pair<Boolean, String>> 
+            subject_pairlist = new ArrayList<Pair<Boolean, String>>();
+  private List<Pair<Boolean, ArrayList<String>>> 
+            predicate_pairlist = new ArrayList<Pair<Boolean, ArrayList<String>>>();
+  private List<Pair<Boolean, String>> 
+            object_pairlist = new ArrayList<Pair<Boolean, String>>();
 
-  
   // initialize instance
   public SparqlAlgebra(String _graph_name, String _query_type) {
     this.query_type = _query_type;
@@ -150,14 +172,18 @@ public class SparqlAlgebra implements OpVisitor {
 
 
   // get coalesce clause for resource, blank node and literal (!schema dependency)
-  public String getCoalesceClause(String var_name, Boolean seperate) {
+  public String getSchemaStmt(String var_name, Boolean seperate) {
     String stmt = "";
-    stmt = stmt.concat(
-      "coalesce("
-      + var_name + ".iri, "     // Resource
-      + var_name + ".bnid, "    // BlankNode
-      + var_name + ".value)"    // Literal
-    );
+    if (!use_coalesce) {
+      stmt = stmt.concat(var_name + ".rdfid ");
+    } else {
+      stmt = stmt.concat(
+        "coalesce("
+        + var_name + ".iri, "     // Resource
+        + var_name + ".bnid, "    // BlankNode
+        + var_name + ".value)"    // Literal
+      );
+    }
     if(seperate) stmt = stmt.concat(", ");
     // else stmt = stmt.concat(" ");
     return stmt;
@@ -177,7 +203,7 @@ public class SparqlAlgebra implements OpVisitor {
   }
 
   // get return clause for matching select variables
-  public String getReturnClause(List<Var> vars, Boolean has_with_clause) {
+  public String setgetReturnClause(List<Var> vars, Boolean has_with_clause) {
     // build return clause
     String return_clause = "RETURN ";
     // match all variables of select statement in return clause
@@ -187,7 +213,7 @@ public class SparqlAlgebra implements OpVisitor {
         return_clause = return_clause.concat(Sparql_to_cypher_variable_map.get(var) + ", ");
       } else {
         // coalesce returns first non-null value from list, no OpOrder including WITH clause present
-        return_clause = return_clause.concat(getCoalesceClause(Sparql_to_cypher_variable_map.get(var), true));
+        return_clause = return_clause.concat(getSchemaStmt(Sparql_to_cypher_variable_map.get(var), true));
         // TODO: check if type cast is necessary
       }
     }
@@ -197,28 +223,310 @@ public class SparqlAlgebra implements OpVisitor {
   }
 
 
-  // build MATCH clause
-  public void buildMatchClause(String s, String pn, String p, String o, Boolean is_first) {
-    // directed pattern by subject, predicate and object
-    // String triple_path = "(" + s + ")-[" + p + "]->(" + o + ") ";
-    String triple_path = "(" + s + ")-[" + pn + p + "]->(" + o + ") ";
-    String match_comma = "";
-    if (is_first) {
-      match_comma = "MATCH ";
+  // cypher variable path optimization: uniqueness of relationships
+
+  // predicate rules
+  // no path optimization if both predicates are unique
+  public Boolean checkPredicateUniqueness(int left, int right) {
+    if (predicate_pairlist.get(left).getRight().equals(predicate_pairlist.get(right).getRight())) {
+      return false;
     } else {
-      match_comma = ", ";
+      return true;
     }
+  }
+  // no path optimization if one of the predicates is a variable
+  public Boolean checkPredicateVars(int left, int right) {
+    if (predicate_pairlist.get(left).getLeft() || predicate_pairlist.get(right).getLeft()) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  // l2l rules
+  // check if both subject variables are true
+  public Boolean checkSubjectVars(int left, int right) {
+    if (subject_pairlist.get(left).getLeft() && subject_pairlist.get(right).getLeft()) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+  // check if one of the object variables is true
+  public Boolean checkOneOfObjectVar(int left, int right) {
+    if (object_pairlist.get(left).getLeft() || object_pairlist.get(right).getLeft()) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  // r2r rules
+  // check if both variables are true
+  public Boolean checkObjectVars(int left, int right) {
+    if (object_pairlist.get(left).getLeft() && object_pairlist.get(right).getLeft()) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+  // check if one of the subject variables is true
+  public Boolean checkOneOfSubjectVar(int left, int right) {
+    if (subject_pairlist.get(left).getLeft() || subject_pairlist.get(right).getLeft()) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  // helper function to swap direction of all predicate path elements
+  // swap direction of predicate path elements
+  public ArrayList<String> reversePath(ArrayList<String> predicate_path) {
+    ArrayList<String> predicate_path_reverse = new ArrayList<String>();
+    for (int i = predicate_path.size() - 1; i >= 0; i--) {
+      if (predicate_path.get(i).equals("-[")) {
+        predicate_path_reverse.add("]-");
+      } else if (predicate_path.get(i).equals("]-")) {
+        predicate_path_reverse.add("-[");
+      } else if (predicate_path.get(i).equals("]->")) {
+        predicate_path_reverse.add("<-[");
+      } else if (predicate_path.get(i).equals("<-[")) {
+        predicate_path_reverse.add("]->");
+      } else {
+        predicate_path_reverse.add(predicate_path.get(i));
+      }
+    }
+    return predicate_path_reverse;
+  }
+
+  // helper function to remove all applied path optimizations by int lists
+  public void rmAppliedPathOptimization(List<Integer> rm_list) {
+    // set all applied path optimizations 
+    // for (int integer : set_list) {
+    //   subject_pairlist.set(integer, Pair.of(true, subject_pairlist.get(integer).getRight()));
+    //   predicate_pairlist.set(integer, Pair.of(true, predicate_pairlist.get(integer).getRight()));
+    //   object_pairlist.set(integer, Pair.of(true, object_pairlist.get(integer).getRight()));
+    // }
+    // // sort index list from highest to lowest
+    rm_list.sort((o1, o2) -> o2.compareTo(o1));
+    // System.out.println("Sorted remove index list: " + rm_list.toString());
+    // remove all applied path optimizations by each element from index list from highest to lowest
+    for (int integer : rm_list) {
+      subject_pairlist.remove(integer);
+      predicate_pairlist.remove(integer);
+      object_pairlist.remove(integer);
+    }
+
+  }
+    
+  
+
+  // path optimization algorithm functions
+
+  // right to right path optimization (same as left to left, object instead of subject)
+  public void r2rCypherPath() {
+    Map<Integer, String> right_var_matches = new HashMap<Integer, String>();
+    Boolean r2r_match = false;
+    // print all pairlists
+    for (int i = 0; i < object_pairlist.size(); i++) {
+      for (int j = i + 1; j < object_pairlist.size(); j++) {
+        // object of second will be merged with object of first
+        if (
+            object_pairlist.get(i).getRight().equals(object_pairlist.get(j).getRight()) 
+            && checkObjectVars(i, j) && checkOneOfSubjectVar(i, j)
+            && !checkPredicateVars(i, j) && checkPredicateUniqueness(i, j)
+          ) {
+          System.out.println("i: " + i + " j: " + j);
+          r2r_match = true;
+          right_var_matches.put(i, object_pairlist.get(i).getRight());
+          right_var_matches.put(j, object_pairlist.get(j).getRight());
+          // set left var subject to object of second match (i < j)
+          object_pairlist.set(i, Pair.of(true, subject_pairlist.get(j).getRight()));
+          // get reverse predicate path
+          ArrayList<String> second_predicate_path_rev = new ArrayList<String>();
+          second_predicate_path_rev = reversePath(predicate_pairlist.get(j).getRight());
+          // add matching subject var_name to second predicate path
+          second_predicate_path_rev.add("("+ object_pairlist.get(j).getRight() +")");
+          // add first predicate path to second predicate path
+          second_predicate_path_rev.addAll(predicate_pairlist.get(i).getRight());
+          // System.out.println("Second predicate path: " + second_predicate_path_rev.toString());
+          // set second predicate path to first predicate path
+          predicate_pairlist.set(
+            i, 
+            Pair.of(predicate_pairlist.get(i).getLeft() 
+            && predicate_pairlist.get(j).getLeft(), second_predicate_path_rev)
+          );
+          // delete second subject, predicate and object pairlist
+          subject_pairlist.remove(j);
+          predicate_pairlist.remove(j);
+          object_pairlist.remove(j);
+        }
+        if (r2r_match) break;
+      }
+      if (r2r_match) break;
+    }
+    if (r2r_match) {
+      // recursive call if found possible optimization
+      r2rCypherPath();
+      // // check l2r path optimization after r2r path optimization
+      // l2rCypherPath();
+    }
+  }
+
+  // left to left path optimization
+  public void l2lCypherPath() {
+    // left == object, right == subject
+    // Map<Integer, String> left_var_matches = new HashMap<Integer, String>();
+    Boolean l2l_match = false;
+    List<Integer> rm_list = new ArrayList<Integer>();
+
+    // create copy of all pairlists
+    List<Pair<Boolean, String>> local_subject_pairlist = new ArrayList<Pair<Boolean, String>>(subject_pairlist);
+    List<Pair<Boolean, ArrayList<String>>> local_predicate_pairlist = new ArrayList<Pair<Boolean, ArrayList<String>>>(predicate_pairlist);
+    // List<Pair<Boolean, String>> local_object_pairlist = new ArrayList<Pair<Boolean, String>>(object_pairlist);
+    
+
+    // print subject_pairlist
+    // System.out.println("Subject pairlist: " + subject_pairlist.toString());
+    // get all duplicates in subject_pairlist
+    for (int i = 0; i < subject_pairlist.size(); i++) {
+      for (int j = i + 1; j < subject_pairlist.size(); j++) {
+        // subject of second will be merged with subject of first
+        if (
+            subject_pairlist.get(i).getRight().equals(subject_pairlist.get(j).getRight()) 
+            && checkSubjectVars(j, i) && checkOneOfObjectVar(i, j)
+            && !checkPredicateVars(i, j) && checkPredicateUniqueness(i, j)
+          ) {
+          // System.out.println("predicate unique: " + checkPredicateUniqueness(i, j));
+          // System.out.println("i: " + i + " j: " + j);
+          // System.out.println("L2L Path Optimization:");
+          // System.out.println("Subject " + i + " var_name match: " + subject_pairlist.get(i).getRight());
+          // System.out.println("Subject " + j + " var_name match: " + subject_pairlist.get(j).getRight());
+
+          l2l_match = true;
+          // left_var_matches.put(i, subject_pairlist.get(i).getRight());
+          // left_var_matches.put(j, subject_pairlist.get(j).getRight());
+          // set left var subject to object of second match (i < j)
+          local_subject_pairlist.set(i, Pair.of(true, object_pairlist.get(j).getRight()));
+          // get reverse predicate path
+          ArrayList<String> second_predicate_path_rev = new ArrayList<String>();
+          second_predicate_path_rev = reversePath(predicate_pairlist.get(j).getRight());
+          // add matching subject var_name to second predicate path
+          second_predicate_path_rev.add("("+ subject_pairlist.get(j).getRight() +")");
+          // add first predicate path to second predicate path
+          second_predicate_path_rev.addAll(predicate_pairlist.get(i).getRight());
+          // System.out.println("Second predicate path: " + second_predicate_path_rev.toString());
+          // set second predicate path to first predicate path
+          local_predicate_pairlist.set(i, Pair.of(predicate_pairlist.get(i).getLeft() && predicate_pairlist.get(j).getLeft(), second_predicate_path_rev));
+          // delete second subject, predicate and object pairlist
+          // subject_pairlist.remove(j);
+          // predicate_pairlist.remove(j);
+          // object_pairlist.remove(j);
+          rm_list.add(j);
+          // System.out.println("Removals: " + rm_list.toString());
+        }
+        // if (l2l_match) break;
+      }
+      // if (l2l_match) break;
+    }
+    
+    //////// FOR DEBUGGING ////////
+    // System.out.println("RM List: " + rm_list.toString());
+    // if (rm_list.stream().distinct().count() == rm_list.size()) {
+    //   System.out.println("All elements in rm_list are unique");
+    //   idx_uniqueness = true;
+    // } else {
+    //   System.out.println("All elements in rm_list are not unique");
+    //   idx_uniqueness = false;
+    // }
+
+    if (l2l_match) {
+      // check if all elements in rm_list are unique
+      if (rm_list.stream().distinct().count() == rm_list.size()) {
+        // System.out.println("All elements in rm_list are unique");
+        // set local pairlists to global pairlists
+        subject_pairlist = local_subject_pairlist;
+        predicate_pairlist = local_predicate_pairlist;
+        // remove all applied path optimizations by int list
+        rmAppliedPathOptimization(rm_list);
+        // recursive call if found possible optimization
+        l2lCypherPath();
+        // System.out.println("-------- CPO L2L APPLIED --------");
+      }
+    } 
+    // // check l2r path optimization after l2l path optimization
+    // TODO: to be tested, still experimental
+    // l2rCypherPath();
+  }
+
+  // left to right path optimization
+  public void l2rCypherPath() {
+    // left == object, right == subject
+    Boolean l2r_match = false;
+    // print all pairlists
+    
+    // if subject_pairlist left is true and object_pairlist left is true, then compare all var_names from both lists and save matching ones with their index
+    for (int i = 0; i < subject_pairlist.size(); i++) {
+      // for every var_name in subject_pairlist compare with every var_name in object_pairlist
+      for (int j = 0; j < subject_pairlist.size(); j++) {
+      // for from highest index to lowest index to ensure no out of bounds
+      // for (int j = subject_pairlist.size() - 1; j >= 0; j--) {
+        if (
+            subject_pairlist.get(i).getRight().equals(object_pairlist.get(j).getRight()) 
+            && !checkPredicateVars(i, j) //&& !checkPredicateUniqueness(i, j)
+        ) {
+          // System.out.println("L2R Path Optimization:");
+          // System.out.println("Subject var_name matches: " + subject_pairlist.get(i).getRight());
+          // System.out.println("Object var_name matches: " + object_pairlist.get(j).getRight());
+
+          l2r_match = true;
+          // System.out.println("Matching var_name: " + subject_pairlist.get(i).getRight() + " with index: " + i + " and " + object_pairlist.get(j).getRight() + " with index: " + j);
+          String left_var = subject_pairlist.get(j).getRight(); 
+          ArrayList<String> predicate_path = new ArrayList<String>();
+          // build new predicate path
+          predicate_path.addAll(predicate_pairlist.get(j).getRight());
+          predicate_path.add("("+ object_pairlist.get(j).getRight() +")");
+          predicate_path.addAll(predicate_pairlist.get(i).getRight());  
+          String right_var = object_pairlist.get(i).getRight();
+
+          // get the smaller and bigger index of i and j to ensure out of bounds 
+          int i_min = Math.min(i, j);
+          int i_max = Math.max(i, j);
+
+          // replace all pairlists on index of right match and remove left match
+          subject_pairlist.set(i_min, Pair.of(subject_pairlist.get(j).getLeft(), left_var));
+          predicate_pairlist.set(i_min, Pair.of(predicate_pairlist.get(j).getLeft() && predicate_pairlist.get(i).getLeft(), predicate_path));
+          object_pairlist.set(i_min, Pair.of(object_pairlist.get(i).getLeft(), right_var));     
+          subject_pairlist.remove(i_max);
+          predicate_pairlist.remove(i_max);
+          object_pairlist.remove(i_max);
+        }
+        // break inner loop if found possible optimization
+        if (l2r_match) break;
+      }
+      // break outer loop if found possible optimization
+      if (l2r_match) break;
+    }
+    // recursive call if found possible optimization
+    if (l2r_match) {
+      l2rCypherPath(); 
+      // System.out.println("-------- CPO L2R APPLIED --------");
+    }
+  }
+
+  // build MATCH clause
+  public void buildMatchClause(String triple_path) {
+    String match = "MATCH ";
 
     // cover OpJoin case for all query types
     switch (query_type) {
       case "SELECT":
         if (!left_bgp_join) {
           // no OpJoin
-          // cypher = cypher + "MATCH " + triple_path;
-          cypher = cypher + match_comma + triple_path;
+          cypher = cypher + match + triple_path;
         } else {
           // OpJoin
-          cached_match_clause = cached_match_clause + match_comma + triple_path;
+          cached_match_clause = cached_match_clause + match + triple_path;
         }
         break;
       case "ASK":
@@ -267,8 +575,9 @@ public class SparqlAlgebra implements OpVisitor {
     }
     // concat specific return clause for ASK queries
     List<Var> ask = List.of(var);
-    return_clause = getReturnClause(ask, has_with_clause);
+    return_clause = setgetReturnClause(ask, has_with_clause);
     concatCypher(return_clause);
+    concatCypher(" LIMIT 1");
     buildEndOfAgeQuery(ask);
     cypher = cypher.substring(0, cypher.length() - 2);
     concatCypher("); ");
@@ -281,7 +590,6 @@ public class SparqlAlgebra implements OpVisitor {
     //! ONLY FOR DEBUG VISITOR ! COMMENT OUT FOR STACK INTEGRATION !
     // System.out.println("\nIn opBGP\n" + opBGP.toString()+"\n");
     // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-    Boolean is_first = true;
     java.util.Iterator<Triple> it = opBGP.getPattern().iterator();
     while(it.hasNext()) {
       Triple t = it.next();
@@ -296,13 +604,26 @@ public class SparqlAlgebra implements OpVisitor {
 
         @Override
         public String visitLiteral(Node_Literal it, LiteralLabel lit) {
-          // $support: Language tag is not supported in rdf2pg yet
 
           return String.format(
-            "{type:\'%s\', value:\'%s\'}",
-            lit.getDatatypeURI(), 
-            lit.getLexicalForm()
+            use_coalesce  
+              ? "{value:\'%s\', type:\'%s\'}" 
+              : "{rdfid:\'%s\', type:\'%s\'}",
+            lit.getLexicalForm(),
+            lit.getDatatypeURI() 
           );
+          
+
+          // SINGLE PROPERTY LITERAL VERSION BACKUP
+          // return String.format(
+          //   lit.getDatatypeURI() == org.apache.jena.datatypes.xsd.XSDDatatype.XSDstring.getURI() ?
+          //     "{rdfid:\'%s\'}" : "{rdfid:\'%s^^%s\'}",
+          //   lit.getLexicalForm(),
+          //   lit.getDatatypeURI()
+          // );
+
+          // TODO: LANGTAG SUPPORT
+          // $Language tag is not supported yet in rdf2pg
           // $issue: possible (part) solution to add language tag support
           // System.out.println("DEBUG LITERAL: " + it.toString());
           // return 
@@ -317,7 +638,12 @@ public class SparqlAlgebra implements OpVisitor {
         @Override
         public String visitURI(Node_URI it, String uri) {
           // System.out.println("DEBUG URI: " + it.toString());
-          return String.format("{iri:\'%s\'}", uri);
+          return String.format(
+            use_coalesce  
+              ? "{iri:\'%s\'}" 
+              : "{rdfid:\'%s\'}", 
+            uri
+          );
         }
 
         @Override
@@ -351,25 +677,73 @@ public class SparqlAlgebra implements OpVisitor {
       String o = t.getMatchObject().visitWith(cypherNodeMatcher).toString();
 
       // get predicate name if it is uri (!partition dependency)
-      String pn = "";
       if (t.getMatchPredicate().isURI() && partitioned) {
-        pn = ":" + t.getMatchPredicate().getLocalName();
+        p = ":" + t.getMatchPredicate().getLocalName() + " " + p;
       }
+      
+      // list of predicates for cpo with different patterns 
+      ArrayList<String> p_list = new ArrayList<String>();
+      p_list.add("-[");
+      p_list.add(p);
+      p_list.add("]->");
 
       // set the latest variable for ask return clause if variable exists
       if (t.getMatchSubject().isVariable()) {
         latest_var = (Var) t.getMatchSubject();
+        subject_pairlist.add(Pair.of(true, s));
+      } else {
+        subject_pairlist.add(Pair.of(false, s));
       }
       if (t.getMatchPredicate().isVariable()) {
         latest_var = (Var) t.getMatchPredicate();
+        predicate_pairlist.add(Pair.of(true, p_list));
+      } else {
+        predicate_pairlist.add(Pair.of(false, p_list));
       }
       if (t.getMatchObject().isVariable()) {
         latest_var = (Var) t.getMatchObject();
+        object_pairlist.add(Pair.of(true, o));
+      } else {
+        object_pairlist.add(Pair.of(false, o));
       }
       
       // build MATCH clause
-      buildMatchClause(s, pn, p, o, is_first);
-      is_first = false;
+      if (!use_cpo) {
+        buildMatchClause("(" + s + ")-[" + p + "]->(" + o + ") ");
+      }
+    }
+    // use all pairlists for path optimization
+    if (use_cpo) {
+
+      // left to left path optimization (l2l cpo)
+      if (l2l_cpo) l2lCypherPath();
+
+      // left to right path optimization (l2r cpo)
+      if (l2r_cpo) l2rCypherPath();
+
+      // right to right path optimization (no sp2b query case)
+      // TODO: test to same as l2l logic when test cases are available
+      // r2rCypherPath();
+
+
+      // build MATCH clause for each list element
+      for (int i = 0; i < subject_pairlist.size(); i++) {
+        String triple_path = "";
+        triple_path = triple_path.concat("("+ subject_pairlist.get(i).getRight() +")");
+        for (String predicate: predicate_pairlist.get(i).getRight()) {
+          triple_path = triple_path.concat(predicate);
+        }
+        triple_path = triple_path.concat("("+ object_pairlist.get(i).getRight() +") ");
+
+        // build MATCH clause
+        buildMatchClause(triple_path);
+      }
+
+      // clear pairlists
+      subject_pairlist.clear();
+      predicate_pairlist.clear();
+      object_pairlist.clear();
+      
     }
   }
 
@@ -384,7 +758,7 @@ public class SparqlAlgebra implements OpVisitor {
     // visit sub operation
     opFilter.getSubOp().visit(this);  
     // parse filter expressions and create cypher WHERE clause    
-    FilterParser filter_parser = new FilterParser();
+    FilterParser filter_parser = new FilterParser(use_coalesce);
     try {
       concatCypher(filter_parser.getWhereClause(opFilter.getExprs()));
     } catch (QueryException e) { 
@@ -407,7 +781,7 @@ public class SparqlAlgebra implements OpVisitor {
     // get vars from select statement
     List<Var> vars = opProject.getVars();
     // build return clause
-    return_clause = getReturnClause(vars, has_with_clause);
+    return_clause = setgetReturnClause(vars, has_with_clause);
     // concat return clause
     concatCypher(return_clause);
     // build end of agtype cypher query
@@ -430,7 +804,7 @@ public class SparqlAlgebra implements OpVisitor {
     concatCypher(" WITH ");
     for(Var var: Sparql_to_cypher_variable_map.keySet()) {
       concatCypher(
-        getCoalesceClause(Sparql_to_cypher_variable_map.get(var), false)
+        getSchemaStmt(Sparql_to_cypher_variable_map.get(var), false)
         + "AS " + Sparql_to_cypher_variable_map.get(var) + ", "
       );
     }
@@ -438,7 +812,7 @@ public class SparqlAlgebra implements OpVisitor {
     // build ORDER BY clause for all variables with regard to their conditions 
     concatCypher(" ORDER BY ");
     for(Var var: opOrder.getConditions().get(0).getExpression().getVarsMentioned()) {
-      concatCypher(getCoalesceClause(Sparql_to_cypher_variable_map.get(var), true));
+      concatCypher(getSchemaStmt(Sparql_to_cypher_variable_map.get(var), true));
     }
     cypher = cypher.substring(0, cypher.length() - 2);
   }
@@ -463,7 +837,7 @@ public class SparqlAlgebra implements OpVisitor {
     // check if FILTER is present by detecting expressions
     if (opLeftJoin.getExprs() != null) {  
       // parse filter expressions and create cypher WHERE clause    
-      FilterParser filter_parser = new FilterParser();
+      FilterParser filter_parser = new FilterParser(use_coalesce);
       try {
         concatCypher(filter_parser.getWhereClause(opLeftJoin.getExprs()));
       } catch (QueryException e) { e.printStackTrace(); }
@@ -481,8 +855,10 @@ public class SparqlAlgebra implements OpVisitor {
     // visit sub operation
     opDistinct.getSubOp().visit(this);
     // DISTINCT is in the RETURN clause of age cypher
-    cypher = cypher.replace("RETURN", "RETURN DISTINCT");
-    // Optionally SELECT DISTINCT could be used in SQL part of age cypher
+    cypher = cypher.replaceAll("RETURN", "RETURN DISTINCT");
+    // set distinct detection for UNION clause, 
+    //required to duplicate RETURN clause after visitors
+    distinct = true;
   }
 
 
@@ -524,7 +900,8 @@ public class SparqlAlgebra implements OpVisitor {
     // visit left bgp -> cache MATCH clause
     opJoin.getLeft().visit(this);
     // concat cached MATCH clause to the left part
-    concatCypher(cached_match_clause);
+    concatCypher(cached_match_clause); 
+
     // unset detection for OpJoin to parse by visitors as usual
     left_bgp_join = false;
     // visit right bgp
@@ -546,7 +923,7 @@ public class SparqlAlgebra implements OpVisitor {
     has_union_clause = true;
     // add MATCH duplicate for right bgp
     if (right_bgp_join) {
-      concatCypher(cached_match_clause);
+      concatCypher(cached_match_clause); 
       // unset used cache and detection
       cached_match_clause = "";
       right_bgp_join = false;
@@ -565,6 +942,13 @@ public class SparqlAlgebra implements OpVisitor {
       }
       // duplicate return clause before UNION if OpJoin + OpUnion is present
       if (has_union_clause) {
+        // check if DISTINCT is present
+        if (distinct) {
+          // DISTINCT is in the RETURN clause of age cypher
+          return_clause = return_clause.replaceAll("RETURN", "RETURN DISTINCT");
+          // unset distinct detection
+          distinct = false;
+        }
         cypher = cypher.replace("UNION", return_clause + " UNION");
       }
       // provide final cypher query

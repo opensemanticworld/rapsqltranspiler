@@ -5,6 +5,7 @@
   - [Testing](#testing)
     - [W3C Test](#w3c-test)
     - [SP2B Test](#sp2b-test)
+  - [Latest Build](#latest-build)
   - [License](#license)
   - [Authors](#authors)
 
@@ -34,6 +35,12 @@ mvn test -Dtest=W3CTest
 
 ```bash
 mvn test -Dtest=SP2BTest
+```
+
+## Latest Build
+
+```bash
+mvn clean install -Dtest=SP2BTest -Dstyle.color=never > logs/buildlog-v0.2.1-rdfid.txt 
 ```
 
 ## License

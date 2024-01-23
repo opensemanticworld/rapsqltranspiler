@@ -1,0 +1,230 @@
+@prefix dc: <http://purl.org/dc/elements/1.1/> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix rdf:  <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix swrc: <http://swrc.ontoware.org/ontology#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+@prefix bench: <http://localhost/vocabulary/bench/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix person: <http://localhost/persons/> .
+bench:Journal rdfs:subClassOf foaf:Document.
+bench:Proceedings rdfs:subClassOf foaf:Document.
+bench:Inproceedings rdfs:subClassOf foaf:Document.
+bench:Article rdfs:subClassOf foaf:Document.
+bench:Www rdfs:subClassOf foaf:Document.
+bench:MastersThesis rdfs:subClassOf foaf:Document.
+bench:PhDThesis rdfs:subClassOf foaf:Document.
+bench:Incollection rdfs:subClassOf foaf:Document.
+bench:Book rdfs:subClassOf foaf:Document.
+<http://localhost/persons/Paul_Erdoes> rdf:type foaf:Person.
+<http://localhost/persons/Paul_Erdoes> foaf:name "Paul Erdoes"^^xsd:string.
+<http://localhost/misc/UnknownDocument> rdf:type foaf:Document.
+<http://localhost/publications/journals/Journal1/1940> rdf:type bench:Journal.
+<http://localhost/publications/journals/Journal1/1940> swrc:number "1"^^xsd:integer.
+<http://localhost/publications/journals/Journal1/1940> dc:title "Journal 1 (1940)"^^xsd:string.
+<http://localhost/publications/journals/Journal1/1940> swrc:volume "1"^^xsd:integer.
+<http://localhost/publications/journals/Journal1/1940> dcterms:issued "1940"^^xsd:integer.
+<http://localhost/publications/articles/Journal1/1940/Article1> rdf:type bench:Article.
+<http://localhost/publications/articles/Journal1/1940/Article1> bench:abstract "unmuzzling measles decentralizing hogfishes gantleted richer succories dwelling scrapped prat islanded burlily thanklessly swiveled polers oinked apnea maxillary dumpers bering evasiveness toto teashop reaccepts gunneries exorcises pirog desexes summable heliocentricity excretions recelebrating dually plateauing reoccupations embossers cerebrum gloves mohairs admiralties bewigged playgoers cheques batting waspishly stilbestrol villainousness miscalling firefanged skeins equalled sandwiching bewitchment cheaters riffled kerneling napoleons rifer splinting surmisers satisfying undamped sharpers forbearer anesthetization undermentioned outflanking funnyman commuted lachrymation floweret arcadian acridities unrealistic substituting surges preheats loggias reconciliating photocatalyst lenity tautological jambing sodality outcrop slipcases phenylketonuria grunts venturers valiantly unremorsefully extradites stollens ponderers conditione loathly cancels debiting parrots paraguayans resonates"^^xsd:string.
+<http://localhost/publications/articles/Journal1/1940/Article1> bench:cdrom "http://www.hogfishes.tld/richer/succories.html"^^xsd:string.
+<http://localhost/publications/articles/Journal1/1940/Article1> rdfs:seeAlso "http://www.gantleted.tld/succories/dwelling.html"^^xsd:string.
+<http://localhost/publications/articles/Journal1/1940/Article1> swrc:month "4"^^xsd:integer.
+<http://localhost/publications/articles/Journal1/1940/Article1> swrc:note "overbites terminals giros podgy vagus kinkiest xix recollected"^^xsd:string.
+<http://localhost/publications/articles/Journal1/1940/Article1> swrc:pages "110"^^xsd:integer.
+<http://localhost/publications/articles/Journal1/1940/Article1> dc:title "richer dwelling scrapped"^^xsd:string.
+<http://localhost/publications/articles/Journal1/1940/Article1> foaf:homepage "http://www.succories.tld/scrapped/prat.html"^^xsd:string.
+<http://localhost/publications/articles/Journal1/1940/Article1> swrc:journal <http://localhost/publications/journals/Journal1/1940>.
+_:Adamanta_Schlitt rdf:type foaf:Person.
+_:Adamanta_Schlitt foaf:name "Adamanta Schlitt"^^xsd:string.
+<http://localhost/publications/articles/Journal1/1940/Article1> dc:creator _:Adamanta_Schlitt.
+<http://localhost/publications/articles/Journal1/1940/Article1> dc:creator <http://localhost/persons/Paul_Erdoes>.
+<http://localhost/publications/articles/Journal1/1940/Article1> dcterms:references _:references1.
+_:references1 rdf:type rdf:Bag.
+_:references1 rdf:_1 <http://localhost/misc/UnknownDocument>.
+_:references1 rdf:_2 <http://localhost/misc/UnknownDocument>.
+_:references1 rdf:_3 <http://localhost/misc/UnknownDocument>.
+_:references1 rdf:_4 <http://localhost/misc/UnknownDocument>.
+<http://localhost/publications/articles/Journal1/1940/Article2> rdf:type bench:Article.
+<http://localhost/publications/articles/Journal1/1940/Article2> bench:abstract "householder overeducated objurgate treaties preprocessor despising loftily yabber reprovingly blungers dwarflike effulgences coreless tuberculoses environs hulled preexamination oralogy tibetans slavishly hipless prs bluejays cuppier nonsurgical skimpiest outpoured dissociated heartier petitionee brill neologic intermuscular fobbed transcribed swifters redigesting ostinato recalculation safest signiory latchets inflecting trephines hops exec junketeers isolators reducing nethermost nonfiction retrogressions eliminates unknowns mongoloids danker raunchiness perspicuously disjoined nigglings midmonths labium peeped daydreams permuting immediately canzona interrelated cooked reformers goodwife technicolor plenishes nippy bounden occulters blubberer amenities desecrated tetrachlorides loutish polygony malines cliffhanger entailments reindexed bedstraws thoughtless elation swampland earings circumscribed paralyzingly pouchy surrejoinders chestiest measurage tonsils pasturage thurifer teazle"^^xsd:string.
+<http://localhost/publications/articles/Journal1/1940/Article2> bench:cdrom "http://www.dwelling.tld/prat/islanded.html"^^xsd:string.
+<http://localhost/publications/articles/Journal1/1940/Article2> rdfs:seeAlso "http://www.scrapped.tld/islanded/burlily.html"^^xsd:string.
+<http://localhost/publications/articles/Journal1/1940/Article2> swrc:month "8"^^xsd:integer.
+<http://localhost/publications/articles/Journal1/1940/Article2> swrc:note "fringier rhythmical wastebaskets powderer immigrates inserter plights corollaries"^^xsd:string.
+<http://localhost/publications/articles/Journal1/1940/Article2> swrc:pages "114"^^xsd:integer.
+<http://localhost/publications/articles/Journal1/1940/Article2> dc:title "prat burlily thanklessly"^^xsd:string.
+<http://localhost/publications/articles/Journal1/1940/Article2> foaf:homepage "http://www.islanded.tld/thanklessly/swiveled.html"^^xsd:string.
+<http://localhost/publications/articles/Journal1/1940/Article2> swrc:journal <http://localhost/publications/journals/Journal1/1940>.
+_:Cecil_Kochler rdf:type foaf:Person.
+_:Cecil_Kochler foaf:name "Cecil Kochler"^^xsd:string.
+<http://localhost/publications/articles/Journal1/1940/Article2> dc:creator _:Cecil_Kochler.
+<http://localhost/publications/articles/Journal1/1940/Article2> dc:creator <http://localhost/persons/Paul_Erdoes>.
+_:Brenda_Varley rdf:type foaf:Person.
+_:Brenda_Varley foaf:name "Brenda Varley"^^xsd:string.
+_:Ekantika_Bisogno rdf:type foaf:Person.
+_:Ekantika_Bisogno foaf:name "Ekantika Bisogno"^^xsd:string.
+_:Lisil_Hellmuth rdf:type foaf:Person.
+_:Lisil_Hellmuth foaf:name "Lisil Hellmuth"^^xsd:string.
+_:Matro_Newell rdf:type foaf:Person.
+_:Matro_Newell foaf:name "Matro Newell"^^xsd:string.
+<http://localhost/publications/journals/Journal2/1952> swrc:editor _:Brenda_Varley.
+<http://localhost/publications/journals/Journal2/1952> swrc:editor _:Ekantika_Bisogno.
+<http://localhost/publications/journals/Journal2/1952> swrc:editor _:Lisil_Hellmuth.
+<http://localhost/publications/procs/Proceeding1/1953> rdf:type bench:Proceedings.
+<http://localhost/publications/procs/Proceeding1/1953> bench:booktitle "dichotic gipsy scorepad"^^xsd:string.
+<http://localhost/publications/procs/Proceeding1/1953> dc:publisher "Pluto Press Ltd"^^xsd:string.
+<http://localhost/publications/procs/Proceeding1/1953> swrc:series "1961"^^xsd:integer.
+<http://localhost/publications/procs/Proceeding1/1953> dc:title "Proceeding 1 (1953)"^^xsd:string.
+<http://localhost/publications/procs/Proceeding1/1953> foaf:homepage "http://www.gipsy.tld/males/tatterdemalion.html"^^xsd:string.
+<http://localhost/publications/procs/Proceeding1/1953> swrc:volume "4"^^xsd:integer.
+<http://localhost/publications/procs/Proceeding1/1953> dcterms:issued "1953"^^xsd:integer.
+<http://localhost/publications/inprocs/Proceeding1/1953/Inproceeding12> rdf:type bench:Inproceedings.
+<http://localhost/publications/inprocs/Proceeding1/1953/Inproceeding12> bench:booktitle "indicative lyses carrotiest"^^xsd:string.
+<http://localhost/publications/inprocs/Proceeding1/1953/Inproceeding12> rdfs:seeAlso "http://www.doorsteps.tld/carrotiest/despiser.html"^^xsd:string.
+<http://localhost/publications/inprocs/Proceeding1/1953/Inproceeding12> swrc:pages "30"^^xsd:integer.
+<http://localhost/publications/inprocs/Proceeding1/1953/Inproceeding12> dc:title "lyses despiser finalization"^^xsd:string.
+<http://localhost/publications/inprocs/Proceeding1/1953/Inproceeding12> foaf:homepage "http://www.carrotiest.tld/finalization/beclouds.html"^^xsd:string.
+<http://localhost/publications/inprocs/Proceeding1/1953/Inproceeding12> dcterms:issued "1953"^^xsd:integer.
+<http://localhost/publications/inprocs/Proceeding1/1953/Inproceeding12> dcterms:partOf <http://localhost/publications/procs/Proceeding1/1953>.
+<http://localhost/publications/inprocs/Proceeding1/1953/Inproceeding12> dc:creator _:Matro_Newell.
+_:Cicely_Genna rdf:type foaf:Person.
+_:Cicely_Genna foaf:name "Cicely Genna"^^xsd:string.
+_:Dirthe_Kiewiet rdf:type foaf:Person.
+_:Dirthe_Kiewiet foaf:name "Dirthe Kiewiet"^^xsd:string.
+<http://localhost/publications/articles/Journal2/1951/Article74> dc:creator _:Cicely_Genna.
+<http://localhost/publications/procs/Proceeding1/1952> rdf:type bench:Proceedings.
+<http://localhost/publications/procs/Proceeding1/1952> bench:booktitle "megacycle hydrators anchorages"^^xsd:string.
+<http://localhost/publications/procs/Proceeding1/1952> swrc:isbn "0-5298-8814-0"^^xsd:string.
+<http://localhost/publications/procs/Proceeding1/1952> dc:publisher "UB & US Books & Things"^^xsd:string.
+<http://localhost/publications/procs/Proceeding1/1952> swrc:series "1046"^^xsd:integer.
+<http://localhost/publications/procs/Proceeding1/1952> dc:title "Proceeding 1 (1952)"^^xsd:string.
+<http://localhost/publications/procs/Proceeding1/1952> foaf:homepage "http://www.hydrators.tld/disencumbering/sniffling.html"^^xsd:string.
+<http://localhost/publications/procs/Proceeding1/1952> swrc:volume "3"^^xsd:integer.
+<http://localhost/publications/procs/Proceeding1/1952> dcterms:issued "1952"^^xsd:integer.
+<http://localhost/publications/inprocs/Proceeding1/1952/Inproceeding24> rdf:type bench:Inproceedings.
+<http://localhost/publications/inprocs/Proceeding1/1952/Inproceeding24> bench:abstract "dopiness stoutish allegers mapmaker seafloor subassembly jowliest psalmody realer puked climber borderlands trashed maximite priss dudishly serialists inveiglers frosts runniest exocrine footbath faddisms maximins radiotelegraphically nubbier mythologists brouhahas tarpapered riggers maladjusted aligners retraces lippy cynicism wieldier offensives disjoining folios fogger diminishments relatione welters predicating overpay waders eastwards darnings brainily threadworm inundating demonstrator envied climatal airscrew avocados inarticulateness chicaner wetsuit subprincipal vesuvius annotates landward frontages hewable vivider weatherstripped bermudian containerizes redheads straggliest nears laconism semiannual bridgeheads slicker paratypic masher autoeroticism announced defective absoluteness oversupply matchmaker cyphers chalkiest cirrhosis transubstantiate paganish remeasured quadrennium hailing earthwork infantilism eluviating bloodied luringly microform yachting bendy splurging lichee withholding decalcified punning ribaldry certificating mynahs"^^xsd:string.
+<http://localhost/publications/inprocs/Proceeding1/1952/Inproceeding24> bench:booktitle "marse implied fichu"^^xsd:string.
+<http://localhost/publications/inprocs/Proceeding1/1952/Inproceeding24> rdfs:seeAlso "http://www.yarded.tld/fichu/czechoslovaks.html"^^xsd:string.
+<http://localhost/publications/inprocs/Proceeding1/1952/Inproceeding24> swrc:pages "180"^^xsd:integer.
+<http://localhost/publications/inprocs/Proceeding1/1952/Inproceeding24> dc:title "implied czechoslovaks terrorizing"^^xsd:string.
+<http://localhost/publications/inprocs/Proceeding1/1952/Inproceeding24> foaf:homepage "http://www.fichu.tld/terrorizing/jingoist.html"^^xsd:string.
+<http://localhost/publications/inprocs/Proceeding1/1952/Inproceeding24> dcterms:issued "1952"^^xsd:integer.
+<http://localhost/publications/inprocs/Proceeding1/1952/Inproceeding24> dcterms:partOf <http://localhost/publications/procs/Proceeding1/1952>.
+<http://localhost/publications/inprocs/Proceeding1/1952/Inproceeding24> dc:creator _:Dirthe_Kiewiet.
+_:Gualtiero_Hemken rdf:type foaf:Person.
+_:Gualtiero_Hemken foaf:name "Gualtiero Hemken"^^xsd:string.
+<http://localhost/publications/procs/Proceeding1/1952> rdf:type bench:Proceedings.
+<http://localhost/publications/procs/Proceeding1/1952> bench:booktitle "megacycle hydrators anchorages"^^xsd:string.
+<http://localhost/publications/procs/Proceeding1/1952> swrc:isbn "0-5298-8814-0"^^xsd:string.
+<http://localhost/publications/procs/Proceeding1/1952> dc:publisher "UB & US Books & Things"^^xsd:string.
+<http://localhost/publications/procs/Proceeding1/1952> swrc:series "1046"^^xsd:integer.
+<http://localhost/publications/procs/Proceeding1/1952> dc:title "Proceeding 1 (1952)"^^xsd:string.
+<http://localhost/publications/procs/Proceeding1/1952> foaf:homepage "http://www.hydrators.tld/disencumbering/sniffling.html"^^xsd:string.
+<http://localhost/publications/procs/Proceeding1/1952> swrc:volume "3"^^xsd:integer.
+<http://localhost/publications/procs/Proceeding1/1952> dcterms:issued "1952"^^xsd:integer.
+<http://localhost/publications/inprocs/Proceeding1/1952/Inproceeding6> rdf:type bench:Inproceedings.
+<http://localhost/publications/inprocs/Proceeding1/1952/Inproceeding6> bench:booktitle "boiling gigs jalousie"^^xsd:string.
+<http://localhost/publications/inprocs/Proceeding1/1952/Inproceeding6> rdfs:seeAlso "http://www.taverner.tld/jalousie/eyesights.html"^^xsd:string.
+<http://localhost/publications/inprocs/Proceeding1/1952/Inproceeding6> swrc:pages "112"^^xsd:integer.
+<http://localhost/publications/inprocs/Proceeding1/1952/Inproceeding6> dc:title "gigs eyesights quirkiness"^^xsd:string.
+<http://localhost/publications/inprocs/Proceeding1/1952/Inproceeding6> foaf:homepage "http://www.jalousie.tld/quirkiness/penney.html"^^xsd:string.
+<http://localhost/publications/inprocs/Proceeding1/1952/Inproceeding6> dcterms:issued "1952"^^xsd:integer.
+<http://localhost/publications/inprocs/Proceeding1/1952/Inproceeding6> dcterms:partOf <http://localhost/publications/procs/Proceeding1/1952>.
+<http://localhost/publications/inprocs/Proceeding1/1952/Inproceeding6> dc:creator _:Gualtiero_Hemken.
+<http://localhost/publications/inprocs/Proceeding1/1952/Inproceeding6> dc:creator <http://localhost/persons/Paul_Erdoes>.
+_:Karina_Eggington rdf:type foaf:Person.
+_:Karina_Eggington foaf:name "Karina Eggington"^^xsd:string.
+<http://localhost/publications/incolls/1949/Incollection1> dc:creator _:Karina_Eggington.
+<http://localhost/publications/journals/Journal2/1949> rdf:type bench:Journal.
+<http://localhost/publications/journals/Journal2/1949> swrc:number "1"^^xsd:integer.
+<http://localhost/publications/journals/Journal2/1949> dc:title "Journal 2 (1949)"^^xsd:string.
+<http://localhost/publications/journals/Journal2/1949> swrc:volume "1"^^xsd:integer.
+<http://localhost/publications/journals/Journal2/1949> dcterms:issued "1949"^^xsd:integer.
+<http://localhost/publications/articles/Journal2/1949/Article21> rdf:type bench:Article.
+<http://localhost/publications/articles/Journal2/1949/Article30> rdf:type bench:Article.
+<http://localhost/publications/articles/Journal2/1949/Article30> rdfs:seeAlso "http://www.drumbeat.tld/friskiness/lapdogs.html"^^xsd:string.
+<http://localhost/publications/articles/Journal2/1949/Article30> swrc:pages "108"^^xsd:integer.
+<http://localhost/publications/articles/Journal2/1949/Article30> dc:title "serries lapdogs biting"^^xsd:string.
+<http://localhost/publications/articles/Journal2/1949/Article30> foaf:homepage "http://www.friskiness.tld/biting/bateaux.html"^^xsd:string.
+<http://localhost/publications/articles/Journal2/1949/Article30> swrc:journal <http://localhost/publications/journals/Journal2/1949>.
+_:Shoko_Moel rdf:type foaf:Person.
+_:Shoko_Moel foaf:name "Shoko Moel"^^xsd:string.
+<http://localhost/publications/articles/Journal2/1949/Article30> dc:creator _:Shoko_Moel.
+_:Bhoomika_Secord rdf:type foaf:Person.
+_:Bhoomika_Secord foaf:name "Bhoomika Secord"^^xsd:string.
+_:Editta_Servoss rdf:type foaf:Person.
+_:Editta_Servoss foaf:name "Editta Servoss"^^xsd:string.
+<http://localhost/publications/articles/Journal2/1949/Article30> dc:creator _:Bhoomika_Secord.
+<http://localhost/publications/procs/Proceeding1/1950> rdf:type bench:Proceedings.
+<http://localhost/publications/procs/Proceeding1/1950> swrc:isbn "0-8755-5472-0"^^xsd:string.
+<http://localhost/publications/procs/Proceeding1/1950> dc:publisher "American Academy of Arts and Sciences"^^xsd:string.
+<http://localhost/publications/procs/Proceeding1/1950> dc:title "Proceeding 1 (1950)"^^xsd:string.
+<http://localhost/publications/procs/Proceeding1/1950> foaf:homepage "http://www.tailpipe.tld/summerhouses/vialing.html"^^xsd:string.
+<http://localhost/publications/procs/Proceeding1/1950> swrc:volume "1"^^xsd:integer.
+<http://localhost/publications/procs/Proceeding1/1950> dcterms:issued "1950"^^xsd:integer.
+<http://localhost/publications/inprocs/Proceeding1/1950/Inproceeding1> rdf:type bench:Inproceedings.
+<http://localhost/publications/inprocs/Proceeding1/1950/Inproceeding1> bench:booktitle "fits vialing lexicons"^^xsd:string.
+<http://localhost/publications/inprocs/Proceeding1/1950/Inproceeding1> rdfs:seeAlso "http://www.summerhouses.tld/lexicons/imprisonment.html"^^xsd:string.
+<http://localhost/publications/inprocs/Proceeding1/1950/Inproceeding1> swrc:pages "47"^^xsd:integer.
+<http://localhost/publications/inprocs/Proceeding1/1950/Inproceeding1> dc:title "vialing imprisonment vivisects"^^xsd:string.
+<http://localhost/publications/inprocs/Proceeding1/1950/Inproceeding1> foaf:homepage "http://www.lexicons.tld/vivisects/gipper.html"^^xsd:string.
+<http://localhost/publications/inprocs/Proceeding1/1950/Inproceeding1> dcterms:issued "1950"^^xsd:integer.
+<http://localhost/publications/inprocs/Proceeding1/1950/Inproceeding1> dcterms:partOf <http://localhost/publications/procs/Proceeding1/1950>.
+<http://localhost/publications/inprocs/Proceeding1/1950/Inproceeding1> dc:creator _:Bhoomika_Secord.
+<http://localhost/publications/inprocs/Proceeding1/1950/Inproceeding1> dc:creator _:Editta_Servoss.
+<http://localhost/publications/inprocs/Proceeding1/1950/Inproceeding1> dc:creator <http://localhost/persons/Paul_Erdoes>.
+<http://localhost/publications/articles/Journal1/1940/Article2> rdfs:seeAlso "http://www.scrapped.tld/islanded/burlily.html"^^xsd:string.
+<http://localhost/publications/articles/Journal1/1940/Article3> rdfs:seeAlso "http://www.thanklessly.tld/polers/oinked.html"^^xsd:string.
+<http://localhost/publications/articles/Journal1/1940/Article4> rdfs:seeAlso "http://www.apnea.tld/dumpers/bering.html"^^xsd:string.
+<http://localhost/publications/articles/Journal1/1940/Article5> rdfs:seeAlso "http://www.bering.tld/toto/teashop.html"^^xsd:string.
+<http://localhost/publications/articles/Journal1/1940/Article6> rdfs:seeAlso "http://www.teashop.tld/gunneries/exorcises.html"^^xsd:string.
+<http://localhost/publications/articles/Journal1/1940/Article7> rdfs:seeAlso "http://www.exorcises.tld/desexes/summable.html"^^xsd:string.
+<http://localhost/publications/articles/Journal1/1940/Article8> rdfs:seeAlso "http://www.summable.tld/excretions/recelebrating.html"^^xsd:string.
+<http://localhost/publications/articles/Journal1/1940/Article9> rdfs:seeAlso "http://www.recelebrating.tld/plateauing/reoccupations.html"^^xsd:string.
+<http://localhost/publications/articles/Journal1/1940/Article10> rdfs:seeAlso "http://www.reoccupations.tld/cerebrum/gloves.html"^^xsd:string.
+<http://localhost/publications/articles/Journal1/1940/Article11> rdfs:seeAlso "http://www.gloves.tld/admiralties/bewigged.html"^^xsd:string.
+<http://localhost/publications/articles/Journal1/1940/Article12> rdfs:seeAlso "http://www.bewigged.tld/cheques/batting.html"^^xsd:string.
+<http://localhost/publications/articles/Journal1/1940/Article13> rdfs:seeAlso "http://www.batting.tld/stilbestrol/villainousness.html"^^xsd:string.
+<http://localhost/publications/articles/Journal1/1940/Article14> rdfs:seeAlso "http://www.villainousness.tld/firefanged/skeins.html"^^xsd:string.
+<http://localhost/publications/articles/Journal1/1940/Article15> rdfs:seeAlso "http://www.skeins.tld/sandwiching/bewitchment.html"^^xsd:string.
+<http://localhost/publications/articles/Journal1/1940/Article16> rdfs:seeAlso "http://www.bewitchment.tld/riffled/kerneling.html"^^xsd:string.
+<http://localhost/publications/articles/Journal1/1940/Article17> rdfs:seeAlso "http://www.kerneling.tld/rifer/splinting.html"^^xsd:string.
+<http://localhost/publications/articles/Journal1/1940/Article18> rdfs:seeAlso "http://www.splinting.tld/satisfying/undamped.html"^^xsd:string.
+<http://localhost/publications/articles/Journal1/1940/Article19> rdfs:seeAlso "http://www.undamped.tld/forbearer/anesthetization.html"^^xsd:string.
+<http://localhost/publications/articles/Journal1/1940/Article20> rdfs:seeAlso "http://www.anesthetization.tld/outflanking/funnyman.html"^^xsd:string.
+<http://localhost/publications/articles/Journal1/1941/Article1> rdfs:seeAlso "http://www.commuted.tld/floweret/arcadian.html"^^xsd:string.
+<http://localhost/publications/articles/Journal1/1941/Article2> rdfs:seeAlso "http://www.arcadian.tld/unrealistic/substituting.html"^^xsd:string.
+<http://localhost/publications/articles/Journal1/1941/Article3> rdfs:seeAlso "http://www.substituting.tld/preheats/loggias.html"^^xsd:string.
+<http://localhost/publications/articles/Journal1/1941/Article4> rdfs:seeAlso "http://www.loggias.tld/photocatalyst/lenity.html"^^xsd:string.
+<http://localhost/publications/articles/Journal1/1941/Article5> rdfs:seeAlso "http://www.lenity.tld/jambing/sodality.html"^^xsd:string.
+<http://localhost/publications/articles/Journal1/1941/Article6> rdfs:seeAlso "http://www.sodality.tld/slipcases/phenylketonuria.html"^^xsd:string.
+<http://localhost/publications/articles/Journal1/1941/Article7> rdfs:seeAlso "http://www.phenylketonuria.tld/venturers/valiantly.html"^^xsd:string.
+<http://localhost/publications/articles/Journal1/1941/Article8> rdfs:seeAlso "http://www.valiantly.tld/extradites/stollens.html"^^xsd:string.
+<http://localhost/publications/articles/Journal1/1941/Article9> rdfs:seeAlso "http://www.stollens.tld/conditione/loathly.html"^^xsd:string.
+<http://localhost/publications/articles/Journal1/1941/Article10> rdfs:seeAlso "http://www.loathly.tld/debiting/parrots.html"^^xsd:string.
+<http://localhost/publications/articles/Journal1/1941/Article11> rdfs:seeAlso "http://www.parrots.tld/resonates/overbites.html"^^xsd:string.
+<http://localhost/publications/articles/Journal1/1941/Article12> rdfs:seeAlso "http://www.overbites.tld/giros/podgy.html"^^xsd:string.
+<http://localhost/publications/articles/Journal1/1941/Article13> rdfs:seeAlso "http://www.podgy.tld/kinkiest/xix.html"^^xsd:string.
+<http://localhost/publications/articles/Journal1/1941/Article13> rdfs:seeAlso "http://www.podgy.tld/kinkiest/xix.html"^^xsd:string.
+<http://localhost/publications/articles/Journal1/1941/Article14> rdfs:seeAlso "http://www.xix.tld/householder/overeducated.html"^^xsd:string.
+<http://localhost/publications/articles/Journal1/1941/Article15> rdfs:seeAlso "http://www.overeducated.tld/treaties/preprocessor.html"^^xsd:string.
+<http://localhost/publications/articles/Journal1/1941/Article16> rdfs:seeAlso "http://www.preprocessor.tld/loftily/yabber.html"^^xsd:string.
+<http://localhost/publications/articles/Journal1/1941/Article17> rdfs:seeAlso "http://www.yabber.tld/blungers/dwarflike.html"^^xsd:string.
+<http://localhost/publications/articles/Journal1/1941/Article18> rdfs:seeAlso "http://www.dwarflike.tld/coreless/tuberculoses.html"^^xsd:string.
+<http://localhost/publications/articles/Journal1/1941/Article19> rdfs:seeAlso "http://www.tuberculoses.tld/hulled/preexamination.html"^^xsd:string.
+<http://localhost/publications/articles/Journal1/1941/Article20> rdfs:seeAlso "http://www.preexamination.tld/tibetans/slavishly.html"^^xsd:string.
+<http://localhost/publications/articles/Journal1/1941/Article21> rdfs:seeAlso "http://www.slavishly.tld/prs/bluejays.html"^^xsd:string.
+<http://localhost/publications/articles/Journal1/1941/Article22> rdfs:seeAlso "http://www.bluejays.tld/nonsurgical/skimpiest.html"^^xsd:string.
+<http://localhost/publications/articles/Journal1/1941/Article23> rdfs:seeAlso "http://www.skimpiest.tld/dissociated/heartier.html"^^xsd:string.
+<http://localhost/publications/incolls/1941/Incollection1> rdfs:seeAlso "http://www.petitionee.tld/neologic/intermuscular.html"^^xsd:string.
+<http://localhost/publications/articles/Journal1/1942/Article1> rdfs:seeAlso "http://www.fobbed.tld/swifters/redigesting.html"^^xsd:string.
+<http://localhost/publications/articles/Journal1/1942/Article2> rdfs:seeAlso "http://www.redigesting.tld/recalculation/safest.html"^^xsd:string.
+<http://localhost/publications/articles/Journal1/1942/Article3> rdfs:seeAlso "http://www.safest.tld/latchets/inflecting.html"^^xsd:string.
+<http://localhost/publications/articles/Journal1/1942/Article4> rdfs:seeAlso "http://www.inflecting.tld/hops/exec.html"^^xsd:string.
+<http://localhost/publications/articles/Journal1/1942/Article5> foaf:homepage "http://www.isolators.tld/nethermost/nonfiction.html"^^xsd:string.
+<http://localhost/publications/articles/Journal1/1942/Article6> rdfs:seeAlso "http://www.nethermost.tld/retrogressions/eliminates.html"^^xsd:string.
+<http://localhost/publications/articles/Journal1/1942/Article7> rdfs:seeAlso "http://www.eliminates.tld/mongoloids/danker.html"^^xsd:string.
+<http://localhost/publications/articles/Journal1/1942/Article8> rdfs:seeAlso "http://www.danker.tld/perspicuously/disjoined.html"^^xsd:string.
+<http://localhost/publications/articles/Journal1/1942/Article9> rdfs:seeAlso "http://www.disjoined.tld/midmonths/labium.html"^^xsd:string.
+<http://localhost/publications/articles/Journal1/1942/Article10> rdfs:seeAlso "http://www.labium.tld/daydreams/permuting.html"^^xsd:string.
+<http://localhost/publications/articles/Journal1/1942/Article11> rdfs:seeAlso "http://www.permuting.tld/canzona/interrelated.html"^^xsd:string.
+<http://localhost/publications/articles/Journal1/1942/Article12> rdfs:seeAlso "http://www.interrelated.tld/reformers/goodwife.html"^^xsd:string.

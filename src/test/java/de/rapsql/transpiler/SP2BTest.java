@@ -49,18 +49,25 @@ import org.apache.jena.rdf.model.Model;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class SP2BTest {
-  // test parameter
+  // test configuration
+  private static final Boolean DISABLE_SPARQL = false;
+  private static final Boolean DISABLE_CYPHER = false;
+  private static final Boolean CNT_RESULTS = false;
+  private static final Boolean import_rdf = false;
+  private static final Boolean drop_graph = false;
+  private static final Boolean use_typed_sparql = false;
+
+  // test parameter setup
   private static final String DB_URL = "jdbc:postgresql://localhost:5432/rapsql";
   private static final String USER = "postgres";
   private static final String PASS = "postgres";
-  // private static final String GRAPH_NAME = "spcustom";
   private static final String GRAPH_NAME = "spcustompart";
+  // private static final String GRAPH_NAME = "spcustomrdfid";
+  // private static final String GRAPH_NAME = "sp100k";
+  // private static final String GRAPH_NAME = "tesla";
   private static final String PATH_NAME = "src/test/resources/sp2b";
   private static final String SRC_NAME = "rdf.n3";
-  // private static final Boolean DISABLE_CYPHER = true;
-  private static final Boolean DISABLE_CYPHER = false;
-  private static final Boolean import_rdf = false;
-  private static final Boolean drop_graph = false;
+
 
   // provide test resources of rdf model, rdf-cypher model, sparql queries
   private static List<Arguments> MethodProvider() throws IOException {
@@ -126,53 +133,60 @@ public class SP2BTest {
     //   return; 
     // }
 
-    // read, print, and execute sparql query
+    // SPARQL: read, print, and execute 
     try {
       sparql_query = new String(Files.readAllBytes(query_file.toPath()));
-      Helper.display_info('-', 20, "SPARQL QUERY " + query_file.getName());
-      System.out.println(sparql_query);
-          // build-in sparql query execution of jena library
-      time_before = System.currentTimeMillis();
-      Query query = QueryFactory.create(sparql_query);
-      String query_type = query.queryType().toString();
-      // System.out.println("Query type: " + query_type);
-      QueryExecution qe = QueryExecutionFactory.create(query, rdf_model);
-
-      if (query_type.equals("ASK")) {
-        boolean result = qe.execAsk();
-        // System.out.println("Result: " + result);
-        if (result) {
-          sparql_res_list.add(new HashMap<String, String>() {{ put("exists", "t"); }});
-        } else {
-          sparql_res_list.add(new HashMap<String, String>() {{ put("exists", "f"); }});
-        }
-        time_after = System.currentTimeMillis();
-      }
-
-      if (query_type.equals("SELECT")) {
-        org.apache.jena.query.ResultSet results = qe.execSelect(); 
-        // sparql result set mapping 
-        while(results.hasNext()) {
-          Map<String, String> sparql_res = new HashMap<String, String>();
-          QuerySolution row = results.next();
-          for(String col: results.getResultVars()) {
-            // System.out.println("\n\nDEBUG RESULT" + sparql_res + "\n");
-            // if not null add to result map, else "null" string
-            if (row.get(col) != null) {
-              // rm datatype for equality test of different triple store designs
-              sparql_res.put(col, Helper.rm_dt(row.get(col).toString()));
-            } 
-            else sparql_res.put(col, "null");
+      if (!DISABLE_SPARQL) {
+        Helper.display_info('-', 20, "SPARQL QUERY " + query_file.getName());
+        System.out.println(sparql_query);
+            // build-in sparql query execution of jena library
+        time_before = System.currentTimeMillis();
+        Query query = QueryFactory.create(sparql_query);
+        String query_type = query.queryType().toString();
+        // System.out.println("Query type: " + query_type);
+        QueryExecution qe = QueryExecutionFactory.create(query, rdf_model);
+  
+        if (query_type.equals("ASK")) {
+          boolean result = qe.execAsk();
+          // System.out.println("Result: " + result);
+          if (result) {
+            sparql_res_list.add(new HashMap<String, String>() {{ put("exists", "t"); }});
+          } else {
+            sparql_res_list.add(new HashMap<String, String>() {{ put("exists", "f"); }});
           }
-          // add result to sparql result list
-          // sparql_res_map.add(sparql_res); 
-          sparql_res_list.add(sparql_res); 
           time_after = System.currentTimeMillis();
+        }
+  
+        if (query_type.equals("SELECT")) {
+          org.apache.jena.query.ResultSet results = qe.execSelect(); 
+          // sparql result set mapping 
+          while(results.hasNext()) {
+            Map<String, String> sparql_res = new HashMap<String, String>();
+            QuerySolution row = results.next();
+            for(String col: results.getResultVars()) {
+              // System.out.println("\n\nDEBUG RESULT" + sparql_res + "\n");
+              // if not null add to result map, else "null" string
+              if (row.get(col) != null) {
+                // rm datatype for equality test of different triple store designs
+                if (!use_typed_sparql) {
+                  sparql_res.put(col, row.get(col).toString().split("\\^\\^")[0]);
+                } else {
+                  sparql_res.put(col, row.get(col).toString());
+                }
+              } 
+              else sparql_res.put(col, "null");
+            }
+            // add result to sparql result list
+            // sparql_res_map.add(sparql_res); 
+            sparql_res_list.add(sparql_res); 
+            time_after = System.currentTimeMillis();
+          }
         }
       }
       Helper.display_exec_time("SPARQL", time_before, time_after);
     } catch (IOException e) { e.printStackTrace(); }
 
+    // CYPHER: read, print, and execute
     if (!DISABLE_CYPHER) {
       // transform, print and execute transpiled cypher query
       try {
@@ -224,8 +238,7 @@ public class SP2BTest {
 
 
 
-
-    if (!DISABLE_CYPHER) {
+    if (!DISABLE_CYPHER && !DISABLE_SPARQL) {
       /*    EQUALITY TEST    */
       // sort result lists, only an applied ORDER BY clause will be checked, not the order of the results
       // caused by equal results, e.g, year(1) = 1950 | year(2) = 1950, the order of the results is not deterministic
@@ -235,8 +248,13 @@ public class SP2BTest {
 
       // print sparql and cypher result maps for test run
       Helper.display_info('$', 28, "EQUALITY TEST RESULT");
-      System.out.println("\nSPARQL: " + sparql_res_list);
-      System.out.println("\nCYPHER: " + cypher_res_list);
+      if (!CNT_RESULTS) {
+        System.out.println("-------- SPARQL RESULT --------\n" + sparql_res_list + "\n");
+        System.out.println("-------- CYPHER RESULT --------\n" + cypher_res_list + "\n");      
+      } else {
+        System.out.println("-------- SPARQL RESULT --------\n" + "cnt=" + sparql_res_list.size() + "\n");
+        System.out.println("-------- CYPHER RESULT --------\n" + "cnt=" + cypher_res_list.size() + "\n");
+      }
       // testing equality of sparql and cypher result maps
       assertEquals(sparql_res_list, cypher_res_list, String.format(    
         "Equality test failed for %s\nSparql result:\n%s\n\nCypher Result\n%s", 
@@ -245,10 +263,13 @@ public class SP2BTest {
         cypher_res_list.toString()
       ));
     } else {
-      System.out.println("-------- SPARQL RESULT --------\n" + sparql_res_list + "\n");
-      System.out.println("-------- CYPHER RESULT --------\n" + cypher_res_list + "\n");      
+      if (!CNT_RESULTS) {
+        System.out.println("-------- SPARQL RESULT --------\n" + sparql_res_list + "\n");
+        System.out.println("-------- CYPHER RESULT --------\n" + cypher_res_list + "\n");      
+      } else {
+        System.out.println("-------- SPARQL RESULT --------\n" + "cnt=" + sparql_res_list.size() + "\n");
+        System.out.println("-------- CYPHER RESULT --------\n" + "cnt=" + cypher_res_list.size() + "\n");
+      }
     }
-  
   }
-
 }
