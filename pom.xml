@@ -25,11 +25,11 @@
   
   <groupId>de.rapsql.transpiler</groupId>
   <artifactId>rapsqltranspiler</artifactId>
-  <version>v0.4.2</version>
+  <version>v0.4.3</version>
   <packaging>jar</packaging>
   <name>rapsqltranspiler</name>
   <url>http://www.rapsql.de</url>
-  <description>Model rdfid cpo2</description>
+  <description>Model rdfid cpo3</description>
 
 
   <!-- encoding and compiler properties -->
