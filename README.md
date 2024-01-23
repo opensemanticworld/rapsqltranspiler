@@ -31,18 +31,21 @@ The automated tests depend on the correct `RDF2PG` integration maven build (spec
 
 ```bash
 mvn test -Dtest=W3CTest -Dstyle.color=never > logs/test-w3c-v0.3.0-yars-plain.txt
+mvn test -Dtest=W3CTest -Dstyle.color=never > logs/test-w3c-v0.3.1-yars-cpo1.txt
 ```
 
 ### SP2B Test
 
 ```bash
 mvn test -Dtest=SP2BTest -Dstyle.color=never > logs/test-sp2b-v0.3.0-yars-plain.txt
+mvn test -Dtest=SP2BTest -Dstyle.color=never > logs/test-sp2b-v0.3.1-yars-cpo1.txt
 ```
 
 ## Latest Build
 
 ```bash
 mvn clean install -Dstyle.color=never > logs/build-v0.3.0-yars-plain.txt
+mvn clean install -Dstyle.color=never > logs/build-v0.3.1-yars-cpo1.txt
 ```
 
 ## License
