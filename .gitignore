@@ -1,8 +1,4 @@
 .vscode
 target/
-<<<<<<< HEAD
 src/test/resources
-=======
-dist/
->>>>>>> 403bc0987dd8083cb6c83352eea60ac95e6631f3
 logs/_old
