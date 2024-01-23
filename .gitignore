@@ -1,4 +1,4 @@
 .vscode
 target/
-src/test/resources
 dist/
+logs/_old
