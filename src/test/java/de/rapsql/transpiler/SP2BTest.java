@@ -50,24 +50,23 @@ import org.apache.jena.rdf.model.Model;
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class SP2BTest {
   // test configuration
+  private static final Boolean use_typed_sparql = false;
   private static final Boolean DISABLE_SPARQL = false;
   private static final Boolean DISABLE_CYPHER = false;
   private static final Boolean CNT_RESULTS = false;
   private static final Boolean import_rdf = false;
   private static final Boolean drop_graph = false;
-  private static final Boolean use_typed_sparql = false;
 
   // test parameter setup
   private static final String DB_URL = "jdbc:postgresql://localhost:5432/rapsql";
   private static final String USER = "postgres";
   private static final String PASS = "postgres";
-  private static final String GRAPH_NAME = "spcustompart";
-  // private static final String GRAPH_NAME = "spcustomrdfid";
-  // private static final String GRAPH_NAME = "sp100k";
-  // private static final String GRAPH_NAME = "tesla";
+  // private static final String GRAPH_NAME = "tesla"; 
+  private static final String GRAPH_NAME = "spcustomyars";
+  // private static final String GRAPH_NAME = "spcustomrdfid2";
   private static final String PATH_NAME = "src/test/resources/sp2b";
   private static final String SRC_NAME = "rdf.n3";
-
+  
 
   // provide test resources of rdf model, rdf-cypher model, sparql queries
   private static List<Arguments> MethodProvider() throws IOException {

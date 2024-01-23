@@ -18,6 +18,7 @@ package de.rapsql.transpiler;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.fail;
+
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assumptions;
 import org.junit.jupiter.api.BeforeEach;
@@ -49,6 +50,7 @@ import org.apache.jena.rdf.model.Model;
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class W3CTest {
   // test parameter
+  private static final Boolean use_typed_sparql = false;
   private static final String DB_URL = "jdbc:postgresql://localhost:5432/rapsql";
   private static final String USER = "postgres";
   private static final String PASS = "postgres";
@@ -62,13 +64,13 @@ public class W3CTest {
   }
 
   // create test graph in postgres
-  @BeforeEach 
+  @BeforeEach
   public void age_create_graph() throws SQLException {
     TestProvider.age_create_graph(DB_URL, USER, PASS, GRAPH_NAME);
   }
 
   // drop test graph in postgres
-  @AfterEach 
+  @AfterEach
   public void age_drop_graph() throws SQLException {
     TestProvider.age_drop_graph(DB_URL, USER, PASS, GRAPH_NAME);
   }
@@ -108,7 +110,11 @@ public class W3CTest {
         QuerySolution row = results.next();
         for(String col: results.getResultVars()) {
           // rm datatype for equality test of different triple store designs
-          sparql_res.put(col, row.get(col).toString());
+          if (!use_typed_sparql) {
+            sparql_res.put(col, row.get(col).toString().split("\\^\\^")[0]);
+          } else {
+            sparql_res.put(col, row.get(col).toString());
+          }
           // sparql_res.put(col, Helper.rm_dt(row.get(col).toString()));
         }
         sparql_res_map.add(sparql_res); // add result to sparql result list
