@@ -35,6 +35,7 @@ mvn test -Dtest=W3CTest -Dstyle.color=never > logs/test-w3c-v0.3.1-yars-cpo1.txt
 mvn test -Dtest=W3CTest -Dstyle.color=never > logs/test-w3c-v0.3.2-yars-cpo2.txt
 mvn test -Dtest=W3CTest -Dstyle.color=never > logs/test-w3c-v0.3.3-yars-cpo3.txt
 mvn test -Dtest=W3CTest -Dstyle.color=never > logs/test-w3c-v0.4.0-rdfid-plain.txt
+mvn test -Dtest=W3CTest -Dstyle.color=never > logs/test-w3c-v0.4.1-rdfid-cpo1.txt
 ```
 
 ### SP2B Test
@@ -45,6 +46,7 @@ mvn test -Dtest=SP2BTest -Dstyle.color=never > logs/test-sp2b-v0.3.1-yars-cpo1.t
 mvn test -Dtest=SP2BTest -Dstyle.color=never > logs/test-sp2b-v0.3.2-yars-cpo2.txt
 mvn test -Dtest=SP2BTest -Dstyle.color=never > logs/test-sp2b-v0.3.3-yars-cpo3.txt
 mvn test -Dtest=SP2BTest -Dstyle.color=never > logs/test-sp2b-v0.4.0-rdfid-plain.txt
+mvn test -Dtest=SP2BTest -Dstyle.color=never > logs/test-sp2b-v0.4.1-rdfid-cpo1.txt
 ```
 
 ## Latest Build
@@ -55,6 +57,7 @@ mvn clean install -Dstyle.color=never > logs/build-v0.3.1-yars-cpo1.txt
 mvn clean install -Dstyle.color=never > logs/build-v0.3.2-yars-cpo2.txt
 mvn clean install -Dstyle.color=never > logs/build-v0.3.3-yars-cpo3.txt
 mvn clean install -Dstyle.color=never > logs/build-v0.4.0-rdfid-plain.txt
+mvn clean install -Dstyle.color=never > logs/build-v0.4.1-rdfid-cpo1.txt
 ```
 
 ## License

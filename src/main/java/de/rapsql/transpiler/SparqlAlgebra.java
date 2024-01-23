@@ -78,9 +78,9 @@ public class SparqlAlgebra implements OpVisitor {
   // enable/disable coalesce (gdm dbmodel: true=yars, false=rdfid)
   private boolean use_coalesce = false;
   // enable/disable cypher path optimization (cpo)
-  private boolean use_cpo = false; 
+  private boolean use_cpo = true; 
   // left to left | right to right
-  private boolean l2l_cpo = false;
+  private boolean l2l_cpo = true;
   private boolean l2r_cpo = false;
   ///////////////////////////////////////////
 
