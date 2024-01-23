@@ -62,8 +62,8 @@ public class SP2BTest {
   private static final String USER = "postgres";
   private static final String PASS = "postgres";
   // private static final String GRAPH_NAME = "tesla"; 
-  private static final String GRAPH_NAME = "spcustomyars";
-  // private static final String GRAPH_NAME = "spcustomrdfid2";
+  // private static final String GRAPH_NAME = "spcustomyars";
+  private static final String GRAPH_NAME = "spcustomrdfid2";
   private static final String PATH_NAME = "src/test/resources/sp2b";
   private static final String SRC_NAME = "rdf.n3";
   

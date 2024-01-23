@@ -1,0 +1,1077 @@
+[INFO] Scanning for projects...
+[INFO] 
+[INFO] ---------------< de.rapsql.transpiler:rapsqltranspiler >----------------
+[INFO] Building rapsqltranspiler v0.4.0
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- maven-clean-plugin:2.5:clean (default-clean) @ rapsqltranspiler ---
+[INFO] Deleting /usr/local/docker/masterthesis/rapsql/submodules/rapsqltranspiler/target
+[INFO] 
+[INFO] --- maven-resources-plugin:2.6:resources (default-resources) @ rapsqltranspiler ---
+[INFO] Using 'UTF-8' encoding to copy filtered resources.
+[INFO] skip non existing resourceDirectory /usr/local/docker/masterthesis/rapsql/submodules/rapsqltranspiler/src/main/resources
+[INFO] 
+[INFO] --- maven-compiler-plugin:3.1:compile (default-compile) @ rapsqltranspiler ---
+[INFO] Changes detected - recompiling the module!
+[INFO] Compiling 8 source files to /usr/local/docker/masterthesis/rapsql/submodules/rapsqltranspiler/target/classes
+[INFO] 
+[INFO] --- maven-resources-plugin:2.6:testResources (default-testResources) @ rapsqltranspiler ---
+[INFO] Using 'UTF-8' encoding to copy filtered resources.
+[INFO] Copying 60 resources
+[INFO] 
+[INFO] --- maven-compiler-plugin:3.1:testCompile (default-testCompile) @ rapsqltranspiler ---
+[INFO] Changes detected - recompiling the module!
+[INFO] Compiling 3 source files to /usr/local/docker/masterthesis/rapsql/submodules/rapsqltranspiler/target/test-classes
+[INFO] 
+[INFO] --- maven-surefire-plugin:3.0.0:test (default-test) @ rapsqltranspiler ---
+[INFO] Using auto detected provider org.apache.maven.surefire.junitplatform.JUnitPlatformProvider
+[INFO] 
+[INFO] -------------------------------------------------------
+[INFO]  T E S T S
+[INFO] -------------------------------------------------------
+[INFO] Running de.rapsql.transpiler.W3CTest
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% METHOD PROVIDER %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+------- TEST RESOURCES -------
+w3c_test1/rdf.ttl
+w3c_test1/queries/query1.sparql
+
+------- TEST RESOURCES -------
+w3c_test2/rdf.ttl
+w3c_test2/queries/query1.sparql
+
+------- TEST RESOURCES -------
+w3c_test3/rdf.ttl
+w3c_test3/queries/query1.sparql
+w3c_test3/queries/query2.sparql
+w3c_test3/queries/query3.sparql
+w3c_test3/queries/query4.sparql
+
+------- TEST RESOURCES -------
+w3c_test4/rdf.ttl
+w3c_test4/queries/query1.sparql
+
+------- TEST RESOURCES -------
+w3c_test5/rdf.ttl
+w3c_test5/queries/query1.sparql
+w3c_test5/queries/query2.sparql
+w3c_test5/queries/query3.sparql
+w3c_test5/queries/query4.sparql
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% END METHOD PROVIDER %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% PARAMETERIZED TEST %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+------- SUCCESS CREATE GRAPH junit-test -------
+
+------- SUCCESS RDF IMPORT w3c_test1 -------
+
+-------------------- SPARQL QUERY query1.sparql --------------------
+SELECT ?title
+WHERE
+{
+  <http://example.org/book/book1> <http://purl.org/dc/elements/1.1/title> ?title .
+}    
+
+---------------------- CYPHER TRANSPILED QUERY ----------------------
+SELECT * FROM ag_catalog.cypher('junit-test', $$
+MATCH ({rdfid:'http://example.org/book/book1'})-[:title {rdfid:'http://purl.org/dc/elements/1.1/title'}]->(title) 
+RETURN title.rdfid  $$) 
+AS (title ag_catalog.agtype); 
+
+$$$$$$$$$$$$$$$$$$$$$$$$$$$$ EQUALITY TEST RESULT $$$$$$$$$$$$$$$$$$$$$$$$$$$$
+SPARQL: [{title=SPARQL Tutorial}]
+CYPHER: [{title=SPARQL Tutorial}]
+
+------- SUCCESS DELETE GRAPH junit-test -------
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% PARAMETERIZED TEST %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+------- SUCCESS CREATE GRAPH junit-test -------
+
+------- SUCCESS RDF IMPORT w3c_test2 -------
+
+-------------------- SPARQL QUERY query1.sparql --------------------
+PREFIX foaf:   <http://xmlns.com/foaf/0.1/>
+SELECT ?name ?mbox
+WHERE
+  { ?x foaf:name ?name .
+    ?x foaf:mbox ?mbox }
+
+---------------------- CYPHER TRANSPILED QUERY ----------------------
+SELECT * FROM ag_catalog.cypher('junit-test', $$
+MATCH (x)-[:name {rdfid:'http://xmlns.com/foaf/0.1/name'}]->(name)
+MATCH (x)-[:mbox {rdfid:'http://xmlns.com/foaf/0.1/mbox'}]->(mbox) 
+RETURN name.rdfid , mbox.rdfid  $$) 
+AS (name ag_catalog.agtype, mbox ag_catalog.agtype); 
+
+$$$$$$$$$$$$$$$$$$$$$$$$$$$$ EQUALITY TEST RESULT $$$$$$$$$$$$$$$$$$$$$$$$$$$$
+SPARQL: [{name=Johnny Lee Outlaw, mbox=mailto:jlow@example.com}, {name=Peter Goodguy, mbox=mailto:peter@example.org}]
+CYPHER: [{name=Johnny Lee Outlaw, mbox=mailto:jlow@example.com}, {name=Peter Goodguy, mbox=mailto:peter@example.org}]
+
+------- SUCCESS DELETE GRAPH junit-test -------
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% PARAMETERIZED TEST %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+------- SUCCESS CREATE GRAPH junit-test -------
+
+------- SUCCESS RDF IMPORT w3c_test3 -------
+
+-------------------- SPARQL QUERY query1.sparql --------------------
+SELECT ?v WHERE { ?v ?p "cat" }
+
+
+---------------------- CYPHER TRANSPILED QUERY ----------------------
+SELECT * FROM ag_catalog.cypher('junit-test', $$
+MATCH (v)-[p]->({rdfid:'cat', type:'http://www.w3.org/2001/XMLSchema#string'}) 
+RETURN v.rdfid  $$) 
+AS (v ag_catalog.agtype); 
+
+$$$$$$$$$$$$$$$$$$$$$$$$$$$$ EQUALITY TEST RESULT $$$$$$$$$$$$$$$$$$$$$$$$$$$$
+SPARQL: []
+CYPHER: []
+
+------- SUCCESS DELETE GRAPH junit-test -------
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% PARAMETERIZED TEST %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+------- SUCCESS CREATE GRAPH junit-test -------
+
+------- SUCCESS RDF IMPORT w3c_test3 -------
+
+-------------------- SPARQL QUERY query2.sparql --------------------
+SELECT ?v WHERE { ?v ?p "cat"@en }
+
+
+---------------------- CYPHER TRANSPILED QUERY ----------------------
+SELECT * FROM ag_catalog.cypher('junit-test', $$
+MATCH (v)-[p]->({rdfid:'cat', type:'http://www.w3.org/1999/02/22-rdf-syntax-ns#langString'}) 
+RETURN v.rdfid  $$) 
+AS (v ag_catalog.agtype); 
+
+$$$$$$$$$$$$$$$$$$$$$$$$$$$$ EQUALITY TEST RESULT $$$$$$$$$$$$$$$$$$$$$$$$$$$$
+SPARQL: [{v=http://example.org/ns#x}]
+CYPHER: [{v=http://example.org/ns#x}]
+
+------- SUCCESS DELETE GRAPH junit-test -------
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% PARAMETERIZED TEST %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+------- SUCCESS CREATE GRAPH junit-test -------
+
+------- SUCCESS RDF IMPORT w3c_test3 -------
+
+-------------------- SPARQL QUERY query3.sparql --------------------
+SELECT ?v WHERE { ?v ?p 42 }
+
+
+---------------------- CYPHER TRANSPILED QUERY ----------------------
+SELECT * FROM ag_catalog.cypher('junit-test', $$
+MATCH (v)-[p]->({rdfid:'42', type:'http://www.w3.org/2001/XMLSchema#integer'}) 
+RETURN v.rdfid  $$) 
+AS (v ag_catalog.agtype); 
+
+$$$$$$$$$$$$$$$$$$$$$$$$$$$$ EQUALITY TEST RESULT $$$$$$$$$$$$$$$$$$$$$$$$$$$$
+SPARQL: [{v=http://example.org/ns#y}]
+CYPHER: [{v=http://example.org/ns#y}]
+
+------- SUCCESS DELETE GRAPH junit-test -------
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% PARAMETERIZED TEST %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+------- SUCCESS CREATE GRAPH junit-test -------
+
+------- SUCCESS RDF IMPORT w3c_test3 -------
+
+-------------------- SPARQL QUERY query4.sparql --------------------
+SELECT ?v WHERE { ?v ?p "abc"^^<http://example.org/datatype#specialDatatype> }
+
+
+---------------------- CYPHER TRANSPILED QUERY ----------------------
+SELECT * FROM ag_catalog.cypher('junit-test', $$
+MATCH (v)-[p]->({rdfid:'abc', type:'http://example.org/datatype#specialDatatype'}) 
+RETURN v.rdfid  $$) 
+AS (v ag_catalog.agtype); 
+
+$$$$$$$$$$$$$$$$$$$$$$$$$$$$ EQUALITY TEST RESULT $$$$$$$$$$$$$$$$$$$$$$$$$$$$
+SPARQL: [{v=http://example.org/ns#z}]
+CYPHER: [{v=http://example.org/ns#z}]
+
+------- SUCCESS DELETE GRAPH junit-test -------
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% PARAMETERIZED TEST %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+------- SUCCESS CREATE GRAPH junit-test -------
+
+------- SUCCESS RDF IMPORT w3c_test4 -------
+
+-------------------- SPARQL QUERY query1.sparql --------------------
+PREFIX foaf:   <http://xmlns.com/foaf/0.1/>
+SELECT ?x ?name
+WHERE  { ?x foaf:name ?name }
+
+
+---------------------- CYPHER TRANSPILED QUERY ----------------------
+SELECT * FROM ag_catalog.cypher('junit-test', $$
+MATCH (x)-[:name {rdfid:'http://xmlns.com/foaf/0.1/name'}]->(name) 
+RETURN x.rdfid , name.rdfid  $$) 
+AS (x ag_catalog.agtype, name ag_catalog.agtype); 
+
+$$$$$$$$$$$$$$$$$$$$$$$$$$$$ EQUALITY TEST RESULT $$$$$$$$$$$$$$$$$$$$$$$$$$$$
+SPARQL: [{x=a, name=Alice}, {x=b, name=Bob}]
+CYPHER: [{x=a, name=Alice}, {x=b, name=Bob}]
+
+------- SUCCESS DELETE GRAPH junit-test -------
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% PARAMETERIZED TEST %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+------- SUCCESS CREATE GRAPH junit-test -------
+
+------- SUCCESS RDF IMPORT w3c_test5 -------
+
+-------------------- SPARQL QUERY query1.sparql --------------------
+PREFIX dc: <http://purl.org/dc/elements/1.1/>
+SELECT ?title
+WHERE {
+  ?x dc:title ?title
+  FILTER (regex(?title, "^SPARQL") )
+}
+
+---------------------- CYPHER TRANSPILED QUERY ----------------------
+SELECT * FROM ag_catalog.cypher('junit-test', $$
+MATCH (x)-[:title {rdfid:'http://purl.org/dc/elements/1.1/title'}]->(title) 
+WHERE (toString(title.rdfid) =~ toString("^SPARQL")) 
+RETURN title.rdfid  $$) 
+AS (title ag_catalog.agtype); 
+
+$$$$$$$$$$$$$$$$$$$$$$$$$$$$ EQUALITY TEST RESULT $$$$$$$$$$$$$$$$$$$$$$$$$$$$
+SPARQL: [{title=SPARQL Tutorial}]
+CYPHER: [{title=SPARQL Tutorial}]
+
+------- SUCCESS DELETE GRAPH junit-test -------
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% PARAMETERIZED TEST %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+------- SUCCESS CREATE GRAPH junit-test -------
+
+------- SUCCESS RDF IMPORT w3c_test5 -------
+
+-------------------- SPARQL QUERY query2.sparql --------------------
+PREFIX dc: <http://purl.org/dc/elements/1.1/>
+SELECT ?title
+WHERE {
+  ?x dc:title ?title
+  FILTER regex(?title, "web", "i" ) 
+}
+
+---------------------- CYPHER TRANSPILED QUERY ----------------------
+SELECT * FROM ag_catalog.cypher('junit-test', $$
+MATCH (x)-[:title {rdfid:'http://purl.org/dc/elements/1.1/title'}]->(title) 
+WHERE (toString(title.rdfid) =~ toString("(?i)web")) 
+RETURN title.rdfid  $$) 
+AS (title ag_catalog.agtype); 
+
+$$$$$$$$$$$$$$$$$$$$$$$$$$$$ EQUALITY TEST RESULT $$$$$$$$$$$$$$$$$$$$$$$$$$$$
+SPARQL: [{title=The Semantic Web}]
+CYPHER: [{title=The Semantic Web}]
+
+------- SUCCESS DELETE GRAPH junit-test -------
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% PARAMETERIZED TEST %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+------- SUCCESS CREATE GRAPH junit-test -------
+
+------- SUCCESS RDF IMPORT w3c_test5 -------
+
+-------------------- SPARQL QUERY query3.sparql --------------------
+PREFIX dc: <http://purl.org/dc/elements/1.1/>
+PREFIX ns: <http://example.org/ns#>
+SELECT ?title ?price
+WHERE { 
+  ?x ns:price ?price .
+  FILTER (?price < 30.5)
+  ?x dc:title ?title . 
+}
+
+---------------------- CYPHER TRANSPILED QUERY ----------------------
+SELECT * FROM ag_catalog.cypher('junit-test', $$
+MATCH (x)-[:price {rdfid:'http://example.org/ns#price'}]->(price)
+MATCH (x)-[:title {rdfid:'http://purl.org/dc/elements/1.1/title'}]->(title) 
+WHERE (toFloat(price.rdfid) < toFloat(30.5)) 
+RETURN title.rdfid , price.rdfid  $$) 
+AS (title ag_catalog.agtype, price ag_catalog.agtype); 
+
+$$$$$$$$$$$$$$$$$$$$$$$$$$$$ EQUALITY TEST RESULT $$$$$$$$$$$$$$$$$$$$$$$$$$$$
+SPARQL: [{price=23, title=The Semantic Web}]
+CYPHER: [{price=23, title=The Semantic Web}]
+
+------- SUCCESS DELETE GRAPH junit-test -------
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% PARAMETERIZED TEST %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+------- SUCCESS CREATE GRAPH junit-test -------
+
+------- SUCCESS RDF IMPORT w3c_test5 -------
+
+-------------------- SPARQL QUERY query4.sparql --------------------
+PREFIX dc: <http://purl.org/dc/elements/1.1/>
+SELECT ?title
+WHERE {
+  ?x dc:title ?title
+  FILTER(?title = "SPARQL Tutorial") .
+}
+
+---------------------- CYPHER TRANSPILED QUERY ----------------------
+SELECT * FROM ag_catalog.cypher('junit-test', $$
+MATCH (x)-[:title {rdfid:'http://purl.org/dc/elements/1.1/title'}]->(title) 
+WHERE (toString(title.rdfid) = toString("SPARQL Tutorial")) 
+RETURN title.rdfid  $$) 
+AS (title ag_catalog.agtype); 
+
+$$$$$$$$$$$$$$$$$$$$$$$$$$$$ EQUALITY TEST RESULT $$$$$$$$$$$$$$$$$$$$$$$$$$$$
+SPARQL: [{title=SPARQL Tutorial}]
+CYPHER: [{title=SPARQL Tutorial}]
+
+------- SUCCESS DELETE GRAPH junit-test -------
+[INFO] Tests run: 11, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 3.509 s - in de.rapsql.transpiler.W3CTest
+[INFO] Running de.rapsql.transpiler.SP2BTest
+
+
+
+§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§ START OF TESTS §§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% METHOD PROVIDER %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+------- TEST RESOURCES -------
+spcustom/rdf.n3
+spcustom/queries/a1-q1.sparql
+spcustom/queries/b2-q2.sparql
+spcustom/queries/c3-q3a.sparql
+spcustom/queries/d4-q3b.sparql
+spcustom/queries/e5-q3c.sparql
+spcustom/queries/f6-q4.sparql
+spcustom/queries/g7-q5a.sparql
+spcustom/queries/h8-q5b.sparql
+spcustom/queries/k11-q8.sparql
+spcustom/queries/l12-q9.sparql
+spcustom/queries/m13-q10.sparql
+spcustom/queries/n14-q11.sparql
+spcustom/queries/o15-q12a.sparql
+spcustom/queries/p16-q12b.sparql
+spcustom/queries/q17-q12c.sparql
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% END METHOD PROVIDER %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+-------------------- SPARQL QUERY a1-q1.sparql --------------------
+PREFIX rdf:     <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX dc:      <http://purl.org/dc/elements/1.1/>
+PREFIX dcterms: <http://purl.org/dc/terms/>
+PREFIX bench:   <http://localhost/vocabulary/bench/>
+PREFIX xsd:     <http://www.w3.org/2001/XMLSchema#> 
+
+SELECT ?yr
+WHERE {
+  ?journal rdf:type bench:Journal .
+  ?journal dc:title "Journal 1 (1940)"^^xsd:string .
+  ?journal dcterms:issued ?yr 
+}
+
+
+####### SPARQL EXEC TIME (ms) #######
+4
+
+---------------------- CYPHER TRANSPILED QUERY ----------------------
+SELECT * FROM ag_catalog.cypher('spcustomrdfid2', $$
+MATCH (journal)-[:type {rdfid:'http://www.w3.org/1999/02/22-rdf-syntax-ns#type'}]->({rdfid:'http://localhost/vocabulary/bench/Journal'})
+MATCH (journal)-[:title {rdfid:'http://purl.org/dc/elements/1.1/title'}]->({rdfid:'Journal 1 (1940)', type:'http://www.w3.org/2001/XMLSchema#string'})
+MATCH (journal)-[:issued {rdfid:'http://purl.org/dc/terms/issued'}]->(yr) 
+RETURN yr.rdfid  $$) 
+AS (yr ag_catalog.agtype); 
+
+####### CYPHER EXEC TIME (ms) #######
+22
+
+$$$$$$$$$$$$$$$$$$$$$$$$$$$$ EQUALITY TEST RESULT $$$$$$$$$$$$$$$$$$$$$$$$$$$$
+-------- SPARQL RESULT --------
+[{yr=1940}]
+
+-------- CYPHER RESULT --------
+[{yr=1940}]
+
+
+$$$$$$$$$$$$$$$$$$$$$$$$$$$$$ EQUALITY RESULT END $$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+
+-------------------- SPARQL QUERY b2-q2.sparql --------------------
+PREFIX rdf:     <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs:    <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX swrc:    <http://swrc.ontoware.org/ontology#>
+PREFIX foaf:    <http://xmlns.com/foaf/0.1/>
+PREFIX bench:   <http://localhost/vocabulary/bench/>
+PREFIX dc:      <http://purl.org/dc/elements/1.1/>
+PREFIX dcterms: <http://purl.org/dc/terms/>
+
+SELECT ?inproc ?author ?booktitle ?title 
+       ?proc ?ee ?page ?url ?yr ?abstract
+WHERE {
+  ?inproc rdf:type bench:Inproceedings .
+  ?inproc dc:creator ?author .
+  ?inproc bench:booktitle ?booktitle .
+  ?inproc dc:title ?title .
+  ?inproc dcterms:partOf ?proc .
+  ?inproc rdfs:seeAlso ?ee .
+  ?inproc swrc:pages ?page .
+  ?inproc foaf:homepage ?url .
+  ?inproc dcterms:issued ?yr 
+  OPTIONAL {
+    ?inproc bench:abstract ?abstract
+  }
+}
+ORDER BY ?yr
+
+
+####### SPARQL EXEC TIME (ms) #######
+25
+
+---------------------- CYPHER TRANSPILED QUERY ----------------------
+SELECT * FROM ag_catalog.cypher('spcustomrdfid2', $$
+MATCH (inproc)-[:type {rdfid:'http://www.w3.org/1999/02/22-rdf-syntax-ns#type'}]->({rdfid:'http://localhost/vocabulary/bench/Inproceedings'})
+MATCH (inproc)-[:creator {rdfid:'http://purl.org/dc/elements/1.1/creator'}]->(author)
+MATCH (inproc)-[:booktitle {rdfid:'http://localhost/vocabulary/bench/booktitle'}]->(booktitle)
+MATCH (inproc)-[:title {rdfid:'http://purl.org/dc/elements/1.1/title'}]->(title)
+MATCH (inproc)-[:partOf {rdfid:'http://purl.org/dc/terms/partOf'}]->(proc)
+MATCH (inproc)-[:seeAlso {rdfid:'http://www.w3.org/2000/01/rdf-schema#seeAlso'}]->(ee)
+MATCH (inproc)-[:pages {rdfid:'http://swrc.ontoware.org/ontology#pages'}]->(page)
+MATCH (inproc)-[:homepage {rdfid:'http://xmlns.com/foaf/0.1/homepage'}]->(url)
+MATCH (inproc)-[:issued {rdfid:'http://purl.org/dc/terms/issued'}]->(yr) 
+OPTIONAL MATCH (inproc)-[:abstract {rdfid:'http://localhost/vocabulary/bench/abstract'}]->(abstract)  
+WITH ee.rdfid 
+AS ee, author.rdfid 
+AS author, proc.rdfid 
+AS proc, inproc.rdfid 
+AS inproc, page.rdfid 
+AS page, yr.rdfid 
+AS yr, booktitle.rdfid 
+AS booktitle, url.rdfid 
+AS url, title.rdfid 
+AS title, abstract.rdfid 
+AS abstract 
+ORDER BY yr.rdfid 
+RETURN inproc, author, booktitle, title, proc, ee, page, url, yr, abstract $$) 
+AS (inproc ag_catalog.agtype, author ag_catalog.agtype, booktitle ag_catalog.agtype, title ag_catalog.agtype, proc ag_catalog.agtype, ee ag_catalog.agtype, page ag_catalog.agtype, url ag_catalog.agtype, yr ag_catalog.agtype, abstract ag_catalog.agtype); 
+
+####### CYPHER EXEC TIME (ms) #######
+27
+
+$$$$$$$$$$$$$$$$$$$$$$$$$$$$ EQUALITY TEST RESULT $$$$$$$$$$$$$$$$$$$$$$$$$$$$
+-------- SPARQL RESULT --------
+[{ee=http://www.doorsteps.tld/carrotiest/despiser.html, proc=http://localhost/publications/procs/Proceeding1/1953, inproc=http://localhost/publications/inprocs/Proceeding1/1953/Inproceeding12, author=Matro_Newell, yr=1953, page=30, abstract=null, booktitle=indicative lyses carrotiest, title=lyses despiser finalization, url=http://www.carrotiest.tld/finalization/beclouds.html}, {ee=http://www.summerhouses.tld/lexicons/imprisonment.html, proc=http://localhost/publications/procs/Proceeding1/1950, inproc=http://localhost/publications/inprocs/Proceeding1/1950/Inproceeding1, author=Bhoomika_Secord, yr=1950, page=47, abstract=null, booktitle=fits vialing lexicons, title=vialing imprisonment vivisects, url=http://www.lexicons.tld/vivisects/gipper.html}, {ee=http://www.summerhouses.tld/lexicons/imprisonment.html, proc=http://localhost/publications/procs/Proceeding1/1950, inproc=http://localhost/publications/inprocs/Proceeding1/1950/Inproceeding1, author=Editta_Servoss, yr=1950, page=47, abstract=null, booktitle=fits vialing lexicons, title=vialing imprisonment vivisects, url=http://www.lexicons.tld/vivisects/gipper.html}, {ee=http://www.summerhouses.tld/lexicons/imprisonment.html, proc=http://localhost/publications/procs/Proceeding1/1950, inproc=http://localhost/publications/inprocs/Proceeding1/1950/Inproceeding1, author=http://localhost/persons/Paul_Erdoes, yr=1950, page=47, abstract=null, booktitle=fits vialing lexicons, title=vialing imprisonment vivisects, url=http://www.lexicons.tld/vivisects/gipper.html}, {ee=http://www.taverner.tld/jalousie/eyesights.html, proc=http://localhost/publications/procs/Proceeding1/1952, inproc=http://localhost/publications/inprocs/Proceeding1/1952/Inproceeding6, author=Gualtiero_Hemken, yr=1952, page=112, abstract=null, booktitle=boiling gigs jalousie, title=gigs eyesights quirkiness, url=http://www.jalousie.tld/quirkiness/penney.html}, {ee=http://www.taverner.tld/jalousie/eyesights.html, proc=http://localhost/publications/procs/Proceeding1/1952, inproc=http://localhost/publications/inprocs/Proceeding1/1952/Inproceeding6, author=http://localhost/persons/Paul_Erdoes, yr=1952, page=112, abstract=null, booktitle=boiling gigs jalousie, title=gigs eyesights quirkiness, url=http://www.jalousie.tld/quirkiness/penney.html}, {ee=http://www.yarded.tld/fichu/czechoslovaks.html, proc=http://localhost/publications/procs/Proceeding1/1952, inproc=http://localhost/publications/inprocs/Proceeding1/1952/Inproceeding24, author=Dirthe_Kiewiet, yr=1952, page=180, abstract=dopiness stoutish allegers mapmaker seafloor subassembly jowliest psalmody realer puked climber borderlands trashed maximite priss dudishly serialists inveiglers frosts runniest exocrine footbath faddisms maximins radiotelegraphically nubbier mythologists brouhahas tarpapered riggers maladjusted aligners retraces lippy cynicism wieldier offensives disjoining folios fogger diminishments relatione welters predicating overpay waders eastwards darnings brainily threadworm inundating demonstrator envied climatal airscrew avocados inarticulateness chicaner wetsuit subprincipal vesuvius annotates landward frontages hewable vivider weatherstripped bermudian containerizes redheads straggliest nears laconism semiannual bridgeheads slicker paratypic masher autoeroticism announced defective absoluteness oversupply matchmaker cyphers chalkiest cirrhosis transubstantiate paganish remeasured quadrennium hailing earthwork infantilism eluviating bloodied luringly microform yachting bendy splurging lichee withholding decalcified punning ribaldry certificating mynahs, booktitle=marse implied fichu, title=implied czechoslovaks terrorizing, url=http://www.fichu.tld/terrorizing/jingoist.html}]
+
+-------- CYPHER RESULT --------
+[{ee=http://www.doorsteps.tld/carrotiest/despiser.html, proc=http://localhost/publications/procs/Proceeding1/1953, inproc=http://localhost/publications/inprocs/Proceeding1/1953/Inproceeding12, author=Matro_Newell, yr=1953, page=30, abstract=null, booktitle=indicative lyses carrotiest, title=lyses despiser finalization, url=http://www.carrotiest.tld/finalization/beclouds.html}, {ee=http://www.summerhouses.tld/lexicons/imprisonment.html, proc=http://localhost/publications/procs/Proceeding1/1950, inproc=http://localhost/publications/inprocs/Proceeding1/1950/Inproceeding1, author=Bhoomika_Secord, yr=1950, page=47, abstract=null, booktitle=fits vialing lexicons, title=vialing imprisonment vivisects, url=http://www.lexicons.tld/vivisects/gipper.html}, {ee=http://www.summerhouses.tld/lexicons/imprisonment.html, proc=http://localhost/publications/procs/Proceeding1/1950, inproc=http://localhost/publications/inprocs/Proceeding1/1950/Inproceeding1, author=Editta_Servoss, yr=1950, page=47, abstract=null, booktitle=fits vialing lexicons, title=vialing imprisonment vivisects, url=http://www.lexicons.tld/vivisects/gipper.html}, {ee=http://www.summerhouses.tld/lexicons/imprisonment.html, proc=http://localhost/publications/procs/Proceeding1/1950, inproc=http://localhost/publications/inprocs/Proceeding1/1950/Inproceeding1, author=http://localhost/persons/Paul_Erdoes, yr=1950, page=47, abstract=null, booktitle=fits vialing lexicons, title=vialing imprisonment vivisects, url=http://www.lexicons.tld/vivisects/gipper.html}, {ee=http://www.taverner.tld/jalousie/eyesights.html, proc=http://localhost/publications/procs/Proceeding1/1952, inproc=http://localhost/publications/inprocs/Proceeding1/1952/Inproceeding6, author=Gualtiero_Hemken, yr=1952, page=112, abstract=null, booktitle=boiling gigs jalousie, title=gigs eyesights quirkiness, url=http://www.jalousie.tld/quirkiness/penney.html}, {ee=http://www.taverner.tld/jalousie/eyesights.html, proc=http://localhost/publications/procs/Proceeding1/1952, inproc=http://localhost/publications/inprocs/Proceeding1/1952/Inproceeding6, author=http://localhost/persons/Paul_Erdoes, yr=1952, page=112, abstract=null, booktitle=boiling gigs jalousie, title=gigs eyesights quirkiness, url=http://www.jalousie.tld/quirkiness/penney.html}, {ee=http://www.yarded.tld/fichu/czechoslovaks.html, proc=http://localhost/publications/procs/Proceeding1/1952, inproc=http://localhost/publications/inprocs/Proceeding1/1952/Inproceeding24, author=Dirthe_Kiewiet, yr=1952, page=180, abstract=dopiness stoutish allegers mapmaker seafloor subassembly jowliest psalmody realer puked climber borderlands trashed maximite priss dudishly serialists inveiglers frosts runniest exocrine footbath faddisms maximins radiotelegraphically nubbier mythologists brouhahas tarpapered riggers maladjusted aligners retraces lippy cynicism wieldier offensives disjoining folios fogger diminishments relatione welters predicating overpay waders eastwards darnings brainily threadworm inundating demonstrator envied climatal airscrew avocados inarticulateness chicaner wetsuit subprincipal vesuvius annotates landward frontages hewable vivider weatherstripped bermudian containerizes redheads straggliest nears laconism semiannual bridgeheads slicker paratypic masher autoeroticism announced defective absoluteness oversupply matchmaker cyphers chalkiest cirrhosis transubstantiate paganish remeasured quadrennium hailing earthwork infantilism eluviating bloodied luringly microform yachting bendy splurging lichee withholding decalcified punning ribaldry certificating mynahs, booktitle=marse implied fichu, title=implied czechoslovaks terrorizing, url=http://www.fichu.tld/terrorizing/jingoist.html}]
+
+
+$$$$$$$$$$$$$$$$$$$$$$$$$$$$$ EQUALITY RESULT END $$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+
+-------------------- SPARQL QUERY c3-q3a.sparql --------------------
+PREFIX rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX bench: <http://localhost/vocabulary/bench/>
+PREFIX swrc:  <http://swrc.ontoware.org/ontology#>
+
+SELECT ?article
+WHERE {
+  ?article rdf:type bench:Article .
+  ?article ?property ?value 
+  FILTER (?property=swrc:pages) 
+}
+
+
+####### SPARQL EXEC TIME (ms) #######
+4
+
+---------------------- CYPHER TRANSPILED QUERY ----------------------
+SELECT * FROM ag_catalog.cypher('spcustomrdfid2', $$
+MATCH (article)-[:type {rdfid:'http://www.w3.org/1999/02/22-rdf-syntax-ns#type'}]->({rdfid:'http://localhost/vocabulary/bench/Article'})
+MATCH (article)-[property]->(value) 
+WHERE (toString(property.rdfid) = toString('http://swrc.ontoware.org/ontology#pages')) 
+RETURN article.rdfid  $$) 
+AS (article ag_catalog.agtype); 
+
+####### CYPHER EXEC TIME (ms) #######
+16
+
+$$$$$$$$$$$$$$$$$$$$$$$$$$$$ EQUALITY TEST RESULT $$$$$$$$$$$$$$$$$$$$$$$$$$$$
+-------- SPARQL RESULT --------
+[{article=http://localhost/publications/articles/Journal1/1940/Article1}, {article=http://localhost/publications/articles/Journal1/1940/Article2}, {article=http://localhost/publications/articles/Journal2/1949/Article30}]
+
+-------- CYPHER RESULT --------
+[{article=http://localhost/publications/articles/Journal1/1940/Article1}, {article=http://localhost/publications/articles/Journal1/1940/Article2}, {article=http://localhost/publications/articles/Journal2/1949/Article30}]
+
+
+$$$$$$$$$$$$$$$$$$$$$$$$$$$$$ EQUALITY RESULT END $$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+
+-------------------- SPARQL QUERY d4-q3b.sparql --------------------
+PREFIX rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX bench: <http://localhost/vocabulary/bench/>
+PREFIX swrc:  <http://swrc.ontoware.org/ontology#>
+
+SELECT ?article
+WHERE {
+  ?article rdf:type bench:Article .
+  ?article ?property ?value
+  FILTER (?property=swrc:month)
+}
+
+
+####### SPARQL EXEC TIME (ms) #######
+5
+
+---------------------- CYPHER TRANSPILED QUERY ----------------------
+SELECT * FROM ag_catalog.cypher('spcustomrdfid2', $$
+MATCH (article)-[:type {rdfid:'http://www.w3.org/1999/02/22-rdf-syntax-ns#type'}]->({rdfid:'http://localhost/vocabulary/bench/Article'})
+MATCH (article)-[property]->(value) 
+WHERE (toString(property.rdfid) = toString('http://swrc.ontoware.org/ontology#month')) 
+RETURN article.rdfid  $$) 
+AS (article ag_catalog.agtype); 
+
+####### CYPHER EXEC TIME (ms) #######
+16
+
+$$$$$$$$$$$$$$$$$$$$$$$$$$$$ EQUALITY TEST RESULT $$$$$$$$$$$$$$$$$$$$$$$$$$$$
+-------- SPARQL RESULT --------
+[{article=http://localhost/publications/articles/Journal1/1940/Article1}, {article=http://localhost/publications/articles/Journal1/1940/Article2}]
+
+-------- CYPHER RESULT --------
+[{article=http://localhost/publications/articles/Journal1/1940/Article1}, {article=http://localhost/publications/articles/Journal1/1940/Article2}]
+
+
+$$$$$$$$$$$$$$$$$$$$$$$$$$$$$ EQUALITY RESULT END $$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+
+-------------------- SPARQL QUERY e5-q3c.sparql --------------------
+PREFIX rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX swrc:  <http://swrc.ontoware.org/ontology#>
+PREFIX bench: <http://localhost/vocabulary/bench/>
+
+SELECT ?article
+WHERE {
+  ?article rdf:type bench:Article .
+  ?article ?property ?value
+  FILTER (?property=swrc:isbn)
+}
+
+
+####### SPARQL EXEC TIME (ms) #######
+-1706024020280
+
+---------------------- CYPHER TRANSPILED QUERY ----------------------
+SELECT * FROM ag_catalog.cypher('spcustomrdfid2', $$
+MATCH (article)-[:type {rdfid:'http://www.w3.org/1999/02/22-rdf-syntax-ns#type'}]->({rdfid:'http://localhost/vocabulary/bench/Article'})
+MATCH (article)-[property]->(value) 
+WHERE (toString(property.rdfid) = toString('http://swrc.ontoware.org/ontology#isbn')) 
+RETURN article.rdfid  $$) 
+AS (article ag_catalog.agtype); 
+
+####### CYPHER EXEC TIME (ms) #######
+16
+
+$$$$$$$$$$$$$$$$$$$$$$$$$$$$ EQUALITY TEST RESULT $$$$$$$$$$$$$$$$$$$$$$$$$$$$
+-------- SPARQL RESULT --------
+[]
+
+-------- CYPHER RESULT --------
+[]
+
+
+$$$$$$$$$$$$$$$$$$$$$$$$$$$$$ EQUALITY RESULT END $$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+
+-------------------- SPARQL QUERY f6-q4.sparql --------------------
+PREFIX rdf:     <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX bench:   <http://localhost/vocabulary/bench/>
+PREFIX dc:      <http://purl.org/dc/elements/1.1/>
+PREFIX dcterms: <http://purl.org/dc/terms/>
+PREFIX foaf:    <http://xmlns.com/foaf/0.1/>
+PREFIX swrc:    <http://swrc.ontoware.org/ontology#>
+
+SELECT DISTINCT ?name1 ?name2 
+WHERE {
+  ?article1 rdf:type bench:Article .
+  ?article2 rdf:type bench:Article .
+  ?article1 dc:creator ?author1 .
+  ?author1 foaf:name ?name1 .
+  ?article2 dc:creator ?author2 .
+  ?author2 foaf:name ?name2 .
+  ?article1 swrc:journal ?journal .
+  ?article2 swrc:journal ?journal
+  FILTER (?name1<?name2)
+}
+
+
+####### SPARQL EXEC TIME (ms) #######
+14
+
+---------------------- CYPHER TRANSPILED QUERY ----------------------
+SELECT * FROM ag_catalog.cypher('spcustomrdfid2', $$
+MATCH (article1)-[:type {rdfid:'http://www.w3.org/1999/02/22-rdf-syntax-ns#type'}]->({rdfid:'http://localhost/vocabulary/bench/Article'})
+MATCH (article2)-[:type {rdfid:'http://www.w3.org/1999/02/22-rdf-syntax-ns#type'}]->({rdfid:'http://localhost/vocabulary/bench/Article'})
+MATCH (article1)-[:creator {rdfid:'http://purl.org/dc/elements/1.1/creator'}]->(author1)
+MATCH (author1)-[:name {rdfid:'http://xmlns.com/foaf/0.1/name'}]->(name1)
+MATCH (article2)-[:creator {rdfid:'http://purl.org/dc/elements/1.1/creator'}]->(author2)
+MATCH (author2)-[:name {rdfid:'http://xmlns.com/foaf/0.1/name'}]->(name2)
+MATCH (article1)-[:journal {rdfid:'http://swrc.ontoware.org/ontology#journal'}]->(journal)
+MATCH (article2)-[:journal {rdfid:'http://swrc.ontoware.org/ontology#journal'}]->(journal) 
+WHERE (name1.rdfid < name2.rdfid) 
+RETURN DISTINCT name1.rdfid , name2.rdfid  $$) 
+AS (name1 ag_catalog.agtype, name2 ag_catalog.agtype); 
+
+####### CYPHER EXEC TIME (ms) #######
+231
+
+$$$$$$$$$$$$$$$$$$$$$$$$$$$$ EQUALITY TEST RESULT $$$$$$$$$$$$$$$$$$$$$$$$$$$$
+-------- SPARQL RESULT --------
+[{name2=Cecil Kochler, name1=Adamanta Schlitt}, {name2=Paul Erdoes, name1=Adamanta Schlitt}, {name2=Paul Erdoes, name1=Cecil Kochler}, {name2=Shoko Moel, name1=Bhoomika Secord}]
+
+-------- CYPHER RESULT --------
+[{name2=Cecil Kochler, name1=Adamanta Schlitt}, {name2=Paul Erdoes, name1=Adamanta Schlitt}, {name2=Paul Erdoes, name1=Cecil Kochler}, {name2=Shoko Moel, name1=Bhoomika Secord}]
+
+
+$$$$$$$$$$$$$$$$$$$$$$$$$$$$$ EQUALITY RESULT END $$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+
+-------------------- SPARQL QUERY g7-q5a.sparql --------------------
+PREFIX rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX foaf:  <http://xmlns.com/foaf/0.1/>
+PREFIX bench: <http://localhost/vocabulary/bench/>
+PREFIX dc:    <http://purl.org/dc/elements/1.1/>
+
+SELECT DISTINCT ?person ?name
+WHERE {
+  ?article rdf:type bench:Article .
+  ?article dc:creator ?person .
+  ?inproc rdf:type bench:Inproceedings .
+  ?inproc dc:creator ?person2 .
+  ?person foaf:name ?name .
+  ?person2 foaf:name ?name2
+  FILTER (?name=?name2)
+}
+
+
+####### SPARQL EXEC TIME (ms) #######
+15
+
+---------------------- CYPHER TRANSPILED QUERY ----------------------
+SELECT * FROM ag_catalog.cypher('spcustomrdfid2', $$
+MATCH (article)-[:type {rdfid:'http://www.w3.org/1999/02/22-rdf-syntax-ns#type'}]->({rdfid:'http://localhost/vocabulary/bench/Article'})
+MATCH (article)-[:creator {rdfid:'http://purl.org/dc/elements/1.1/creator'}]->(person)
+MATCH (inproc)-[:type {rdfid:'http://www.w3.org/1999/02/22-rdf-syntax-ns#type'}]->({rdfid:'http://localhost/vocabulary/bench/Inproceedings'})
+MATCH (inproc)-[:creator {rdfid:'http://purl.org/dc/elements/1.1/creator'}]->(person2)
+MATCH (person)-[:name {rdfid:'http://xmlns.com/foaf/0.1/name'}]->(name)
+MATCH (person2)-[:name {rdfid:'http://xmlns.com/foaf/0.1/name'}]->(name2) 
+WHERE (name.rdfid = name2.rdfid) 
+RETURN DISTINCT person.rdfid , name.rdfid  $$) 
+AS (person ag_catalog.agtype, name ag_catalog.agtype); 
+
+####### CYPHER EXEC TIME (ms) #######
+29
+
+$$$$$$$$$$$$$$$$$$$$$$$$$$$$ EQUALITY TEST RESULT $$$$$$$$$$$$$$$$$$$$$$$$$$$$
+-------- SPARQL RESULT --------
+[{person=Bhoomika_Secord, name=Bhoomika Secord}, {person=http://localhost/persons/Paul_Erdoes, name=Paul Erdoes}]
+
+-------- CYPHER RESULT --------
+[{person=Bhoomika_Secord, name=Bhoomika Secord}, {person=http://localhost/persons/Paul_Erdoes, name=Paul Erdoes}]
+
+
+$$$$$$$$$$$$$$$$$$$$$$$$$$$$$ EQUALITY RESULT END $$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+
+-------------------- SPARQL QUERY h8-q5b.sparql --------------------
+PREFIX rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX foaf:  <http://xmlns.com/foaf/0.1/>
+PREFIX bench: <http://localhost/vocabulary/bench/>
+PREFIX dc:    <http://purl.org/dc/elements/1.1/>
+
+SELECT DISTINCT ?person ?name
+WHERE {
+  ?article rdf:type bench:Article .
+  ?article dc:creator ?person .
+  ?inproc rdf:type bench:Inproceedings .
+  ?inproc dc:creator ?person .
+  ?person foaf:name ?name
+}
+
+
+####### SPARQL EXEC TIME (ms) #######
+4
+
+---------------------- CYPHER TRANSPILED QUERY ----------------------
+SELECT * FROM ag_catalog.cypher('spcustomrdfid2', $$
+MATCH (article)-[:type {rdfid:'http://www.w3.org/1999/02/22-rdf-syntax-ns#type'}]->({rdfid:'http://localhost/vocabulary/bench/Article'})
+MATCH (article)-[:creator {rdfid:'http://purl.org/dc/elements/1.1/creator'}]->(person)
+MATCH (inproc)-[:type {rdfid:'http://www.w3.org/1999/02/22-rdf-syntax-ns#type'}]->({rdfid:'http://localhost/vocabulary/bench/Inproceedings'})
+MATCH (inproc)-[:creator {rdfid:'http://purl.org/dc/elements/1.1/creator'}]->(person)
+MATCH (person)-[:name {rdfid:'http://xmlns.com/foaf/0.1/name'}]->(name) 
+RETURN DISTINCT person.rdfid , name.rdfid  $$) 
+AS (person ag_catalog.agtype, name ag_catalog.agtype); 
+
+####### CYPHER EXEC TIME (ms) #######
+17
+
+$$$$$$$$$$$$$$$$$$$$$$$$$$$$ EQUALITY TEST RESULT $$$$$$$$$$$$$$$$$$$$$$$$$$$$
+-------- SPARQL RESULT --------
+[{person=Bhoomika_Secord, name=Bhoomika Secord}, {person=http://localhost/persons/Paul_Erdoes, name=Paul Erdoes}]
+
+-------- CYPHER RESULT --------
+[{person=Bhoomika_Secord, name=Bhoomika Secord}, {person=http://localhost/persons/Paul_Erdoes, name=Paul Erdoes}]
+
+
+$$$$$$$$$$$$$$$$$$$$$$$$$$$$$ EQUALITY RESULT END $$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+
+-------------------- SPARQL QUERY k11-q8.sparql --------------------
+PREFIX xsd:  <http://www.w3.org/2001/XMLSchema#> 
+PREFIX rdf:  <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX foaf: <http://xmlns.com/foaf/0.1/>
+PREFIX dc:   <http://purl.org/dc/elements/1.1/>
+
+SELECT DISTINCT ?name
+WHERE {
+  ?erdoes rdf:type foaf:Person .
+  ?erdoes foaf:name "Paul Erdoes"^^xsd:string .
+  {
+    ?document dc:creator ?erdoes .
+    ?document dc:creator ?author .
+    ?document2 dc:creator ?author .
+    ?document2 dc:creator ?author2 .
+    ?author2 foaf:name ?name
+    FILTER (?author!=?erdoes &&
+            ?document2!=?document &&
+            ?author2!=?erdoes &&
+            ?author2!=?author)
+  } UNION {
+    ?document dc:creator ?erdoes.
+    ?document dc:creator ?author.
+    ?author foaf:name ?name
+    FILTER (?author!=?erdoes)
+  }
+}
+
+
+####### SPARQL EXEC TIME (ms) #######
+16
+
+---------------------- CYPHER TRANSPILED QUERY ----------------------
+SELECT * FROM ag_catalog.cypher('spcustomrdfid2', $$
+MATCH (erdoes)-[:type {rdfid:'http://www.w3.org/1999/02/22-rdf-syntax-ns#type'}]->({rdfid:'http://xmlns.com/foaf/0.1/Person'})
+MATCH (erdoes)-[:name {rdfid:'http://xmlns.com/foaf/0.1/name'}]->({rdfid:'Paul Erdoes', type:'http://www.w3.org/2001/XMLSchema#string'})
+MATCH (document)-[:creator {rdfid:'http://purl.org/dc/elements/1.1/creator'}]->(erdoes)
+MATCH (document)-[:creator {rdfid:'http://purl.org/dc/elements/1.1/creator'}]->(author)
+MATCH (document2)-[:creator {rdfid:'http://purl.org/dc/elements/1.1/creator'}]->(author)
+MATCH (document2)-[:creator {rdfid:'http://purl.org/dc/elements/1.1/creator'}]->(author2)
+MATCH (author2)-[:name {rdfid:'http://xmlns.com/foaf/0.1/name'}]->(name) 
+WHERE (author.rdfid <> erdoes.rdfid) AND (document2.rdfid <> document.rdfid) AND (author2.rdfid <> erdoes.rdfid) AND (author2.rdfid <> author.rdfid) 
+RETURN DISTINCT name.rdfid  
+UNION
+MATCH (erdoes)-[:type {rdfid:'http://www.w3.org/1999/02/22-rdf-syntax-ns#type'}]->({rdfid:'http://xmlns.com/foaf/0.1/Person'})
+MATCH (erdoes)-[:name {rdfid:'http://xmlns.com/foaf/0.1/name'}]->({rdfid:'Paul Erdoes', type:'http://www.w3.org/2001/XMLSchema#string'})
+MATCH (document)-[:creator {rdfid:'http://purl.org/dc/elements/1.1/creator'}]->(erdoes)
+MATCH (document)-[:creator {rdfid:'http://purl.org/dc/elements/1.1/creator'}]->(author)
+MATCH (author)-[:name {rdfid:'http://xmlns.com/foaf/0.1/name'}]->(name) 
+WHERE (author.rdfid <> erdoes.rdfid) 
+RETURN DISTINCT name.rdfid  $$) 
+AS (name ag_catalog.agtype); 
+
+####### CYPHER EXEC TIME (ms) #######
+50
+
+$$$$$$$$$$$$$$$$$$$$$$$$$$$$ EQUALITY TEST RESULT $$$$$$$$$$$$$$$$$$$$$$$$$$$$
+-------- SPARQL RESULT --------
+[{name=Adamanta Schlitt}, {name=Bhoomika Secord}, {name=Cecil Kochler}, {name=Editta Servoss}, {name=Gualtiero Hemken}, {name=Shoko Moel}]
+
+-------- CYPHER RESULT --------
+[{name=Adamanta Schlitt}, {name=Bhoomika Secord}, {name=Cecil Kochler}, {name=Editta Servoss}, {name=Gualtiero Hemken}, {name=Shoko Moel}]
+
+
+$$$$$$$$$$$$$$$$$$$$$$$$$$$$$ EQUALITY RESULT END $$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+
+-------------------- SPARQL QUERY l12-q9.sparql --------------------
+PREFIX rdf:  <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX foaf: <http://xmlns.com/foaf/0.1/>
+
+SELECT DISTINCT ?predicate
+WHERE {
+  {
+    ?person rdf:type foaf:Person .
+    ?subject ?predicate ?person
+  } UNION {
+    ?person rdf:type foaf:Person .
+    ?person ?predicate ?object
+  }
+}
+
+
+####### SPARQL EXEC TIME (ms) #######
+7
+
+---------------------- CYPHER TRANSPILED QUERY ----------------------
+SELECT * FROM ag_catalog.cypher('spcustomrdfid2', $$
+MATCH (person)-[:type {rdfid:'http://www.w3.org/1999/02/22-rdf-syntax-ns#type'}]->({rdfid:'http://xmlns.com/foaf/0.1/Person'})
+MATCH (subject)-[predicate]->(person) 
+RETURN DISTINCT predicate.rdfid  
+UNION
+MATCH (person)-[:type {rdfid:'http://www.w3.org/1999/02/22-rdf-syntax-ns#type'}]->({rdfid:'http://xmlns.com/foaf/0.1/Person'})
+MATCH (person)-[predicate]->(object) 
+RETURN DISTINCT predicate.rdfid  $$) 
+AS (predicate ag_catalog.agtype); 
+
+####### CYPHER EXEC TIME (ms) #######
+19
+
+$$$$$$$$$$$$$$$$$$$$$$$$$$$$ EQUALITY TEST RESULT $$$$$$$$$$$$$$$$$$$$$$$$$$$$
+-------- SPARQL RESULT --------
+[{predicate=http://purl.org/dc/elements/1.1/creator}, {predicate=http://swrc.ontoware.org/ontology#editor}, {predicate=http://www.w3.org/1999/02/22-rdf-syntax-ns#type}, {predicate=http://xmlns.com/foaf/0.1/name}]
+
+-------- CYPHER RESULT --------
+[{predicate=http://purl.org/dc/elements/1.1/creator}, {predicate=http://swrc.ontoware.org/ontology#editor}, {predicate=http://www.w3.org/1999/02/22-rdf-syntax-ns#type}, {predicate=http://xmlns.com/foaf/0.1/name}]
+
+
+$$$$$$$$$$$$$$$$$$$$$$$$$$$$$ EQUALITY RESULT END $$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+
+-------------------- SPARQL QUERY m13-q10.sparql --------------------
+PREFIX person: <http://localhost/persons/>
+
+SELECT ?subject ?predicate
+WHERE {
+  ?subject ?predicate person:Paul_Erdoes
+}
+
+
+####### SPARQL EXEC TIME (ms) #######
+3
+
+---------------------- CYPHER TRANSPILED QUERY ----------------------
+SELECT * FROM ag_catalog.cypher('spcustomrdfid2', $$
+MATCH (subject)-[predicate]->({rdfid:'http://localhost/persons/Paul_Erdoes'}) 
+RETURN subject.rdfid , predicate.rdfid  $$) 
+AS (subject ag_catalog.agtype, predicate ag_catalog.agtype); 
+
+####### CYPHER EXEC TIME (ms) #######
+11
+
+$$$$$$$$$$$$$$$$$$$$$$$$$$$$ EQUALITY TEST RESULT $$$$$$$$$$$$$$$$$$$$$$$$$$$$
+-------- SPARQL RESULT --------
+[{predicate=http://purl.org/dc/elements/1.1/creator, subject=http://localhost/publications/articles/Journal1/1940/Article1}, {predicate=http://purl.org/dc/elements/1.1/creator, subject=http://localhost/publications/articles/Journal1/1940/Article2}, {predicate=http://purl.org/dc/elements/1.1/creator, subject=http://localhost/publications/inprocs/Proceeding1/1950/Inproceeding1}, {predicate=http://purl.org/dc/elements/1.1/creator, subject=http://localhost/publications/inprocs/Proceeding1/1952/Inproceeding6}]
+
+-------- CYPHER RESULT --------
+[{predicate=http://purl.org/dc/elements/1.1/creator, subject=http://localhost/publications/articles/Journal1/1940/Article1}, {predicate=http://purl.org/dc/elements/1.1/creator, subject=http://localhost/publications/articles/Journal1/1940/Article2}, {predicate=http://purl.org/dc/elements/1.1/creator, subject=http://localhost/publications/inprocs/Proceeding1/1950/Inproceeding1}, {predicate=http://purl.org/dc/elements/1.1/creator, subject=http://localhost/publications/inprocs/Proceeding1/1952/Inproceeding6}]
+
+
+$$$$$$$$$$$$$$$$$$$$$$$$$$$$$ EQUALITY RESULT END $$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+
+-------------------- SPARQL QUERY n14-q11.sparql --------------------
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+SELECT ?ee
+WHERE {
+  ?publication rdfs:seeAlso ?ee
+}
+ORDER BY ?ee
+LIMIT 10
+OFFSET 50
+
+
+####### SPARQL EXEC TIME (ms) #######
+18
+
+---------------------- CYPHER TRANSPILED QUERY ----------------------
+SELECT * FROM ag_catalog.cypher('spcustomrdfid2', $$
+MATCH (publication)-[:seeAlso {rdfid:'http://www.w3.org/2000/01/rdf-schema#seeAlso'}]->(ee)  
+WITH ee.rdfid 
+AS ee, publication.rdfid 
+AS publication 
+ORDER BY ee.rdfid 
+RETURN ee $$) 
+AS (ee ag_catalog.agtype) 
+LIMIT 10 
+OFFSET 50;
+
+####### CYPHER EXEC TIME (ms) #######
+9
+
+$$$$$$$$$$$$$$$$$$$$$$$$$$$$ EQUALITY TEST RESULT $$$$$$$$$$$$$$$$$$$$$$$$$$$$
+-------- SPARQL RESULT --------
+[{ee=http://www.taverner.tld/jalousie/eyesights.html}, {ee=http://www.teashop.tld/gunneries/exorcises.html}, {ee=http://www.thanklessly.tld/polers/oinked.html}, {ee=http://www.tuberculoses.tld/hulled/preexamination.html}, {ee=http://www.undamped.tld/forbearer/anesthetization.html}, {ee=http://www.valiantly.tld/extradites/stollens.html}, {ee=http://www.villainousness.tld/firefanged/skeins.html}, {ee=http://www.xix.tld/householder/overeducated.html}, {ee=http://www.yabber.tld/blungers/dwarflike.html}, {ee=http://www.yarded.tld/fichu/czechoslovaks.html}]
+
+-------- CYPHER RESULT --------
+[{ee=http://www.taverner.tld/jalousie/eyesights.html}, {ee=http://www.teashop.tld/gunneries/exorcises.html}, {ee=http://www.thanklessly.tld/polers/oinked.html}, {ee=http://www.tuberculoses.tld/hulled/preexamination.html}, {ee=http://www.undamped.tld/forbearer/anesthetization.html}, {ee=http://www.valiantly.tld/extradites/stollens.html}, {ee=http://www.villainousness.tld/firefanged/skeins.html}, {ee=http://www.xix.tld/householder/overeducated.html}, {ee=http://www.yabber.tld/blungers/dwarflike.html}, {ee=http://www.yarded.tld/fichu/czechoslovaks.html}]
+
+
+$$$$$$$$$$$$$$$$$$$$$$$$$$$$$ EQUALITY RESULT END $$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+
+-------------------- SPARQL QUERY o15-q12a.sparql --------------------
+PREFIX rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX foaf:  <http://xmlns.com/foaf/0.1/>
+PREFIX bench: <http://localhost/vocabulary/bench/>
+PREFIX dc:    <http://purl.org/dc/elements/1.1/>
+
+ASK {
+  ?article rdf:type bench:Article .
+  ?article dc:creator ?person1 .
+  ?inproc  rdf:type bench:Inproceedings .
+  ?inproc  dc:creator ?person2 .
+  ?person1 foaf:name ?name1 .
+  ?person2 foaf:name ?name2
+  FILTER (?name1=?name2)
+}
+
+
+####### SPARQL EXEC TIME (ms) #######
+6
+
+---------------------- CYPHER TRANSPILED QUERY ----------------------
+SELECT EXISTS (SELECT * FROM ag_catalog.cypher('spcustomrdfid2', $$
+MATCH (article)-[:type {rdfid:'http://www.w3.org/1999/02/22-rdf-syntax-ns#type'}]->({rdfid:'http://localhost/vocabulary/bench/Article'})
+MATCH (article)-[:creator {rdfid:'http://purl.org/dc/elements/1.1/creator'}]->(person1)
+MATCH (inproc)-[:type {rdfid:'http://www.w3.org/1999/02/22-rdf-syntax-ns#type'}]->({rdfid:'http://localhost/vocabulary/bench/Inproceedings'})
+MATCH (inproc)-[:creator {rdfid:'http://purl.org/dc/elements/1.1/creator'}]->(person2)
+MATCH (person1)-[:name {rdfid:'http://xmlns.com/foaf/0.1/name'}]->(name1)
+MATCH (person2)-[:name {rdfid:'http://xmlns.com/foaf/0.1/name'}]->(name2) 
+WHERE (name1.rdfid = name2.rdfid) 
+RETURN name2.rdfid  
+LIMIT 1 $$) 
+AS (name2 ag_catalog.agtype)); 
+
+####### CYPHER EXEC TIME (ms) #######
+25
+
+$$$$$$$$$$$$$$$$$$$$$$$$$$$$ EQUALITY TEST RESULT $$$$$$$$$$$$$$$$$$$$$$$$$$$$
+-------- SPARQL RESULT --------
+[{exists=t}]
+
+-------- CYPHER RESULT --------
+[{exists=t}]
+
+
+$$$$$$$$$$$$$$$$$$$$$$$$$$$$$ EQUALITY RESULT END $$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+
+-------------------- SPARQL QUERY p16-q12b.sparql --------------------
+PREFIX xsd:  <http://www.w3.org/2001/XMLSchema#> 
+PREFIX rdf:  <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX foaf: <http://xmlns.com/foaf/0.1/>
+PREFIX dc:   <http://purl.org/dc/elements/1.1/>
+
+ASK {
+  ?erdoes rdf:type foaf:Person .
+  ?erdoes foaf:name "Paul Erdoes"^^xsd:string .
+  {
+    ?document dc:creator ?erdoes .
+    ?document dc:creator ?author .
+    ?document2 dc:creator ?author .
+    ?document2 dc:creator ?author2 .
+    ?author2 foaf:name ?name
+    FILTER (?author!=?erdoes &&
+            ?document2!=?document &&
+            ?author2!=?erdoes &&
+            ?author2!=?author)
+  } UNION {
+    ?document dc:creator ?erdoes .
+    ?document dc:creator ?author .
+    ?author foaf:name ?name 
+    FILTER (?author!=?erdoes)
+  }
+}
+
+
+####### SPARQL EXEC TIME (ms) #######
+9
+
+---------------------- CYPHER TRANSPILED QUERY ----------------------
+SELECT EXISTS (SELECT * FROM ag_catalog.cypher('spcustomrdfid2', $$
+MATCH (erdoes)-[:type {rdfid:'http://www.w3.org/1999/02/22-rdf-syntax-ns#type'}]->({rdfid:'http://xmlns.com/foaf/0.1/Person'})
+MATCH (erdoes)-[:name {rdfid:'http://xmlns.com/foaf/0.1/name'}]->({rdfid:'Paul Erdoes', type:'http://www.w3.org/2001/XMLSchema#string'})
+MATCH (document)-[:creator {rdfid:'http://purl.org/dc/elements/1.1/creator'}]->(erdoes)
+MATCH (document)-[:creator {rdfid:'http://purl.org/dc/elements/1.1/creator'}]->(author)
+MATCH (document2)-[:creator {rdfid:'http://purl.org/dc/elements/1.1/creator'}]->(author)
+MATCH (document2)-[:creator {rdfid:'http://purl.org/dc/elements/1.1/creator'}]->(author2)
+MATCH (author2)-[:name {rdfid:'http://xmlns.com/foaf/0.1/name'}]->(name) 
+WHERE (author.rdfid <> erdoes.rdfid) AND (document2.rdfid <> document.rdfid) AND (author2.rdfid <> erdoes.rdfid) AND (author2.rdfid <> author.rdfid) 
+RETURN name.rdfid  
+UNION
+MATCH (erdoes)-[:type {rdfid:'http://www.w3.org/1999/02/22-rdf-syntax-ns#type'}]->({rdfid:'http://xmlns.com/foaf/0.1/Person'})
+MATCH (erdoes)-[:name {rdfid:'http://xmlns.com/foaf/0.1/name'}]->({rdfid:'Paul Erdoes', type:'http://www.w3.org/2001/XMLSchema#string'})
+MATCH (document)-[:creator {rdfid:'http://purl.org/dc/elements/1.1/creator'}]->(erdoes)
+MATCH (document)-[:creator {rdfid:'http://purl.org/dc/elements/1.1/creator'}]->(author)
+MATCH (author)-[:name {rdfid:'http://xmlns.com/foaf/0.1/name'}]->(name) 
+WHERE (author.rdfid <> erdoes.rdfid) 
+RETURN name.rdfid  
+LIMIT 1 $$) 
+AS (name ag_catalog.agtype)); 
+
+####### CYPHER EXEC TIME (ms) #######
+43
+
+$$$$$$$$$$$$$$$$$$$$$$$$$$$$ EQUALITY TEST RESULT $$$$$$$$$$$$$$$$$$$$$$$$$$$$
+-------- SPARQL RESULT --------
+[{exists=t}]
+
+-------- CYPHER RESULT --------
+[{exists=t}]
+
+
+$$$$$$$$$$$$$$$$$$$$$$$$$$$$$ EQUALITY RESULT END $$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+
+-------------------- SPARQL QUERY q17-q12c.sparql --------------------
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX person: <http://localhost/persons/>
+PREFIX foaf: <http://xmlns.com/foaf/0.1/>
+
+ASK {
+  person:John_Q_Public rdf:type foaf:Person.
+}
+
+
+####### SPARQL EXEC TIME (ms) #######
+6
+
+---------------------- CYPHER TRANSPILED QUERY ----------------------
+SELECT EXISTS (SELECT * FROM ag_catalog.cypher('spcustomrdfid2', $$
+MATCH ask = ({rdfid:'http://localhost/persons/John_Q_Public'})-[:type {rdfid:'http://www.w3.org/1999/02/22-rdf-syntax-ns#type'}]->({rdfid:'http://xmlns.com/foaf/0.1/Person'}) 
+RETURN ask.rdfid  
+LIMIT 1 $$) 
+AS (ask ag_catalog.agtype)); 
+
+####### CYPHER EXEC TIME (ms) #######
+20
+
+$$$$$$$$$$$$$$$$$$$$$$$$$$$$ EQUALITY TEST RESULT $$$$$$$$$$$$$$$$$$$$$$$$$$$$
+-------- SPARQL RESULT --------
+[{exists=f}]
+
+-------- CYPHER RESULT --------
+[{exists=f}]
+
+
+$$$$$$$$$$$$$$$$$$$$$$$$$$$$$ EQUALITY RESULT END $$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+
+§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§ END OF TESTS §§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§
+
+
+[INFO] Tests run: 15, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.24 s - in de.rapsql.transpiler.SP2BTest
+[INFO] 
+[INFO] Results:
+[INFO] 
+[INFO] Tests run: 26, Failures: 0, Errors: 0, Skipped: 0
+[INFO] 
+[INFO] 
+[INFO] --- maven-jar-plugin:2.4:jar (default-jar) @ rapsqltranspiler ---
+[INFO] Building jar: /usr/local/docker/masterthesis/rapsql/submodules/rapsqltranspiler/target/rapsqltranspiler-v0.4.0.jar
+[INFO] 
+[INFO] --- maven-assembly-plugin:3.4.2:single (default) @ rapsqltranspiler ---
+[INFO] Building jar: /usr/local/docker/masterthesis/rapsql/submodules/rapsqltranspiler/target/rapsqltranspiler-v0.4.0-jar-with-dependencies.jar
+[INFO] 
+[INFO] --- maven-install-plugin:2.4:install (default-install) @ rapsqltranspiler ---
+[INFO] Installing /usr/local/docker/masterthesis/rapsql/submodules/rapsqltranspiler/target/rapsqltranspiler-v0.4.0.jar to /home/raeder/.m2/repository/de/rapsql/transpiler/rapsqltranspiler/v0.4.0/rapsqltranspiler-v0.4.0.jar
+[INFO] Installing /usr/local/docker/masterthesis/rapsql/submodules/rapsqltranspiler/pom.xml to /home/raeder/.m2/repository/de/rapsql/transpiler/rapsqltranspiler/v0.4.0/rapsqltranspiler-v0.4.0.pom
+[INFO] Installing /usr/local/docker/masterthesis/rapsql/submodules/rapsqltranspiler/target/rapsqltranspiler-v0.4.0-jar-with-dependencies.jar to /home/raeder/.m2/repository/de/rapsql/transpiler/rapsqltranspiler/v0.4.0/rapsqltranspiler-v0.4.0-jar-with-dependencies.jar
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  14.604 s
+[INFO] Finished at: 2024-01-23T15:33:46Z
+[INFO] ------------------------------------------------------------------------

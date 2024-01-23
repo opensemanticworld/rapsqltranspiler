@@ -1,0 +1,345 @@
+[INFO] Scanning for projects...
+[INFO] 
+[INFO] ---------------< de.rapsql.transpiler:rapsqltranspiler >----------------
+[INFO] Building rapsqltranspiler v0.4.0
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- maven-resources-plugin:2.6:resources (default-resources) @ rapsqltranspiler ---
+[INFO] Using 'UTF-8' encoding to copy filtered resources.
+[INFO] skip non existing resourceDirectory /usr/local/docker/masterthesis/rapsql/submodules/rapsqltranspiler/src/main/resources
+[INFO] 
+[INFO] --- maven-compiler-plugin:3.1:compile (default-compile) @ rapsqltranspiler ---
+[INFO] Changes detected - recompiling the module!
+[INFO] Compiling 8 source files to /usr/local/docker/masterthesis/rapsql/submodules/rapsqltranspiler/target/classes
+[INFO] 
+[INFO] --- maven-resources-plugin:2.6:testResources (default-testResources) @ rapsqltranspiler ---
+[INFO] Using 'UTF-8' encoding to copy filtered resources.
+[INFO] Copying 60 resources
+[INFO] 
+[INFO] --- maven-compiler-plugin:3.1:testCompile (default-testCompile) @ rapsqltranspiler ---
+[INFO] Changes detected - recompiling the module!
+[INFO] Compiling 3 source files to /usr/local/docker/masterthesis/rapsql/submodules/rapsqltranspiler/target/test-classes
+[INFO] 
+[INFO] --- maven-surefire-plugin:3.0.0:test (default-test) @ rapsqltranspiler ---
+[INFO] Using auto detected provider org.apache.maven.surefire.junitplatform.JUnitPlatformProvider
+[INFO] 
+[INFO] -------------------------------------------------------
+[INFO]  T E S T S
+[INFO] -------------------------------------------------------
+[INFO] Running de.rapsql.transpiler.W3CTest
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% METHOD PROVIDER %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+------- TEST RESOURCES -------
+w3c_test1/rdf.ttl
+w3c_test1/queries/query1.sparql
+
+------- TEST RESOURCES -------
+w3c_test2/rdf.ttl
+w3c_test2/queries/query1.sparql
+
+------- TEST RESOURCES -------
+w3c_test3/rdf.ttl
+w3c_test3/queries/query1.sparql
+w3c_test3/queries/query2.sparql
+w3c_test3/queries/query3.sparql
+w3c_test3/queries/query4.sparql
+
+------- TEST RESOURCES -------
+w3c_test4/rdf.ttl
+w3c_test4/queries/query1.sparql
+
+------- TEST RESOURCES -------
+w3c_test5/rdf.ttl
+w3c_test5/queries/query1.sparql
+w3c_test5/queries/query2.sparql
+w3c_test5/queries/query3.sparql
+w3c_test5/queries/query4.sparql
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% END METHOD PROVIDER %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% PARAMETERIZED TEST %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+------- SUCCESS CREATE GRAPH junit-test -------
+
+------- SUCCESS RDF IMPORT w3c_test1 -------
+
+-------------------- SPARQL QUERY query1.sparql --------------------
+SELECT ?title
+WHERE
+{
+  <http://example.org/book/book1> <http://purl.org/dc/elements/1.1/title> ?title .
+}    
+
+---------------------- CYPHER TRANSPILED QUERY ----------------------
+SELECT * FROM ag_catalog.cypher('junit-test', $$
+MATCH ({rdfid:'http://example.org/book/book1'})-[:title {rdfid:'http://purl.org/dc/elements/1.1/title'}]->(title) 
+RETURN title.rdfid  $$) 
+AS (title ag_catalog.agtype); 
+
+$$$$$$$$$$$$$$$$$$$$$$$$$$$$ EQUALITY TEST RESULT $$$$$$$$$$$$$$$$$$$$$$$$$$$$
+SPARQL: [{title=SPARQL Tutorial}]
+CYPHER: [{title=SPARQL Tutorial}]
+
+------- SUCCESS DELETE GRAPH junit-test -------
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% PARAMETERIZED TEST %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+------- SUCCESS CREATE GRAPH junit-test -------
+
+------- SUCCESS RDF IMPORT w3c_test2 -------
+
+-------------------- SPARQL QUERY query1.sparql --------------------
+PREFIX foaf:   <http://xmlns.com/foaf/0.1/>
+SELECT ?name ?mbox
+WHERE
+  { ?x foaf:name ?name .
+    ?x foaf:mbox ?mbox }
+
+---------------------- CYPHER TRANSPILED QUERY ----------------------
+SELECT * FROM ag_catalog.cypher('junit-test', $$
+MATCH (x)-[:name {rdfid:'http://xmlns.com/foaf/0.1/name'}]->(name)
+MATCH (x)-[:mbox {rdfid:'http://xmlns.com/foaf/0.1/mbox'}]->(mbox) 
+RETURN name.rdfid , mbox.rdfid  $$) 
+AS (name ag_catalog.agtype, mbox ag_catalog.agtype); 
+
+$$$$$$$$$$$$$$$$$$$$$$$$$$$$ EQUALITY TEST RESULT $$$$$$$$$$$$$$$$$$$$$$$$$$$$
+SPARQL: [{name=Johnny Lee Outlaw, mbox=mailto:jlow@example.com}, {name=Peter Goodguy, mbox=mailto:peter@example.org}]
+CYPHER: [{name=Johnny Lee Outlaw, mbox=mailto:jlow@example.com}, {name=Peter Goodguy, mbox=mailto:peter@example.org}]
+
+------- SUCCESS DELETE GRAPH junit-test -------
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% PARAMETERIZED TEST %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+------- SUCCESS CREATE GRAPH junit-test -------
+
+------- SUCCESS RDF IMPORT w3c_test3 -------
+
+-------------------- SPARQL QUERY query1.sparql --------------------
+SELECT ?v WHERE { ?v ?p "cat" }
+
+
+---------------------- CYPHER TRANSPILED QUERY ----------------------
+SELECT * FROM ag_catalog.cypher('junit-test', $$
+MATCH (v)-[p]->({rdfid:'cat', type:'http://www.w3.org/2001/XMLSchema#string'}) 
+RETURN v.rdfid  $$) 
+AS (v ag_catalog.agtype); 
+
+$$$$$$$$$$$$$$$$$$$$$$$$$$$$ EQUALITY TEST RESULT $$$$$$$$$$$$$$$$$$$$$$$$$$$$
+SPARQL: []
+CYPHER: []
+
+------- SUCCESS DELETE GRAPH junit-test -------
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% PARAMETERIZED TEST %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+------- SUCCESS CREATE GRAPH junit-test -------
+
+------- SUCCESS RDF IMPORT w3c_test3 -------
+
+-------------------- SPARQL QUERY query2.sparql --------------------
+SELECT ?v WHERE { ?v ?p "cat"@en }
+
+
+---------------------- CYPHER TRANSPILED QUERY ----------------------
+SELECT * FROM ag_catalog.cypher('junit-test', $$
+MATCH (v)-[p]->({rdfid:'cat', type:'http://www.w3.org/1999/02/22-rdf-syntax-ns#langString'}) 
+RETURN v.rdfid  $$) 
+AS (v ag_catalog.agtype); 
+
+$$$$$$$$$$$$$$$$$$$$$$$$$$$$ EQUALITY TEST RESULT $$$$$$$$$$$$$$$$$$$$$$$$$$$$
+SPARQL: [{v=http://example.org/ns#x}]
+CYPHER: [{v=http://example.org/ns#x}]
+
+------- SUCCESS DELETE GRAPH junit-test -------
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% PARAMETERIZED TEST %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+------- SUCCESS CREATE GRAPH junit-test -------
+
+------- SUCCESS RDF IMPORT w3c_test3 -------
+
+-------------------- SPARQL QUERY query3.sparql --------------------
+SELECT ?v WHERE { ?v ?p 42 }
+
+
+---------------------- CYPHER TRANSPILED QUERY ----------------------
+SELECT * FROM ag_catalog.cypher('junit-test', $$
+MATCH (v)-[p]->({rdfid:'42', type:'http://www.w3.org/2001/XMLSchema#integer'}) 
+RETURN v.rdfid  $$) 
+AS (v ag_catalog.agtype); 
+
+$$$$$$$$$$$$$$$$$$$$$$$$$$$$ EQUALITY TEST RESULT $$$$$$$$$$$$$$$$$$$$$$$$$$$$
+SPARQL: [{v=http://example.org/ns#y}]
+CYPHER: [{v=http://example.org/ns#y}]
+
+------- SUCCESS DELETE GRAPH junit-test -------
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% PARAMETERIZED TEST %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+------- SUCCESS CREATE GRAPH junit-test -------
+
+------- SUCCESS RDF IMPORT w3c_test3 -------
+
+-------------------- SPARQL QUERY query4.sparql --------------------
+SELECT ?v WHERE { ?v ?p "abc"^^<http://example.org/datatype#specialDatatype> }
+
+
+---------------------- CYPHER TRANSPILED QUERY ----------------------
+SELECT * FROM ag_catalog.cypher('junit-test', $$
+MATCH (v)-[p]->({rdfid:'abc', type:'http://example.org/datatype#specialDatatype'}) 
+RETURN v.rdfid  $$) 
+AS (v ag_catalog.agtype); 
+
+$$$$$$$$$$$$$$$$$$$$$$$$$$$$ EQUALITY TEST RESULT $$$$$$$$$$$$$$$$$$$$$$$$$$$$
+SPARQL: [{v=http://example.org/ns#z}]
+CYPHER: [{v=http://example.org/ns#z}]
+
+------- SUCCESS DELETE GRAPH junit-test -------
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% PARAMETERIZED TEST %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+------- SUCCESS CREATE GRAPH junit-test -------
+
+------- SUCCESS RDF IMPORT w3c_test4 -------
+
+-------------------- SPARQL QUERY query1.sparql --------------------
+PREFIX foaf:   <http://xmlns.com/foaf/0.1/>
+SELECT ?x ?name
+WHERE  { ?x foaf:name ?name }
+
+
+---------------------- CYPHER TRANSPILED QUERY ----------------------
+SELECT * FROM ag_catalog.cypher('junit-test', $$
+MATCH (x)-[:name {rdfid:'http://xmlns.com/foaf/0.1/name'}]->(name) 
+RETURN x.rdfid , name.rdfid  $$) 
+AS (x ag_catalog.agtype, name ag_catalog.agtype); 
+
+$$$$$$$$$$$$$$$$$$$$$$$$$$$$ EQUALITY TEST RESULT $$$$$$$$$$$$$$$$$$$$$$$$$$$$
+SPARQL: [{x=a, name=Alice}, {x=b, name=Bob}]
+CYPHER: [{x=a, name=Alice}, {x=b, name=Bob}]
+
+------- SUCCESS DELETE GRAPH junit-test -------
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% PARAMETERIZED TEST %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+------- SUCCESS CREATE GRAPH junit-test -------
+
+------- SUCCESS RDF IMPORT w3c_test5 -------
+
+-------------------- SPARQL QUERY query1.sparql --------------------
+PREFIX dc: <http://purl.org/dc/elements/1.1/>
+SELECT ?title
+WHERE {
+  ?x dc:title ?title
+  FILTER (regex(?title, "^SPARQL") )
+}
+
+---------------------- CYPHER TRANSPILED QUERY ----------------------
+SELECT * FROM ag_catalog.cypher('junit-test', $$
+MATCH (x)-[:title {rdfid:'http://purl.org/dc/elements/1.1/title'}]->(title) 
+WHERE (toString(title.rdfid) =~ toString("^SPARQL")) 
+RETURN title.rdfid  $$) 
+AS (title ag_catalog.agtype); 
+
+$$$$$$$$$$$$$$$$$$$$$$$$$$$$ EQUALITY TEST RESULT $$$$$$$$$$$$$$$$$$$$$$$$$$$$
+SPARQL: [{title=SPARQL Tutorial}]
+CYPHER: [{title=SPARQL Tutorial}]
+
+------- SUCCESS DELETE GRAPH junit-test -------
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% PARAMETERIZED TEST %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+------- SUCCESS CREATE GRAPH junit-test -------
+
+------- SUCCESS RDF IMPORT w3c_test5 -------
+
+-------------------- SPARQL QUERY query2.sparql --------------------
+PREFIX dc: <http://purl.org/dc/elements/1.1/>
+SELECT ?title
+WHERE {
+  ?x dc:title ?title
+  FILTER regex(?title, "web", "i" ) 
+}
+
+---------------------- CYPHER TRANSPILED QUERY ----------------------
+SELECT * FROM ag_catalog.cypher('junit-test', $$
+MATCH (x)-[:title {rdfid:'http://purl.org/dc/elements/1.1/title'}]->(title) 
+WHERE (toString(title.rdfid) =~ toString("(?i)web")) 
+RETURN title.rdfid  $$) 
+AS (title ag_catalog.agtype); 
+
+$$$$$$$$$$$$$$$$$$$$$$$$$$$$ EQUALITY TEST RESULT $$$$$$$$$$$$$$$$$$$$$$$$$$$$
+SPARQL: [{title=The Semantic Web}]
+CYPHER: [{title=The Semantic Web}]
+
+------- SUCCESS DELETE GRAPH junit-test -------
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% PARAMETERIZED TEST %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+------- SUCCESS CREATE GRAPH junit-test -------
+
+------- SUCCESS RDF IMPORT w3c_test5 -------
+
+-------------------- SPARQL QUERY query3.sparql --------------------
+PREFIX dc: <http://purl.org/dc/elements/1.1/>
+PREFIX ns: <http://example.org/ns#>
+SELECT ?title ?price
+WHERE { 
+  ?x ns:price ?price .
+  FILTER (?price < 30.5)
+  ?x dc:title ?title . 
+}
+
+---------------------- CYPHER TRANSPILED QUERY ----------------------
+SELECT * FROM ag_catalog.cypher('junit-test', $$
+MATCH (x)-[:price {rdfid:'http://example.org/ns#price'}]->(price)
+MATCH (x)-[:title {rdfid:'http://purl.org/dc/elements/1.1/title'}]->(title) 
+WHERE (toFloat(price.rdfid) < toFloat(30.5)) 
+RETURN title.rdfid , price.rdfid  $$) 
+AS (title ag_catalog.agtype, price ag_catalog.agtype); 
+
+$$$$$$$$$$$$$$$$$$$$$$$$$$$$ EQUALITY TEST RESULT $$$$$$$$$$$$$$$$$$$$$$$$$$$$
+SPARQL: [{price=23, title=The Semantic Web}]
+CYPHER: [{price=23, title=The Semantic Web}]
+
+------- SUCCESS DELETE GRAPH junit-test -------
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% PARAMETERIZED TEST %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+------- SUCCESS CREATE GRAPH junit-test -------
+
+------- SUCCESS RDF IMPORT w3c_test5 -------
+
+-------------------- SPARQL QUERY query4.sparql --------------------
+PREFIX dc: <http://purl.org/dc/elements/1.1/>
+SELECT ?title
+WHERE {
+  ?x dc:title ?title
+  FILTER(?title = "SPARQL Tutorial") .
+}
+
+---------------------- CYPHER TRANSPILED QUERY ----------------------
+SELECT * FROM ag_catalog.cypher('junit-test', $$
+MATCH (x)-[:title {rdfid:'http://purl.org/dc/elements/1.1/title'}]->(title) 
+WHERE (toString(title.rdfid) = toString("SPARQL Tutorial")) 
+RETURN title.rdfid  $$) 
+AS (title ag_catalog.agtype); 
+
+$$$$$$$$$$$$$$$$$$$$$$$$$$$$ EQUALITY TEST RESULT $$$$$$$$$$$$$$$$$$$$$$$$$$$$
+SPARQL: [{title=SPARQL Tutorial}]
+CYPHER: [{title=SPARQL Tutorial}]
+
+------- SUCCESS DELETE GRAPH junit-test -------
+[INFO] Tests run: 11, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 3.447 s - in de.rapsql.transpiler.W3CTest
+[INFO] 
+[INFO] Results:
+[INFO] 
+[INFO] Tests run: 11, Failures: 0, Errors: 0, Skipped: 0
+[INFO] 
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  7.851 s
+[INFO] Finished at: 2024-01-23T15:33:01Z
+[INFO] ------------------------------------------------------------------------
