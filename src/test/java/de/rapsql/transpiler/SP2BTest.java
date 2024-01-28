@@ -49,36 +49,39 @@ import org.apache.jena.rdf.model.Model;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class SP2BTest {
+  /////////////////////// TEST CONFIGURATION ///////////////////////
   // test configuration
-  private static final Boolean use_typed_sparql = false;
+  private static final Boolean IMPORT_RDF = false;
+  private static final Boolean DROP_GRAPH = false;
+  private static final Boolean CNT_RESULTS = false;
+  private static final Boolean USE_TYPED_SPARQL = false;
   private static final Boolean DISABLE_SPARQL = false;
   private static final Boolean DISABLE_CYPHER = false;
-  private static final Boolean CNT_RESULTS = false;
-  private static final Boolean import_rdf = false;
-  private static final Boolean drop_graph = false;
 
-  // test parameter setup
+  // db connection setup
   private static final String DB_URL = "jdbc:postgresql://localhost:5432/rapsql";
   private static final String USER = "postgres";
   private static final String PASS = "postgres";
-  // private static final String GRAPH_NAME = "tesla"; 
-  // private static final String GRAPH_NAME = "spcustomyars";
-  private static final String GRAPH_NAME = "spcustomrdfid2";
-  private static final String PATH_NAME = "src/test/resources/sp2b";
-  private static final String SRC_NAME = "rdf.n3";
   
+  // test parameter setup
+  private static final String GRAPH_NAME = "tesla"; 
+  // private static final String GRAPH_NAME = "spcustomyars";
+  // private static final String GRAPH_NAME = "spcustomrdfid2";
+  private static final String PATH_NAME = "src/test/resources/sp2b";
+  private static final String SRC_NAME = "tesla.ttl";
+////////////////////////////////////////////////////////////////////
 
-  // provide test resources of rdf model, rdf-cypher model, sparql queries
+  // provide test resources of rdf model, rdf-cypher model, and sparql queries
   private static List<Arguments> MethodProvider() throws IOException {
     return TestProvider.MethodArgProvider(GRAPH_NAME, PATH_NAME, SRC_NAME);
   }
 
-  // create test graph in postgres
+  // create test graph in postgres before test run, if rdf import is enabled
   @BeforeAll
   public void load_data() throws SQLException {
     System.out.println("\n");
     Helper.display_info('§', 34, "START OF TESTS");
-    if (import_rdf) {
+    if (IMPORT_RDF) {
       Arguments arg = null;
       TestProvider.age_create_graph(DB_URL, USER, PASS, GRAPH_NAME);
       try {
@@ -91,20 +94,21 @@ public class SP2BTest {
       TestProvider.age_import_rdf(DB_URL, USER, PASS, rdf_model, rdf_to_cypher, query_file);
     }
   }
-
-  @AfterEach
-  public void print_line() {
-    Helper.display_info('$', 29, "EQUALITY RESULT END");
-  }
-
-  // drop test graph in postgres
+  
+  // drop test graph in postgres after test run if drop graph is enabled
   @AfterAll
   public void delete_data() throws SQLException {
-    if (drop_graph) {
+    if (DROP_GRAPH) {
       TestProvider.age_drop_graph(DB_URL, USER, PASS, GRAPH_NAME);
     }
     Helper.display_info('§', 35, "END OF TESTS");
     System.out.println("\n");
+  }
+
+  // only info and cosmetic separators for log output
+  @AfterEach
+  public void print_line() {
+    Helper.display_info('$', 29, "EQUALITY RESULT END");
   }
 
   // parametrized equality tests of both sparql and transpiled cypher results
@@ -117,34 +121,23 @@ public class SP2BTest {
     String cypher_query = "";
     long time_before = 0;
     long time_after = 0;
-    // Set<Map<String, String>> sparql_res_map = new HashSet<Map<String, String>>();
-    // Set<Map<String, String>> cypher_res_map = new HashSet<Map<String, String>>();
     List<Map<String, String>> sparql_res_list = new ArrayList<Map<String, String>>();
     List<Map<String, String>> cypher_res_list = new ArrayList<Map<String, String>>();
 
-    // USE ONLY WITH @BeforeEach and @AfterEach
-    // // import transformed rdf model to postgres age
-    // try {
-    //   TestProvider.age_import_rdf(DB_URL, USER, PASS, rdf_model, rdf_to_cypher, query_file);
-    // } catch (SQLException e) {
-    //   e.printStackTrace(); 
-    //   fail("Error: RDF-Cypher-Mapping query in PostgreSQL AGE");
-    //   return; 
-    // }
-
-    // SPARQL: read, print, and execute 
+    // SPARQL: read, print, and execute, if sparql is not disabled
     try {
       sparql_query = new String(Files.readAllBytes(query_file.toPath()));
       if (!DISABLE_SPARQL) {
         Helper.display_info('-', 20, "SPARQL QUERY " + query_file.getName());
         System.out.println(sparql_query);
-            // build-in sparql query execution of jena library
+        // build-in sparql query execution of jena library
         time_before = System.currentTimeMillis();
         Query query = QueryFactory.create(sparql_query);
         String query_type = query.queryType().toString();
         // System.out.println("Query type: " + query_type);
         QueryExecution qe = QueryExecutionFactory.create(query, rdf_model);
-  
+        
+        // support for ASK and SELECT sparql queries
         if (query_type.equals("ASK")) {
           boolean result = qe.execAsk();
           // System.out.println("Result: " + result);
@@ -155,7 +148,6 @@ public class SP2BTest {
           }
           time_after = System.currentTimeMillis();
         }
-  
         if (query_type.equals("SELECT")) {
           org.apache.jena.query.ResultSet results = qe.execSelect(); 
           // sparql result set mapping 
@@ -164,10 +156,10 @@ public class SP2BTest {
             QuerySolution row = results.next();
             for(String col: results.getResultVars()) {
               // System.out.println("\n\nDEBUG RESULT" + sparql_res + "\n");
-              // if not null add to result map, else "null" string
+              // create sparql result set and cover postgres null values with "null" string
               if (row.get(col) != null) {
                 // rm datatype for equality test of different triple store designs
-                if (!use_typed_sparql) {
+                if (!USE_TYPED_SPARQL) {
                   sparql_res.put(col, row.get(col).toString().split("\\^\\^")[0]);
                 } else {
                   sparql_res.put(col, row.get(col).toString());
@@ -176,7 +168,6 @@ public class SP2BTest {
               else sparql_res.put(col, "null");
             }
             // add result to sparql result list
-            // sparql_res_map.add(sparql_res); 
             sparql_res_list.add(sparql_res); 
             time_after = System.currentTimeMillis();
           }
@@ -185,7 +176,7 @@ public class SP2BTest {
       Helper.display_exec_time("SPARQL", time_before, time_after);
     } catch (IOException e) { e.printStackTrace(); }
 
-    // CYPHER: read, print, and execute
+    // CYPHER: read, print, and execute, if cypher is not disabled
     if (!DISABLE_CYPHER) {
       // transform, print and execute transpiled cypher query
       try {
@@ -200,7 +191,8 @@ public class SP2BTest {
           stmt.execute("LOAD 'age'");
           stmt.execute("SET search_path = ag_catalog, \"$user\", public;");             
           time_before = System.currentTimeMillis();
-          ResultSet rs = stmt.executeQuery(cypher_query); // sparql-to-cypher result here
+          // sparql-to-cypher result here
+          ResultSet rs = stmt.executeQuery(cypher_query); 
           ResultSetMetaData rsmd = rs.getMetaData();
           int columnsNumber = rsmd.getColumnCount();
           // create map of single cypher statements 
@@ -231,16 +223,10 @@ public class SP2BTest {
       }
     }
 
-    // Manually check that the result lists are not unique (Q11) by adding an existing result pair, cause this must be achieved by the query
-    // sparql_res_list.add(new HashMap<String, String>() {{ put("ee", "http://www.anesthetization.tld/outflanking/funnyman.html"); }});
-    // cypher_res_list.add(new HashMap<String, String>() {{ put("ee", "http://www.anesthetization.tld/outflanking/funnyman.html"); }});
-
-
-
+    /*    EQUALITY TEST    */
     if (!DISABLE_CYPHER && !DISABLE_SPARQL) {
-      /*    EQUALITY TEST    */
       // sort result lists, only an applied ORDER BY clause will be checked, not the order of the results
-      // caused by equal results, e.g, year(1) = 1950 | year(2) = 1950, the order of the results is not deterministic
+      // caused by equal results, e.g, year(1) = 1950 | year(2) = 1950, the order of these results is not deterministic
       // TODO: Create test data set (no duplicates) for ORDER BY clause, e.g., data year1 = 1950, year2 = 1951, year3 = 1952
       sparql_res_list.sort((m1, m2) -> m1.toString().compareTo(m2.toString()));
       cypher_res_list.sort((m1, m2) -> m1.toString().compareTo(m2.toString()));
@@ -262,10 +248,13 @@ public class SP2BTest {
         cypher_res_list.toString()
       ));
     } else {
+      // just print sparql and cypher output if any of them is disabled (response or cnt)
       if (!CNT_RESULTS) {
+        // standard output of sparql and cypher result maps
         System.out.println("-------- SPARQL RESULT --------\n" + sparql_res_list + "\n");
         System.out.println("-------- CYPHER RESULT --------\n" + cypher_res_list + "\n");      
       } else {
+        // output of sparql and cypher result maps as count of results
         System.out.println("-------- SPARQL RESULT --------\n" + "cnt=" + sparql_res_list.size() + "\n");
         System.out.println("-------- CYPHER RESULT --------\n" + "cnt=" + cypher_res_list.size() + "\n");
       }
