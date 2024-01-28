@@ -75,13 +75,15 @@ import org.apache.jena.sparql.core.Var;
 
 public class SparqlAlgebra implements OpVisitor {
   ////////////// Configuration //////////////
-  // enable/disable coalesce (gdm dbmodel: true=yars, false=rdfid)
-  private boolean use_coalesce = false;
+  // enable/disable coalesce (gdm dbmodel: true:=yars, false:=rdfid)
+  private boolean use_coalesce = true;
   // enable/disable cypher path optimization (cpo)
   private boolean use_cpo = true; 
-  // left to left | right to right
+  // cpo1: left to left
   private boolean l2l_cpo = true;
-  private boolean l2r_cpo = true;
+  // cpo2: left to right 
+  private boolean l2r_cpo = false;
+  // cpo3: l2l + l2r
   ///////////////////////////////////////////
 
 

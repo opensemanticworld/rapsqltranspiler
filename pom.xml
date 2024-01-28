@@ -25,11 +25,11 @@
   
   <groupId>de.rapsql.transpiler</groupId>
   <artifactId>rapsqltranspiler</artifactId>
-  <version>v0.4.3</version>
+  <version>v0.3.1</version>
   <packaging>jar</packaging>
   <name>rapsqltranspiler</name>
   <url>http://www.rapsql.de</url>
-  <description>Model rdfid cpo3</description>
+  <description>Model yars cpo1</description>
 
 
   <!-- encoding and compiler properties -->
@@ -51,7 +51,7 @@
     <dependency>
       <groupId>de.rapsql.rdf2pg</groupId>
       <artifactId>rdf2pg</artifactId>
-      <version>v0.4.0</version>
+      <version>v0.3.0</version>
     </dependency>
     <!-- jena SPARQL algebra library -->
     <dependency>
