@@ -1,6 +1,6 @@
-# rapsqltranspiler
+# RAPSQLTranspiler
 
-- [rapsqltranspiler](#rapsqltranspiler)
+- [RAPSQLTranspiler](#rapsqltranspiler)
   - [Installation](#installation)
   - [Testing](#testing)
     - [W3C Test](#w3c-test)
