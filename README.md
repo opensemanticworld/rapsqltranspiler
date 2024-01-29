@@ -5,7 +5,7 @@
   - [Testing](#testing)
     - [W3C Test](#w3c-test)
     - [SP2B Test](#sp2b-test)
-  - [Latest Build](#latest-build)
+  - [RAPSQLBench Builds](#rapsqlbench-builds)
   - [License](#license)
   - [Authors](#authors)
 
@@ -30,40 +30,40 @@ The automated tests depend on the correct `RDF2PG` integration maven build (spec
 ### W3C Test
 
 ```bash
-mvn test -Dtest=W3CTest -Dstyle.color=never > logs/test-w3c-v0.3.0-yars-plain.txt
-mvn test -Dtest=W3CTest -Dstyle.color=never > logs/test-w3c-v0.3.1-yars-cpo1.txt
-mvn test -Dtest=W3CTest -Dstyle.color=never > logs/test-w3c-v0.3.2-yars-cpo2.txt
-mvn test -Dtest=W3CTest -Dstyle.color=never > logs/test-w3c-v0.3.3-yars-cpo3.txt
-mvn test -Dtest=W3CTest -Dstyle.color=never > logs/test-w3c-v0.4.0-rdfid-plain.txt
-mvn test -Dtest=W3CTest -Dstyle.color=never > logs/test-w3c-v0.4.1-rdfid-cpo1.txt
-mvn test -Dtest=W3CTest -Dstyle.color=never > logs/test-w3c-v0.4.2-rdfid-cpo2.txt
-mvn test -Dtest=W3CTest -Dstyle.color=never > logs/test-w3c-v0.4.3-rdfid-cpo3.txt
+mvn test -Dtest=W3CTest -Dstyle.color=never > logs/test-w3c-v0.3.0-yars-plain.log
+mvn test -Dtest=W3CTest -Dstyle.color=never > logs/test-w3c-v0.3.1-yars-cpo1.log
+mvn test -Dtest=W3CTest -Dstyle.color=never > logs/test-w3c-v0.3.2-yars-cpo2.log
+mvn test -Dtest=W3CTest -Dstyle.color=never > logs/test-w3c-v0.3.3-yars-cpo3.log
+mvn test -Dtest=W3CTest -Dstyle.color=never > logs/test-w3c-v0.4.0-rdfid-plain.log
+mvn test -Dtest=W3CTest -Dstyle.color=never > logs/test-w3c-v0.4.1-rdfid-cpo1.log
+mvn test -Dtest=W3CTest -Dstyle.color=never > logs/test-w3c-v0.4.2-rdfid-cpo2.log
+mvn test -Dtest=W3CTest -Dstyle.color=never > logs/test-w3c-v0.4.3-rdfid-cpo3.log
 ```
 
 ### SP2B Test
 
 ```bash
-mvn test -Dtest=SP2BTest -Dstyle.color=never > logs/test-sp2b-v0.3.0-yars-plain.txt
-mvn test -Dtest=SP2BTest -Dstyle.color=never > logs/test-sp2b-v0.3.1-yars-cpo1.txt
-mvn test -Dtest=SP2BTest -Dstyle.color=never > logs/test-sp2b-v0.3.2-yars-cpo2.txt
-mvn test -Dtest=SP2BTest -Dstyle.color=never > logs/test-sp2b-v0.3.3-yars-cpo3.txt
-mvn test -Dtest=SP2BTest -Dstyle.color=never > logs/test-sp2b-v0.4.0-rdfid-plain.txt
-mvn test -Dtest=SP2BTest -Dstyle.color=never > logs/test-sp2b-v0.4.1-rdfid-cpo1.txt
-mvn test -Dtest=SP2BTest -Dstyle.color=never > logs/test-sp2b-v0.4.2-rdfid-cpo2.txt
-mvn test -Dtest=SP2BTest -Dstyle.color=never > logs/test-sp2b-v0.4.3-rdfid-cpo3.txt
+mvn test -Dtest=SP2BTest -Dstyle.color=never > logs/test-sp2b-v0.3.0-yars-plain.log
+mvn test -Dtest=SP2BTest -Dstyle.color=never > logs/test-sp2b-v0.3.1-yars-cpo1.log
+mvn test -Dtest=SP2BTest -Dstyle.color=never > logs/test-sp2b-v0.3.2-yars-cpo2.log
+mvn test -Dtest=SP2BTest -Dstyle.color=never > logs/test-sp2b-v0.3.3-yars-cpo3.log
+mvn test -Dtest=SP2BTest -Dstyle.color=never > logs/test-sp2b-v0.4.0-rdfid-plain.log
+mvn test -Dtest=SP2BTest -Dstyle.color=never > logs/test-sp2b-v0.4.1-rdfid-cpo1.log
+mvn test -Dtest=SP2BTest -Dstyle.color=never > logs/test-sp2b-v0.4.2-rdfid-cpo2.log
+mvn test -Dtest=SP2BTest -Dstyle.color=never > logs/test-sp2b-v0.4.3-rdfid-cpo3.log
 ```
 
-## Latest Build
+## RAPSQLBench Builds
 
 ```bash
-mvn clean install -Dstyle.color=never > logs/build-v0.3.0-yars-plain.txt
-mvn clean install -Dstyle.color=never > logs/build-v0.3.1-yars-cpo1.txt
-mvn clean install -Dstyle.color=never > logs/build-v0.3.2-yars-cpo2.txt
-mvn clean install -Dstyle.color=never > logs/build-v0.3.3-yars-cpo3.txt
-mvn clean install -Dstyle.color=never > logs/build-v0.4.0-rdfid-plain.txt
-mvn clean install -Dstyle.color=never > logs/build-v0.4.1-rdfid-cpo1.txt
-mvn clean install -Dstyle.color=never > logs/build-v0.4.2-rdfid-cpo2.txt
-mvn clean install -Dstyle.color=never > logs/build-v0.4.3-rdfid-cpo3.txt
+mvn clean install -Dstyle.color=never > logs/build-v0.3.0-yars-plain.log
+mvn clean install -Dstyle.color=never > logs/build-v0.3.1-yars-cpo1.log
+mvn clean install -Dstyle.color=never > logs/build-v0.3.2-yars-cpo2.log
+mvn clean install -Dstyle.color=never > logs/build-v0.3.3-yars-cpo3.log
+mvn clean install -Dstyle.color=never > logs/build-v0.4.0-rdfid-plain.log
+mvn clean install -Dstyle.color=never > logs/build-v0.4.1-rdfid-cpo1.log
+mvn clean install -Dstyle.color=never > logs/build-v0.4.2-rdfid-cpo2.log
+mvn clean install -Dstyle.color=never > logs/build-v0.4.3-rdfid-cpo3.log
 ```
 
 ## License
