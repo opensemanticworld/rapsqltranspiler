@@ -1,13 +1,20 @@
 # RAPSQLTranspiler
 
 - [RAPSQLTranspiler](#rapsqltranspiler)
+  - [Prerequisites](#prerequisites)
   - [Installation](#installation)
   - [Testing](#testing)
     - [W3C Test](#w3c-test)
     - [SP2B Test](#sp2b-test)
   - [RAPSQLBench Builds](#rapsqlbench-builds)
+  - [Repositories](#repositories)
   - [License](#license)
   - [Authors](#authors)
+
+## Prerequisites
+
+- Java
+- Maven
 
 ## Installation
 
@@ -25,7 +32,7 @@ mvn clean package -DskipTests
 
 ## Testing
 
-The automated tests depend on the correct `RDF2PG` integration maven build (specified in `pom.xml`, dependency groupId: `de.rapsql.rdf2pg`) to ensure that the proper model (either `yars` or `rdfid`) is used for the equality tests! The script `SparqlAlegebra.java` must also be adapted to the correct data model. The test Java scripts (`W3CTest.java` and `SP2BTest.java`) also have some configuration parameters that you should check and adjust before executing the tests to guarantee that all tests are executed correctly.
+Automated tests depend on correct [RDF2PG](https://github.com/raederan/rdf2pg) integrations. Maven build (specified in `pom.xml`, dependency groupId: `de.rapsql.rdf2pg`) to ensure that the proper model (either `yars` or `rdfid`) that are used for equality JUnit tests! The script `SparqlAlegebra.java` must also be adapted to the correct data model. The test Java scripts (`W3CTest.java` and `SP2BTest.java`) also have some configuration parameters that you should check and adjust before executing the tests to guarantee that all tests can be executed correctly.
 
 ### W3C Test
 
@@ -65,6 +72,11 @@ mvn clean install -Dstyle.color=never > logs/build-v0.4.1-rdfid-cpo1.log
 mvn clean install -Dstyle.color=never > logs/build-v0.4.2-rdfid-cpo2.log
 mvn clean install -Dstyle.color=never > logs/build-v0.4.3-rdfid-cpo3.log
 ```
+
+## Repositories
+
+- [RDF2PG](https://github.com/raederan/rdf2pg)
+- [RAPSQLBench](https://github.com/OpenSemanticWorld/rapsqlbench)
 
 ## License
 
