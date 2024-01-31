@@ -1,15 +1,20 @@
 # RAPSQLTranspiler
 
 - [RAPSQLTranspiler](#rapsqltranspiler)
+  - [Repositories](#repositories)
   - [Prerequisites](#prerequisites)
   - [Installation](#installation)
   - [Testing](#testing)
     - [W3C Test](#w3c-test)
     - [SP2B Test](#sp2b-test)
   - [RAPSQLBench Builds](#rapsqlbench-builds)
-  - [Repositories](#repositories)
   - [License](#license)
   - [Authors](#authors)
+
+## Repositories
+
+- [RDF2PG](https://github.com/raederan/rdf2pg)
+- [RAPSQLBench](https://github.com/OpenSemanticWorld/rapsqlbench)
 
 ## Prerequisites
 
@@ -72,11 +77,6 @@ mvn clean install -Dstyle.color=never > logs/build-v0.4.1-rdfid-cpo1.log
 mvn clean install -Dstyle.color=never > logs/build-v0.4.2-rdfid-cpo2.log
 mvn clean install -Dstyle.color=never > logs/build-v0.4.3-rdfid-cpo3.log
 ```
-
-## Repositories
-
-- [RDF2PG](https://github.com/raederan/rdf2pg)
-- [RAPSQLBench](https://github.com/OpenSemanticWorld/rapsqlbench)
 
 ## License
 
