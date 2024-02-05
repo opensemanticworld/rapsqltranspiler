@@ -41,12 +41,6 @@
 
   <!-- maven repository dependencies -->
   <dependencies>
-    <!-- PL/Java annotations (!not in public maven repo, local programming requires install from https://github.com/tada/pljava/tree/REL1_5_STABLE/pljava-api) -->
-    <dependency>
-      <groupId>org.postgresql</groupId>
-      <artifactId>pljava-api</artifactId>
-      <version>1.5-SNAPSHOT</version>
-    </dependency>
     <!-- ///////////////////////////////////////////////////// -->
     <!--                                                       -->
     <!-- IMPORTANT BRIDGE FOR SYNTACTIC DATA-INTEROPERABILITY  -->
@@ -61,6 +55,13 @@
     </dependency>
     <!--                                                       -->
     <!-- ///////////////////////////////////////////////////// -->
+
+    <!-- PL/Java annotations (!not in public maven repo, local programming requires install from https://github.com/tada/pljava/tree/REL1_5_STABLE/pljava-api) -->
+    <dependency>
+      <groupId>org.postgresql</groupId>
+      <artifactId>pljava-api</artifactId>
+      <version>1.5-SNAPSHOT</version>
+    </dependency>
     <!-- jena SPARQL algebra library -->
     <dependency>
       <groupId>org.apache.jena</groupId>
