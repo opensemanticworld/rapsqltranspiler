@@ -37,7 +37,7 @@ mvn clean package -DskipTests
 
 ## Testing
 
-Automated tests depend on correct [RDF2PG](https://github.com/raederan/rdf2pg) integrations. Maven build (specified in `pom.xml`, dependency groupId: `de.rapsql.rdf2pg`) to ensure that the proper model (either `yars` or `rdfid`) that are used for equality JUnit tests! The script `SparqlAlegebra.java` must also be adapted to the correct data model. The test Java scripts (`W3CTest.java` and `SP2BTest.java`) also have some configuration parameters that you should check and adjust before executing the tests to guarantee that all tests can be executed correctly.
+Automated tests depend on correct [RDF2PG](https://github.com/raederan/rdf2pg) integrations. Different Maven build versions (specified in `pom.xml`, dependency groupId: `de.rapsql.rdf2pg`) are used to ensure that the proper model (either `yars` or `rdfid`) for equality JUnit tests! The script `SparqlAlegebra.java` must also be adapted to the correct data model. The Java testing scripts (`W3CTest.java` and `SP2BTest.java`) also have some configuration parameters that you should check and adjust before executing the tests to guarantee that all tests can be executed correctly. The tests depend on a running and configured RAPSQL database ([Postgres](https://www.postgresql.org/) + [Apache AGE](https://github.com/apache/age)), which is tested against with the correct RDF2PG schema and data model.
 
 ### W3C Test
 
