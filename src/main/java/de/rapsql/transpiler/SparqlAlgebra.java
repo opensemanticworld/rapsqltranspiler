@@ -337,8 +337,15 @@ public class SparqlAlgebra implements OpVisitor {
   // TODO: empirical analytics for evidence
   //
   // DESCRIPTION: 
-  //  - left and right belong to subject and object of a triple pattern
+  //  - see: https://neo4j.com/docs/cypher-manual/current/patterns/reference/#graph-patterns-rules-relationship-uniqueness
+  //  - left and right belong to subject and object of a bgp's
   //  - overarching cypher variable path optimization rule: uniqueness of relationships
+  //  - these algorithms compare vars of all objects or subjects or a combiation of both for possible combinations
+  //    to morph multiple MATCH clauses into paths for possible performance boosts
+  //  - all implemented functions are called recursively to ensure full coverage of all possible combinations
+  //  - only if the uniqueness of relationships is given, the path optimization will be applied
+  //
+  //    definition:
   //    - cpo1: left to left (l2l) path optimization
   //    - cpo2: left to right (l2r) path optimization
   //    - cpo3: left to left then left to right path optimization (in this order)
