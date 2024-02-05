@@ -823,6 +823,8 @@ public class SparqlAlgebra implements OpVisitor {
         buildMatchClause("(" + s + ")-[" + p + "]->(" + o + ") ");
       }
     }
+    /////////////// START CONFIGURATION OPTIONS CPO ///////////////
+    //
     // use all pairlists for path optimization
     if (use_cpo) {
 
@@ -855,6 +857,8 @@ public class SparqlAlgebra implements OpVisitor {
       predicate_pairlist.clear();
       object_pairlist.clear();
     }
+    //
+    //////////////// END CONFIGURATION OPTIONS CPO ////////////////
   }
   //
   /////// ABOVE CONTAINS BUSINESS LOGIC OF BGP AND REFERS TO SEMANTIC DATA- AND QUERY-INTEROPERABILTY  ///////
