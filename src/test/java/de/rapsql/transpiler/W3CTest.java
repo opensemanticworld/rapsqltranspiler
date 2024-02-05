@@ -1,5 +1,5 @@
 /* 
-   Copyright 2023 Andreas Räder, https://github.com/raederan
+   Copyright 2023 Andreas Raeder, https://github.com/raederan
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -18,7 +18,6 @@ package de.rapsql.transpiler;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.fail;
-
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assumptions;
 import org.junit.jupiter.api.BeforeEach;

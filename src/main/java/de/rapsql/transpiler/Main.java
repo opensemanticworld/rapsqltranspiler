@@ -1,5 +1,5 @@
 /* 
-   Copyright 2023 Andreas Räder, https://github.com/raederan
+   Copyright 2023 Andreas Raeder, https://github.com/raederan
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -150,7 +150,7 @@ public class Main
 
 
 
-      //////////////////////////// LOAD n4j RDF ////////////////////////////
+      //////////////////////////// LOAD n4j RDF IN THIS VERSION UNSUPPORTED ////////////////////////////
 
       // String rdf_path = "/usr/local/docker/masterthesis/rapsql/submodules/rapsqltranspiler/src/test/resources/sp2b/spcustom/rdf.n3";
       // String graph = "spcustom";

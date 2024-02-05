@@ -1,5 +1,5 @@
 /* 
-   Copyright 2023 Andreas Räder, https://github.com/raederan
+   Copyright 2023 Andreas Raeder, https://github.com/raederan
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -35,14 +35,17 @@ public class S2C {
     return sparql_query;
   }
 
-  @Function // auto generated endpoint via _5API.sql
+  // 
+  @Function // auto generated endpoint via _5API.sql from feasibility study
   public static String rapsql_s2c(String graph_name, String sparql_query) throws QueryException {
     // compile sparql query string using jena algebra
     Query sq = QueryFactory.create(sparql_query);
     Op op = Algebra.compile(sq);
-    // retrieve query type for transpiler support check
+    // retrieve query type for transpiler SPARQL query support 
+    // important notice: only available in higher level algebra, not in SparqlAlgebra visitor!
     Enum<QueryType> query_type = sq.queryType();
-    // create visitor instance for compiler access
+    // create visitor instance for RDF compiler access including query type to transpile cypher 
+    // current supported types: SELECT, ASK
     SparqlAlgebra visitor = new SparqlAlgebra(graph_name, query_type.toString());
     // query transpilation
     op.visit(visitor);        

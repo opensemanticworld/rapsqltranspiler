@@ -1,5 +1,5 @@
 /* 
-   Copyright 2023 Andreas Räder, https://github.com/raederan
+   Copyright 2023 Andreas Raeder, https://github.com/raederan
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -22,7 +22,7 @@ import java.util.List;
 import org.apache.jena.sparql.expr.Expr;
 import org.apache.jena.sparql.expr.ExprList;
 
-
+// extracted from SparqlAlgebra.java in order to support filter as standalone class
 public class FilterParser {
   private boolean isQueryConversionSuccesful = true;
   private String conversionErrors = "";

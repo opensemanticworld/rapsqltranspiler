@@ -1,5 +1,5 @@
 /* 
-   Copyright 2023 Andreas Räder, https://github.com/raederan
+   Copyright 2023 Andreas Raeder, https://github.com/raederan
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -26,7 +26,6 @@ import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -69,7 +68,7 @@ public class SP2BTest {
   // private static final String GRAPH_NAME = "spcustomrdfid2";
   private static final String PATH_NAME = "src/test/resources/sp2b";
   private static final String SRC_NAME = "rdf.n3";
-////////////////////////////////////////////////////////////////////
+  ////////////////////////////////////////////////////////////////////
 
   // provide test resources of rdf model, rdf-cypher model, and sparql queries
   private static List<Arguments> MethodProvider() throws IOException {
