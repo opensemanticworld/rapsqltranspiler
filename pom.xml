@@ -49,7 +49,7 @@
     </dependency>
     <!-- ///////////////////////////////////////////////////// -->
     <!--                                                       -->
-    <!--  IMPORTANT BRIDGE FOR SEMANTIC DATA-INTEROPERABILITY  -->
+    <!-- IMPORTANT BRIDGE FOR SYNTACTIC DATA-INTEROPERABILITY  -->
     <!--                                                       -->
     <!--        ! RDF2PG-RAPSQL INTERFACE CONNECTOR !          -->
     <!--                                                       -->
