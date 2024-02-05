@@ -749,7 +749,7 @@ public class SparqlAlgebra implements OpVisitor {
         }
 
         // triple visitor (is only for experimental purposes of jena)
-        // see desc.: https://svn.apache.org/repos/asf/jena/site/trunk/content/documentation/javadoc/arq/org/apache/jena/sparql/algebra/op/OpTriple.html
+        // developer notice: https://svn.apache.org/repos/asf/jena/site/trunk/content/documentation/javadoc/arq/org/apache/jena/sparql/algebra/op/OpTriple.html
         @Override
         public Object visitTriple(Node_Triple it, Triple triple) {
           System.out.println("DEBUG TRIPLE: " + it.toString() + triple.toString());
