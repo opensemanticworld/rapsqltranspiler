@@ -170,6 +170,8 @@ public class SparqlAlgebra implements OpVisitor {
     }
   }
 
+  ///////////////////////// START IMPLEMENTATION LOGIC FUNCTIONS FOR VISITOR PATTERN ////////////////////////////////
+  //
   // helper function concatCypher for readability of code
   public void concatCypher(String _cypher) {
     cypher = cypher.concat(_cypher);
@@ -235,6 +237,7 @@ public class SparqlAlgebra implements OpVisitor {
     // cypher_stmt_opt = cypher_stmt_opt.replaceAll("MATCH", ",");
     return cypher_stmt + cypher_stmt_opt;
   }
+
 
   // return clause for matching select variables ( ! Cpyher set ! SPARQL get! )
   public String setgetReturnClause(List<Var> vars, Boolean has_with_clause) {
@@ -325,9 +328,12 @@ public class SparqlAlgebra implements OpVisitor {
     cypher = cypher.substring(0, cypher.length() - 2);
     concatCypher("); ");
   }
+  //
+  ///////////////////////// END IMPLEMENTATION LOGIC FUNCTIONS FOR VISITOR PATTERN ////////////////////////////////
 
 
-  /////////////////////////////// !!! CPO EXPERIMENTAL BELOW !!! ////////////////////////////////////////////
+  /////////////////////////////// !!! CPO EXPERIMENTAL BELOW !!! /////////////////////////////////////////////////
+  //
   // TODO: empirical analytics for evidence
   //
   // DESCRIPTION: 
@@ -342,7 +348,7 @@ public class SparqlAlgebra implements OpVisitor {
   //  - code is inside of SparqlAlgebra.java to ensure full access to all variables and methods
   //  - as soon as the code is stable, it will be moved to a separate class
   //////////////////////////////////////////////////////////////////////////////////////////
-
+  //
   /////////////////////////// START HELPER FUNCTIONS OF CPO ALGORITHMS /////////////////////////////
   // predicate rules
   // no path optimization if both predicates are unique
@@ -438,11 +444,13 @@ public class SparqlAlgebra implements OpVisitor {
       object_pairlist.remove(integer);
     }
   }
+  //
   /////////////////////////// END HELPER FUNCTIONS OF CPO ALGORITHMS //////////////////////////////
-
-
+  //
+  //
+  //
   //////////////////////// START CYPHER PATH OPTIMIZATION (CPO) ALGORITHMS ////////////////////////
-
+  //
   /////////////////////////////// START R2R CPO ////////////////////////////////////////////
   /////////// R2R NOT YET APPLIED CAUSED BY MISSING TEST CASES ///////////
   // right to right path optimization (same as left to left, object instead of subject)
@@ -494,10 +502,12 @@ public class SparqlAlgebra implements OpVisitor {
       // l2rCypherPath();
     }
   }
+  //
   /////////////////////////////// END R2R CPO //////////////////////////////////////////////
-
-
+  //
+  //
   /////////////////////////////// START L2L CPO ////////////////////////////////////////////
+  //
   // left to left path optimization
   public void l2lCypherPath() {
     // left == object, right == subject
@@ -584,8 +594,10 @@ public class SparqlAlgebra implements OpVisitor {
     // REMINDER: RECURSIVE CALL of l2r inside of l2l to be tested, still experimental 
     // l2rCypherPath();
   }
+  //
   /////////////////////////////// END L2L CPO ////////////////////////////////////////////
-
+  //
+  //
   /////////////////////////////// START L2R CPO ////////////////////////////////////////////
   // left to right path optimization
   public void l2rCypherPath() {
@@ -641,12 +653,15 @@ public class SparqlAlgebra implements OpVisitor {
       // System.out.println("-------- CPO L2R APPLIED --------");
     }
   }
+  //
   /////////////////////////////// END L2R CPO ////////////////////////////////////////////
+  //
   //////////////////////// END CYPHER PATH OPTIMIZATION (CPO) ALGORITHMS ////////////////////////
 
 
 
-  /////////////////////////////// START SUPPORTED VISITOR PATTERN OF SPARQL ALGEBRA ///////////////////////////////
+  ///////////////////// START SUPPORTED VISITOR PATTERN OF SPARQL ALGEBRA FOR QUERY INTEROPERABILITY /////////////////////
+  //
   // MATCH
   @Override 
   public void visit(OpBGP opBGP) {
@@ -661,7 +676,7 @@ public class SparqlAlgebra implements OpVisitor {
       // CreateCypher visitor = new CreateCypher(); // BACKUP
 
       /////////////// BELOW IS NESTED VISITOR OF BGP AND REFERS TO SEMANTIC DATA- AND QUERY-INTEROPERABILTY //////
-
+      //
       // nested visitor pattern for nodes inside BGP (!jena graph)
       NodeVisitor cypherNodeMatcher = new NodeVisitor() {
 
@@ -696,7 +711,7 @@ public class SparqlAlgebra implements OpVisitor {
           // );
           //
           ////////////////////////////////////////////////////////////////////////////////////////////
-
+          //
           ////////////////////////////////////////////////////////////////////////////////////////////
           // TODO: LANGTAG SUPPORT -> MUST BE APPLIED AT THIS POINT
           // $Language tag is not supported yet in rdf2pg
@@ -753,7 +768,7 @@ public class SparqlAlgebra implements OpVisitor {
           return null;
         } 
       };
-
+      //
       /////////////// ABOVE IS NESTED VISITOR OF BGP AND REFERS TO SEMANTIC DATA- AND QUERY-INTEROPERABILTY //////
       //
       // ! IMPORTANT BRIDGE !
@@ -765,7 +780,7 @@ public class SparqlAlgebra implements OpVisitor {
       //
       /////// BELOW CONTAINS BUSINESS LOGIC OF BGP AND REFERS TO SEMANTIC DATA- AND QUERY-INTEROPERABILTY  ///////
       // get subject, predicate and object of triple
-
+      //
       String s = t.getMatchSubject().visitWith(cypherNodeMatcher).toString();
       String p = t.getMatchPredicate().visitWith(cypherNodeMatcher).toString();
       String o = t.getMatchObject().visitWith(cypherNodeMatcher).toString();
@@ -839,6 +854,7 @@ public class SparqlAlgebra implements OpVisitor {
       object_pairlist.clear();
     }
   }
+  //
   /////// ABOVE CONTAINS BUSINESS LOGIC OF BGP AND REFERS TO SEMANTIC DATA- AND QUERY-INTEROPERABILTY  ///////
 
 
@@ -1014,6 +1030,7 @@ public class SparqlAlgebra implements OpVisitor {
     opUnion.getLeft().visit(this);
     concatCypher("UNION ");
     // set detection to duplicate RETURN clause at parser end
+    // see getCypher() below this visit function
     has_union_clause = true;
     // add MATCH duplicate for right bgp
     if (right_bgp_join) {
@@ -1025,8 +1042,15 @@ public class SparqlAlgebra implements OpVisitor {
     // visit right bgp
     opUnion.getRight().visit(this);
   }
+  //
+  ////////////////////////////////// END SUPPORTED VISITOR PATTERN OF SPARQL ALGEBRA ///////////////////////////////
+  //
+  ///////////////////// END SUPPORTED VISITOR PATTERN OF SPARQL ALGEBRA FOR QUERY INTEROPERABILITY /////////////////////
 
 
+
+  /////////////////////////// THIS IS THE POINT WHERE TRANSPILED CYPHER WILL BE RETURNED ///////////////////////////////
+  //
   // provide cypher query or throw exception for unassigned patterns
   public String getCypher() throws QueryException {
     if(this.isQueryConversionSuccesful) {
@@ -1050,8 +1074,8 @@ public class SparqlAlgebra implements OpVisitor {
     }
     else throw new QueryException(this.conversionErrors);
   }
-
-  /////////////////////////////// END SUPPORTED VISITOR PATTERN OF SPARQL ALGEBRA ///////////////////////////////
+  //
+  /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
   //////////////////////// FUTURE WORK BELOW ////////////////////////
@@ -1207,3 +1231,4 @@ public class SparqlAlgebra implements OpVisitor {
   }
 
 }
+
