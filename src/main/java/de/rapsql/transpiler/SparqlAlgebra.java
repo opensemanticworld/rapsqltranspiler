@@ -923,6 +923,8 @@ public class SparqlAlgebra implements OpVisitor {
     // visit sub operation
     opOrder.getSubOp().visit(this);
     // set detection var for WITH clause, required to return binding variables
+    // see: https://age.apache.org/age-manual/master/clauses/order_by.html
+
     has_with_clause = true;
     // build WITH clause for all variables
     concatCypher(" WITH ");
