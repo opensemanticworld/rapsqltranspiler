@@ -113,10 +113,12 @@ public class SparqlAlgebra implements OpVisitor {
   
   // support for Cypher UNION 
   private Boolean has_union_clause = false;
-  private Boolean has_with_clause = false;
   private String cached_match_clause = ""; 
   private boolean left_bgp_join = false;
   private boolean right_bgp_join = false;
+
+  // support for Cypher ORDER BY 
+  private Boolean has_with_clause = false;
 
   // support for distinct clause
   private boolean distinct = false;
@@ -128,6 +130,7 @@ public class SparqlAlgebra implements OpVisitor {
   // TODO: empirical analytics for evidence
   //
   private Var latest_var = null;
+  //
   /////////////////////////////////////////////////////////////////////////////////////////////////
 
   // support for cypher variable path optimization (cpo)
