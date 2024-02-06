@@ -150,7 +150,7 @@ public class FilterParser {
         expr.getConstant().getClass().getSimpleName(), 
         reg3.concat(expr.getConstant().toString())
       );
-    // check if expression is variable and has no constant neighbor
+    // check if expression is variable and has no constant neighbour
     } else if (expr.isVariable() && !expr_has_const) {
       typed_expr = getSchemaStmt(expr.getVarName(), false);
     // check if expression var must be casted to equalize type with constant
