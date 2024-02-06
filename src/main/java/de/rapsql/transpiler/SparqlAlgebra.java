@@ -1011,6 +1011,7 @@ public class SparqlAlgebra implements OpVisitor {
       concatCypher(" LIMIT " + opSlice.getLength());
       concatCypher(" OFFSET " + opSlice.getStart() + ";");
       // SKIP in cypher could be an alternative
+      // see: https://age.apache.org/age-manual/master/clauses/skip.html
     }
   }
 
