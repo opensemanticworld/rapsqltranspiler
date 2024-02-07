@@ -703,7 +703,7 @@ public class SparqlAlgebra implements OpVisitor {
         // literal visitor
         @Override
         public String visitLiteral(Node_Literal it, LiteralLabel lit) {
-          // current applied syntactic interoperability at this point
+          // current applied semantic interoperability at this point
           return String.format(
             use_coalesce  
               ? "{value:\'%s\', type:\'%s\'}" 
@@ -714,7 +714,7 @@ public class SparqlAlgebra implements OpVisitor {
 
           ////////////////////////////////////////////////////////////////////////////////////////////
           // BACKUP VERSION OF SINGLE PROPERTY LITERAL -> MUST BE APPLIED AT THIS POINT
-          // SYNTACTIC INTEROPERABILITY: depends on graph schema: {rdfid:'value^^type'}
+          // SEMANTIC INTEROPERABILITY: depends on graph schema: {rdfid:'value^^type'}
           // 
           // return String.format(
           //   lit.getDatatypeURI() == org.apache.jena.datatypes.xsd.XSDDatatype.XSDstring.getURI() ?
